@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../Contact.h">
+   </FileRef>
+   <FileRef
+      location = "group:../Contact.m">
+   </FileRef>
+   <FileRef
       location = "self:Contacts Assistant.xcodeproj">
    </FileRef>
 </Workspace>

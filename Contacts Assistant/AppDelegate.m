@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#import <AddressBook/AddressBook.h>
+#import "Contact.h"
+
 
 @interface AppDelegate ()
 
@@ -17,6 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+
     return YES;
 }
 
@@ -43,6 +47,7 @@
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
+
 
 #pragma mark - Core Data stack
 

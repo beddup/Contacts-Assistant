@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Contact" representedClassName="Contact" syncable="YES">
+        <attribute name="contactID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="contactName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="belongWhichRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relation" inverseName="otherContact" inverseEntity="Relation" syncable="YES"/>
+        <relationship name="directUnderWhichTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="directlyOwnedContacts" inverseEntity="Tag" syncable="YES"/>
+        <relationship name="relationsWithOtherPeople" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relation" inverseName="whoseRelation" inverseEntity="Relation" syncable="YES"/>
+    </entity>
+    <entity name="Relation" representedClassName="Relation" syncable="YES">
+        <attribute name="relationName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="otherContact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="belongWhichRelations" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="whoseRelation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="relationsWithOtherPeople" inverseEntity="Contact" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName="Tag" syncable="YES">
+        <attribute name="tagID" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="tagName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="childrenTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="parentTag" inverseEntity="Tag" syncable="YES"/>
+        <relationship name="directlyOwnedContacts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Contact" inverseName="directUnderWhichTags" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="parentTag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Tag" inverseName="childrenTags" inverseEntity="Tag" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Tag" positionX="-1712" positionY="62" width="128" height="118"/>
+        <element name="Relation" positionX="-1368" positionY="27" width="180" height="88"/>
+        <element name="Contact" positionX="-1604" positionY="-243" width="191" height="118"/>
+    </elements>
 </model>

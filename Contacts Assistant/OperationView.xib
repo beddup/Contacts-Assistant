@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="OperationsView">
+            <rect key="frame" x="0.0" y="0.0" width="226" height="280"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defualtOperationIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Td5-6W-Nhj">
+                    <rect key="frame" x="0.0" y="0.0" width="226" height="280"/>
+                </imageView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GNz-C1-2cq">
+                    <rect key="frame" x="2" y="16" width="222" height="262"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="iN0-l3-epB" id="CEA-Qc-5HC"/>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="D4C-nr-674"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="GNz-C1-2cq" secondAttribute="bottom" constant="2" id="8Aw-xl-ZQQ"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="trailing" secondItem="Td5-6W-Nhj" secondAttribute="trailing" constant="4" id="964-ID-MGn"/>
+                <constraint firstItem="Td5-6W-Nhj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="9c0-WT-wrT"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="top" secondItem="Td5-6W-Nhj" secondAttribute="bottom" constant="-272" id="IjM-OT-vJN"/>
+                <constraint firstItem="Td5-6W-Nhj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QLN-hm-gS7"/>
+                <constraint firstAttribute="trailing" secondItem="GNz-C1-2cq" secondAttribute="trailing" constant="2" id="QMF-vy-kg3"/>
+                <constraint firstAttribute="bottom" secondItem="Td5-6W-Nhj" secondAttribute="bottom" id="Rlr-et-8gJ"/>
+                <constraint firstAttribute="trailing" secondItem="Td5-6W-Nhj" secondAttribute="trailing" id="cPt-zs-HC1"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="leading" secondItem="Td5-6W-Nhj" secondAttribute="leading" constant="4" id="doO-pv-c6s"/>
+                <constraint firstAttribute="bottom" secondItem="Td5-6W-Nhj" secondAttribute="bottom" id="kgz-Uh-MRE"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="bottom" secondItem="Td5-6W-Nhj" secondAttribute="bottom" constant="4" id="rj3-ur-nKe"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="uBR-W3-doX"/>
+                <constraint firstItem="GNz-C1-2cq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="2" id="vPG-bB-QpD"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="964-ID-MGn"/>
+                    <exclude reference="IjM-OT-vJN"/>
+                    <exclude reference="doO-pv-c6s"/>
+                    <exclude reference="rj3-ur-nKe"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="BKGImageView" destination="Td5-6W-Nhj" id="o6y-nq-kzn"/>
+            </connections>
+            <point key="canvasLocation" x="-117" y="-1"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="defualtOperationIcon" width="33" height="33"/>
+    </resources>
+</document>
