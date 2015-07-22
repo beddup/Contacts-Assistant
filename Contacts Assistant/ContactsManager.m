@@ -223,7 +223,7 @@ static BOOL DisplayMoreTagCell = YES;
 -(void)addNewTagNamed:(NSString *)tagName{
     Tag *tag=[self createTagWithTagName:tagName];
     tag.parentTag=self.currentTag;
-    NSLog(@"add :%d",self.currentTag.childrenTags.count);
+    NSLog(@"add :%lu",(unsigned long)self.currentTag.childrenTags.count);
     self.tags=nil;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
                   withRowAnimation:UITableViewRowAnimationNone];
@@ -474,7 +474,7 @@ static BOOL DisplayMoreTagCell = YES;
         }
 
         self.currentTag=[self tagWithName:@"RootTag"];
-        NSLog(@"update %d",self.currentTag.childrenTags.count);
+        NSLog(@"update %lu",(unsigned long)self.currentTag.childrenTags.count);
         [[NSNotificationCenter defaultCenter] postNotificationName:ContactManagerDidFinishUpdatingCoreData object:nil];
 
         [self saveContext];

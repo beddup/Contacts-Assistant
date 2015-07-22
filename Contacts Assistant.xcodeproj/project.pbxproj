@@ -18,8 +18,13 @@
 		8D7180911B5D427A00E372ED /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180901B5D427A00E372ED /* HeaderView.m */; };
 		8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180931B5DE96A00E372ED /* ContactCell.m */; };
 		8D7180971B5DE97400E372ED /* TagCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180961B5DE97400E372ED /* TagCell.m */; };
-		8D7180991B5EB55600E372ED /* AddContactOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */; };
+		8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */; };
 		8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A01B5F5FB300E372ED /* AddTagView.xib */; };
+		8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180A31B5FACE300E372ED /* ActionsView.m */; };
+		8D7180A61B5FD07100E372ED /* BatchEditOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */; };
+		8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */; };
+		8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180AA1B5FD63800E372ED /* TagNavigationView.m */; };
+		8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180B01B5FDEC700E372ED /* Tag+Utility.m */; };
 		8D95A92A1B53ABDD009EB722 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9291B53ABDD009EB722 /* main.m */; };
 		8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92C1B53ABDD009EB722 /* AppDelegate.m */; };
 		8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92E1B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld */; };
@@ -60,8 +65,16 @@
 		8D7180931B5DE96A00E372ED /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactCell.m; path = View/ContactCell.m; sourceTree = "<group>"; };
 		8D7180951B5DE97400E372ED /* TagCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagCell.h; path = View/TagCell.h; sourceTree = "<group>"; };
 		8D7180961B5DE97400E372ED /* TagCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagCell.m; path = View/TagCell.m; sourceTree = "<group>"; };
-		8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddContactOptionsView.xib; path = View/AddContactOptionsView.xib; sourceTree = "<group>"; };
+		8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreFuctionsView.xib; path = View/MoreFuctionsView.xib; sourceTree = "<group>"; };
 		8D7180A01B5F5FB300E372ED /* AddTagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddTagView.xib; path = View/AddTagView.xib; sourceTree = "<group>"; };
+		8D7180A21B5FACE300E372ED /* ActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionsView.h; path = View/ActionsView.h; sourceTree = "<group>"; };
+		8D7180A31B5FACE300E372ED /* ActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActionsView.m; path = View/ActionsView.m; sourceTree = "<group>"; };
+		8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BatchEditOptionsView.xib; sourceTree = "<group>"; };
+		8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagNavigationView.xib; sourceTree = "<group>"; };
+		8D7180A91B5FD63800E372ED /* TagNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagNavigationView.h; path = View/TagNavigationView.h; sourceTree = "<group>"; };
+		8D7180AA1B5FD63800E372ED /* TagNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagNavigationView.m; path = View/TagNavigationView.m; sourceTree = "<group>"; };
+		8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Tag+Utility.h"; sourceTree = "<group>"; };
+		8D7180B01B5FDEC700E372ED /* Tag+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Tag+Utility.m"; sourceTree = "<group>"; };
 		8D95A9241B53ABDD009EB722 /* Contacts Assistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contacts Assistant.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D95A9281B53ABDD009EB722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D95A9291B53ABDD009EB722 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -118,11 +131,17 @@
 				8D7180931B5DE96A00E372ED /* ContactCell.m */,
 				8D71808F1B5D427A00E372ED /* HeaderView.h */,
 				8D7180901B5D427A00E372ED /* HeaderView.m */,
-				8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */,
+				8D7180A21B5FACE300E372ED /* ActionsView.h */,
+				8D7180A31B5FACE300E372ED /* ActionsView.m */,
+				8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */,
+				8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */,
 				8D7180A01B5F5FB300E372ED /* AddTagView.xib */,
 				8D7180231B55102600E372ED /* SearchAssistantView.h */,
 				8D7180241B55102600E372ED /* SearchAssistantView.m */,
 				8D71801F1B543EF000E372ED /* SearchAssistantView.xib */,
+				8D7180A91B5FD63800E372ED /* TagNavigationView.h */,
+				8D7180AA1B5FD63800E372ED /* TagNavigationView.m */,
+				8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -132,6 +151,8 @@
 			children = (
 				8D7180771B56D4BF00E372ED /* Tag.h */,
 				8D7180781B56D4BF00E372ED /* Tag.m */,
+				8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */,
+				8D7180B01B5FDEC700E372ED /* Tag+Utility.m */,
 				8D71807A1B56EAE400E372ED /* Contact.h */,
 				8D71807B1B56EAE400E372ED /* Contact.m */,
 				8D71806F1B56A4A600E372ED /* Relation.h */,
@@ -284,11 +305,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D95A9361B53ABDD009EB722 /* Main.storyboard in Resources */,
-				8D7180991B5EB55600E372ED /* AddContactOptionsView.xib in Resources */,
+				8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */,
 				8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */,
 				8D95A9381B53ABDD009EB722 /* Images.xcassets in Resources */,
 				8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */,
+				8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */,
 				8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */,
+				8D7180A61B5FD07100E372ED /* BatchEditOptionsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,9 +336,12 @@
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
 				8D7180911B5D427A00E372ED /* HeaderView.m in Sources */,
+				8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */,
 				8D7180731B56A4A600E372ED /* Relation.m in Sources */,
 				8D71807C1B56EAE400E372ED /* Contact.m in Sources */,
+				8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */,
 				8D95A92A1B53ABDD009EB722 /* main.m in Sources */,
+				8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */,
 				8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */,
 				8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */,
 			);

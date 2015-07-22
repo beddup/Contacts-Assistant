@@ -62,6 +62,7 @@
             cell.detailTextLabel.textColor=[UIColor lightGrayColor];
             cell.detailTextLabel.font=[UIFont systemFontOfSize:10.0 weight:UIFontWeightLight];
             cell.detailTextLabel.textAlignment=NSTextAlignmentRight;
+        cell.backgroundColor=[UIColor lightGrayColor];
             
     }
 
@@ -78,7 +79,7 @@
     [self setup];
 }
 -(void)setup{
-
+    
     self.contentMode=UIViewContentModeScaleToFill;
     self.opaque=YES;
 

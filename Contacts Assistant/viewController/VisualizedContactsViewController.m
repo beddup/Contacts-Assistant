@@ -8,8 +8,9 @@
 
 #import "VisualizedContactsViewController.h"
 #import "SearchAssistantView.h"
-#import "OperationsView.h"
 #import "ContactsManager.h"
+#import "TagNavigationView.h"
+#import "ActionsView.h"
 
 CGFloat const SearchAssistantViewHeight=150.0;
 
@@ -18,16 +19,18 @@ CGFloat const OperationViewHeight = 238;
 
 
 
-@interface VisualizedContactsViewController ()<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,OperationDelegate>
+@interface VisualizedContactsViewController ()<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *contactsTableView;
+@property (weak, nonatomic) IBOutlet UIButton *moreFunctionsButton;
 
 @property(strong,nonatomic)UISearchController *searchController;
-@property(weak,nonatomic)SearchAssistantView *searchAssistant;
 
-@property(weak,nonatomic)UIView *contentDimmingView;
-@property(weak,nonatomic)UIView *navigationDimmingView;
-@property(weak,nonatomic)OperationsView *operationView;
+@property(weak,nonatomic)UIView *customDimmingView;
+@property(weak,nonatomic)ActionsView *batchEditingView;
+@property(weak,nonatomic)ActionsView *moreFunctionsView;
+@property(weak,nonatomic)SearchAssistantView *searchAssistant;
+@property(weak,nonatomic)TagNavigationView *tagNavigationView;
 
 @property(strong,nonatomic) ContactsManager * contactManager;
 
@@ -39,13 +42,13 @@ CGFloat const OperationViewHeight = 238;
 - (void)viewDidLoad {
 
     [super viewDidLoad];
-    [self configureNavigationBar];
-
-    dispatch_queue_t updateCoreDataQueue = dispatch_queue_create("UpdateCoreDataQueue", NULL);
-    dispatch_async(updateCoreDataQueue, ^{
-        [self.contactManager updateCoreDataBasedOnContacts];
-    });
-
+    [self configureMoreFunctionButton];
+    [self configureTitleView];
+//    dispatch_queue_t updateCoreDataQueue = dispatch_queue_create("UpdateCoreDataQueue", NULL);
+//    dispatch_async(updateCoreDataQueue, ^{
+//        [self.contactManager updateCoreDataBasedOnContacts];
+//    });
+//
 }
 -(void)viewWillAppear:(BOOL)animated{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coreDataUpdatingFinished:) name:ContactManagerDidFinishUpdatingCoreData object:nil];
@@ -74,140 +77,179 @@ CGFloat const OperationViewHeight = 238;
     }
     return _contactManager;
 }
--(void)configureNavigationBar{
+-(void)configureMoreFunctionButton{
 
-    //configure rightBarButtonItem
-    self.navigationItem.rightBarButtonItem= [self createRightButtonItem];
+}
+-(void)configureTitleView{
+
+    UIButton *button=[[UIButton alloc]init];
+    [button setTitle:@"Group" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(prepareSwitchTag:) forControlEvents:UIControlEventTouchUpInside];
+
+    self.navigationItem.titleView=button;
+
+}
+#pragma mark - Actions
+-(void)prepareSwitchTag:(UIButton *)button{
+    if (self.tagNavigationView) {
+        [self dismissDimmingView:nil];
+        return;
+    }
+    // dim bkg
+    [self dim];
+    self.navigationItem.rightBarButtonItem.enabled=NO;
+    self.navigationItem.leftBarButtonItem.enabled=NO;
+
+    // prepare action view
+    TagNavigationView *tagNavigationView=[[[NSBundle mainBundle]loadNibNamed:@"TagNavigationView" owner:nil options:nil] lastObject];
+    tagNavigationView.didSelectTag=^(Tag *tag){
+
+    };
+    tagNavigationView.manageTags=^{
+
+    };
+    [self.view addSubview:tagNavigationView];
+    self.tagNavigationView=tagNavigationView;
+
+    //calculate geometry
+    CGRect rect = [self.navigationController.navigationBar convertRect:self.navigationController.navigationBar.bounds toView:self.view];
+    CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.view.bounds), 0);
+    tagNavigationView.frame=frame;
+    [tagNavigationView layoutIfNeeded];
+
+    // display with animation
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
+        self.customDimmingView.alpha=0.7;
+        tagNavigationView.frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.view.bounds), 150);
+    } completion:nil];
+
+}
+- (IBAction)prepareToSearch:(UIBarButtonItem *)sender {
+
+    [self prepareSearchController];
+    [self.searchController.searchBar becomeFirstResponder];
+
+}
+-(void )prepareSearchController{
+
+    //configure Search Controller
+    UISearchController *searchController=[[UISearchController alloc]initWithSearchResultsController:nil];
+    self.searchController=searchController;
+    searchController.searchResultsUpdater=self;
+    searchController.delegate=self;
+    [searchController setHidesNavigationBarDuringPresentation:YES];
+    [searchController setDimsBackgroundDuringPresentation:YES];
 
     //configure searchBar
-    [self configureSearchController];
-    UISearchBar *searchBar=self.searchController.searchBar;
+    UISearchBar *searchBar=searchController.searchBar;
     searchBar.placeholder=@"Keyword: Contact Info or Tag Name";
     searchBar.delegate=self;
     searchBar.showsCancelButton=NO;
-    self.navigationItem.titleView=searchBar;
+    self.contactsTableView.tableHeaderView=searchBar;
+    
+}
+-(void)dim{
+    UIView *dimmingView=[[UIView alloc]initWithFrame:self.contactsTableView.frame];
+    dimmingView.backgroundColor=[UIColor darkGrayColor];
+    self.customDimmingView=dimmingView;
+    self.customDimmingView.alpha=0.0;
+    [self.view addSubview:dimmingView];
 
+    UITapGestureRecognizer *tapToDismissAdd=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismissDimmingView:)];
+    [self.customDimmingView addGestureRecognizer:tapToDismissAdd];
+}
+-(void)dismissDimmingView:(UITapGestureRecognizer *)gesture{
+
+    [self.customDimmingView removeFromSuperview];
+    [self.moreFunctionsView removeFromSuperview];
+    [self.batchEditingView removeFromSuperview];
+    [self.tagNavigationView removeFromSuperview];
+
+    self.navigationItem.rightBarButtonItem.enabled=YES;
+    self.navigationItem.leftBarButtonItem.enabled=YES;
+
+
+    CGRect rect=self.view.bounds;
+    self.moreFunctionsButton.frame=CGRectMake(CGRectGetWidth(rect)/2-70/2, CGRectGetHeight(rect)-44-12, 70, 44);
 
 }
--(UIBarButtonItem *)createRightButtonItem{
-
-    return [[UIBarButtonItem alloc]initWithTitle:@"More"
-                                           style:UIBarButtonItemStylePlain
-                                          target:self action:@selector(add:)];
-
-}
-
--(void)add:(UIBarButtonItem *)barButtonItem{
-
-    // navigation dimmingview
-    UIView *navigationDimmingView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetMaxY(self.navigationController.navigationBar.bounds)+20)];
-    [navigationDimmingView setBackgroundColor:[UIColor darkGrayColor]];
-    navigationDimmingView.alpha=0.0;
-    [self.navigationController.view addSubview:navigationDimmingView];
-    self.navigationDimmingView=navigationDimmingView;
-
-    //content dimming View
-    UIView *contentDimmingView=[[UIView alloc]initWithFrame:self.view.bounds];
-    [contentDimmingView setBackgroundColor:[UIColor darkGrayColor]];
-    contentDimmingView.alpha=0;
-    [self.view addSubview:contentDimmingView];
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismissOperationsView:)];
-    [contentDimmingView addGestureRecognizer:tap];
-    self.contentDimmingView=contentDimmingView;
-
-    // create operations View
-    OperationsView *operationView=[[[NSBundle mainBundle]loadNibNamed:@"OperationView" owner:nil options:nil]lastObject];
-    CGRect frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, 0, OperationViewWidth, OperationViewHeight);
-    operationView.frame=CGRectOffset(frame, 0, -OperationViewHeight);
-    [self.view addSubview:operationView];
-    operationView.delegate=self;
-    self.operationView=operationView;
-
-
-    //animation dimming view and operation view
-    [UIView animateWithDuration:0.3 animations:^{
-        contentDimmingView.alpha=0.5;
-        navigationDimmingView.alpha=0.3;
-        operationView.frame=frame;
-    }];
-}
--(void)dismissOperationViewAnimation:(BOOL)animated{
-
-    [UIView animateWithDuration:animated ? 0.3 : 0 animations:^{
-        if (animated) {
-            self.navigationDimmingView.alpha=0.0;
-            self.contentDimmingView.alpha=0.0;
-            self.operationView.frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, -OperationViewHeight, OperationViewWidth, OperationViewHeight);
-        }
-        } completion:^(BOOL finished) {
-            [self.navigationDimmingView removeFromSuperview];
-            [self.contentDimmingView removeFromSuperview];
-            [self.operationView removeFromSuperview];
-        }];
-}
--(void)dismissOperationsView:(UITapGestureRecognizer *)gesture{
-    NSLog(@"tapped");
-    if (gesture.state==UIGestureRecognizerStateEnded) {
-        [self dismissOperationViewAnimation:YES];
+- (IBAction)prepareToBatchEditContacts:(UIBarButtonItem *)sender {
+    if (self.batchEditingView) {
+        [self dismissDimmingView:nil];
+        return;
     }
-}
-#pragma  mark - OperationViewDelegate
--(void)operationViewCreatNewContact:(OperationsView *)view{
-    [self dismissOperationViewAnimation:NO];
+    // dim bkg
+    [self dim];
+    self.navigationItem.rightBarButtonItem.enabled=NO;
+
+    // prepare action view
+    ActionsView *batchEditingView=[[[NSBundle mainBundle]loadNibNamed:@"BatchEditOptionsView" owner:nil options:nil] lastObject];
+    [self.view addSubview:batchEditingView];
+    self.batchEditingView=batchEditingView;
+
+    //calculate geometry
+    CGRect rect = [self.navigationController.navigationBar convertRect:self.navigationController.navigationBar.bounds toView:self.view];
+    CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), 200, 0);
+    batchEditingView.frame=frame;
+    [batchEditingView layoutIfNeeded];
+
+    // display with animation
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
+        self.customDimmingView.alpha=0.7;
+        batchEditingView.frame=CGRectMake(0, CGRectGetMaxY(rect), 200, 100);
+    } completion:nil];
 
 }
--(void)operationViewScanQRCode:(OperationsView *)view{
-    [self dismissOperationViewAnimation:NO];
+- (IBAction)displayMoreActions:(UIButton *)sender {
+    // dim bkg
+    [self dim];
+
+    self.navigationItem.rightBarButtonItem.enabled=NO;
+    self.navigationItem.leftBarButtonItem.enabled=NO;
+
+    // prepare action view
+    ActionsView *moreActionsView=[[[NSBundle mainBundle]loadNibNamed:@"MoreFuctionsView" owner:nil options:nil] lastObject];
+    [self.view addSubview:moreActionsView];
+    self.moreFunctionsView=moreActionsView;
+
+    //calculate geometry
+    moreActionsView.frame=self.moreFunctionsButton.frame;
+    [moreActionsView layoutIfNeeded];
+    CGRect frame=CGRectMake(4, CGRectGetHeight(self.view.bounds)-100-20, CGRectGetWidth(self.view.bounds)-8,100);
+
+    // display with animation
+    [UIView animateWithDuration:.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
+        self.customDimmingView.alpha=0.7;
+        self.moreFunctionsButton.frame=frame;
+        moreActionsView.frame=CGRectInset(frame, 4, 4);
+    } completion:nil];
 
 }
--(void)operationViewExchangeCard:(OperationsView *)view{
-    [self dismissOperationViewAnimation:NO];
 
-
-}
--(void)operationViewSendSMS:(OperationsView *)view{
-    [self dismissOperationViewAnimation:NO];
-
-}
--(void)operationViewSendEmail:(OperationsView *)view{
-    [self dismissOperationViewAnimation:NO];
-
-}
 
 #pragma  mark - UISearchResultsUpdatingDelegate
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController{
     NSLog(@"updating");
 }
 #pragma mark - UISearchBarDelegate
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
-    self.navigationItem.rightBarButtonItem=nil;
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     [self showSearchAssistantView];
-
 }
 
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
 
     // dismiss searchAssistantView
-    [searchBar setShowsCancelButton:NO animated:YES];
-    [self dismissSearchAssistantView];
+    [self dismissDimmingView:nil];
 
 }
--(void)dismissSearchAssistantView{
-    [UIView animateWithDuration:0.3 animations:^{
-
-        self.searchAssistant.frame=CGRectMake(0, -SearchAssistantViewHeight, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
-
-    } completion:^(BOOL finished) {
-        if (finished) {
-            [self.searchAssistant removeFromSuperview];
-        }
-    }];
-
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+    [self.searchAssistant removeFromSuperview];
 }
 
 -(void)showSearchAssistantView{
-
+    if (self.searchAssistant) {
+        return;
+    }
     dispatch_queue_t searchAssistantCreationQueue = dispatch_queue_create("SearchAssistantView", NULL);
 
     dispatch_async(searchAssistantCreationQueue, ^{
@@ -221,38 +263,31 @@ CGFloat const OperationViewHeight = 238;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // update UI in main queue
-            CGRect frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
-            frame=CGRectInset(frame, 4, 4);
-            searchAssistantView.frame=CGRectOffset(frame, 0, -SearchAssistantViewHeight);
+
             [self.view addSubview:searchAssistantView];
             self.searchAssistant=searchAssistantView;
-            [UIView animateWithDuration:0.5 animations:^{
-                searchAssistantView.frame=frame;
-            }];
+
+            // calcute geometry info
+            CGRect rect=[self.searchController.searchBar convertRect:self.searchController.searchBar.bounds toView:self.view];
+            CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.searchController.searchBar.bounds), 120);
+            searchAssistantView.frame=CGRectMake(0, CGRectGetMinY(frame),CGRectGetWidth(frame), 0);
+            [searchAssistantView layoutIfNeeded];
+
+            // display with animation
+            [UIView animateWithDuration:3
+                                  delay:0
+                 usingSpringWithDamping:0.7
+                  initialSpringVelocity:0.5
+                                options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 searchAssistantView.frame=frame;
+                                 self.customDimmingView.alpha=0.7;
+                             }
+                             completion:nil];
         });
     });
 }
--(void )configureSearchController{
 
-    UISearchController *searchController=[[UISearchController alloc]initWithSearchResultsController:nil];
-    self.searchController=searchController;
-
-    searchController.searchResultsUpdater=self;
-    searchController.delegate=self;
-
-    [searchController setHidesNavigationBarDuringPresentation:NO];
-    [searchController setDimsBackgroundDuringPresentation:NO];
-
-}
-
-#pragma mark - UISearchControllerDelegate
--(void)willDismissSearchController:(UISearchController *)searchController{
-
-    if (!self.navigationItem.rightBarButtonItem) {
-        self.navigationItem.rightBarButtonItem=[self createRightButtonItem];
-    }
-
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
