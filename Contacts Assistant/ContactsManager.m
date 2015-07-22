@@ -11,6 +11,8 @@
 #import "Contact.h"
 #import "Relation.h"
 #import "Tag.h"
+#import "HeaderView.h"
+#import "TagCell.h"
 #import <AddressBook/AddressBook.h>
 
 #import <CoreData/CoreData.h>
@@ -19,127 +21,299 @@ NSString *const FetchResultContactsKey=@"Contacts";
 NSString *const FetchResultTagsKey=@"Tags";
 NSString *const ContactManagerDidFinishUpdatingCoreData=@"ContactManagerDidFinishUpdatingCoreData";
 
-@interface ContactsManager()
+typedef enum : NSUInteger {
+    CellTypeTagCellNormal,
+    CellTypeContactCellNormal,
+    CellTypeAddNewTag,
+    CellTypeAddNewContact,
+    CellTypeShowMoreTag,
+} CellType;
+
+@interface ContactsManager()<HeaderViewDelegate>
 
 @property(weak,nonatomic)NSManagedObjectContext *context;
-@property(strong,nonatomic)NSManagedObject *LatestFetchedObject;
 @property(strong,nonatomic)NSArray *allContacts;
 @property(nonatomic,assign)ABAddressBookRef addressBook;
 
-@property(strong,nonatomic)id currentNode;// tag or contact
-@property(strong,nonatomic)NSArray *tagElementsUnderCurrentNode;
-@property(strong,nonatomic)NSArray *contactElementsUnderCurrentNode;
+@property(strong,nonatomic)NSArray *tags;
+@property(strong,nonatomic)NSArray *contacts;
+
+@property(strong,nonatomic)Tag *currentTag;
+
+@property(strong,nonatomic)UITableViewRowAction *deleteAction;
+@property(strong,nonatomic)UITableViewRowAction *renameAction;
+@property(strong,nonatomic)UITableViewRowAction *moreAction;
+@property(strong,nonatomic)UITableViewRowAction *shareAction;
+
+@property(weak,nonatomic)UITableView *tableView;
 
 
 @end
 
 @implementation ContactsManager
-@synthesize currentNode=_currentNode;
-#pragma mark - ContactNetViewDatasource
--(id)currentNode{
-    if (!_currentNode) {
-        _currentNode=[self tagWithName:@"RootTag"];
+-(UITableViewRowAction *)deleteAction{
+    if (!_deleteAction) {
+        _deleteAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"delete");
+        }];
     }
-    return _currentNode;
+    return _deleteAction;
 }
--(void)setCurrentNode:(id)currentNode{
-    _currentNode=currentNode;
-    self.tagElementsUnderCurrentNode=nil;
-    self.contactElementsUnderCurrentNode=nil;
-}
--(NSArray *)tagElementsUnderCurrentNode{
-    if (!_tagElementsUnderCurrentNode && [self.currentNode isKindOfClass:[Tag class]]) {
-        _tagElementsUnderCurrentNode=[((Tag*)self.currentNode).childrenTags allObjects];
+-(UITableViewRowAction *)renameAction{
+    if (!_renameAction) {
+        _renameAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"重命名" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"Rename");
+        }];
+        _renameAction.backgroundColor=[UIColor orangeColor];
     }
-    return _tagElementsUnderCurrentNode;
+    return _renameAction;
 }
--(NSArray *)contactElementsUnderCurrentNode{
-    if (!_contactElementsUnderCurrentNode) {
-        if ([self.currentNode isKindOfClass:[Tag class]]) {
-            _contactElementsUnderCurrentNode=[((Tag *)self.currentNode).directlyOwnedContacts allObjects];
+-(UITableViewRowAction *)moreAction{
+    if (!_moreAction) {
+        _moreAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"更多" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"more");
+        }];
+        _moreAction.backgroundColor=[UIColor lightGrayColor];
+    }
+    return _moreAction;
+}
+-(UITableViewRowAction *)shareAction{
+    if (!_shareAction) {
+        _shareAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"分享" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"share");
+        }];
+        _shareAction.backgroundColor=[UIColor orangeColor];
 
-        }else if ([self.currentNode isKindOfClass:[Contact class]]){
-            _contactElementsUnderCurrentNode=[((Contact *)self.currentNode).relationsWithOtherPeople allObjects];
-        }
     }
-    return _contactElementsUnderCurrentNode;
-}
-
--(NSUInteger)numberOfTopElements{
-    return 0;
-}
--(NSString *)nameOfTopElement:(NSUInteger)topElementIndex{
-    if ([self.currentNode isKindOfClass:[Tag class]]) {
-        return ((Tag *)self.currentNode).tagName;
-    }
-    else if ([self.currentNode isKindOfClass:[Contact class]]){
-        return ((Contact *)self.currentNode).contactName;
-    }
-    return @"我";
-}
--(ElementViewType)typeOfTopElement:(NSUInteger)topElementIndex{
-    if ([self.currentNode isKindOfClass:[Tag class]]) {
-        return ElementViewTypeTag;
-    }
-    else if ([self.currentNode isKindOfClass:[Contact class]]){
-        return ElementViewTypeContact;
-    }
-    return ElementViewTypeOwner;
-
-}
--(UIImage *)imageOfTopElement:(NSUInteger)topElementIndex{
-    if ([self.currentNode isKindOfClass:[Contact class]]){
-        Contact *contact=(Contact *)self.currentNode;
-        return [self thumbnailOfContact:contact];
-    }
-    return nil;
-
+    return _shareAction;
 }
 
--(NSUInteger)numberOfElementsUnderTopElement:(NSUInteger)topElementIndex{
-
-    return self.tagElementsUnderCurrentNode.count+self.contactElementsUnderCurrentNode.count;
-
+-(NSArray *)tags{
+    if (!_tags) {
+        _tags=[[self.currentTag.childrenTags allObjects] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
+            return [obj1.tagName compare:obj2.tagName];
+        }];
+;
+    }
+    return _tags;
 }
--(NSString *)nameOfElement:(NSUInteger)elementIndex underTopElement:(NSUInteger)topElementIndex{
-    if (elementIndex < self.tagElementsUnderCurrentNode.count) {
-        Tag *tag=self.tagElementsUnderCurrentNode[elementIndex];
-        return tag.tagName;
+-(NSArray *)contacts{
+    if (!_contacts) {
+        _contacts=[[self.currentTag.directlyOwnedContacts allObjects]sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
+            return [obj1.contactName compare:obj2.contactName];
+        }];
+;
+    }
+    return _contacts;
+}
+#pragma  mark - tableViewDataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (!self.tableView) {
+        self.tableView=tableView;
+    }
+    return 2;
+}
+
+static BOOL DisplayMoreTagCell = YES;
+-(NSInteger)countOfTagsSectionCells{
+    if (!self.tags.count) {
+        return 1;
+    }
+    if (!DisplayMoreTagCell) {
+        return self.tags.count;
+    }
+    if (self.tags.count > 3) {
+        return 3+1; // 1 is for showing more
+    }
+    return self.tags.count <=3 ? self.tags.count : 4 ;
+}
+
+-(CellType)cellTypeAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1) {
+        return self.contacts.count ? CellTypeContactCellNormal : CellTypeAddNewContact;
+
     }else{
-        id element=self.contactElementsUnderCurrentNode[elementIndex-self.tagElementsUnderCurrentNode.count];
-        if ([element isKindOfClass:[Contact class]]) {
-            return ((Contact *)element).contactName;
-        }else if ([element isKindOfClass:[Relation class]]){
-            return ((Relation *)element).otherContact.contactName;
+
+        if (!self.tags.count) {
+            return CellTypeAddNewTag;
         }
-        return nil;
+
+        if (DisplayMoreTagCell && self.tags.count > 3 && indexPath.row == 3 ) {
+            return CellTypeShowMoreTag;
+        }
+
+        return CellTypeTagCellNormal;
     }
 }
--(ElementViewType)typeOfElement:(NSUInteger)elementIndex underTopElement:(NSUInteger)topElementIndex{
 
-    if (elementIndex<self.tagElementsUnderCurrentNode.count) {
-        return ElementViewTypeTag;
-    }else{
-        return ElementViewTypeContact;
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 0) {
+        return [self countOfTagsSectionCells];
     }
-
+    return self.contacts.count ? self.contacts.count : 1 ;
 }
--(UIImage *)imageOfElement:(NSUInteger)elementIndex underTopElement:(NSUInteger)topElementIndex{
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    if (elementIndex >= self.tagElementsUnderCurrentNode.count) {
-        id element=self.contactElementsUnderCurrentNode[elementIndex-self.tagElementsUnderCurrentNode.count];
-        if ([element isKindOfClass:[Contact class]]) {
-            return [self thumbnailOfContact:(Contact *)element];
-        }else if ([element isKindOfClass:[Relation class]]){
-            return [self thumbnailOfContact:((Relation *)element).otherContact];
+    UITableViewCell *cell;
+    switch ([self cellTypeAtIndexPath:indexPath]) {
+        case CellTypeAddNewContact:{
+            cell=[tableView dequeueReusableCellWithIdentifier:@"No Result Cell"];
+            cell.textLabel.text= @"无联系人";
+            break;
+        }
+        case CellTypeAddNewTag:{
+            cell=[tableView dequeueReusableCellWithIdentifier:@"No Result Cell"];
+            cell.textLabel.text=@"无标签";
+            break;
+        }
+        case CellTypeContactCellNormal:{
+            cell=[tableView dequeueReusableCellWithIdentifier:@"Contact Cell"];
+            Contact *contact=self.contacts[indexPath.row];
+            cell.textLabel.text=contact.contactName;
+            break;
+        }
+        case CellTypeTagCellNormal:{
+            cell=[tableView dequeueReusableCellWithIdentifier:@"Tag Cell"];
+            Tag *tag=self.tags[indexPath.row];
+            ((TagCell *)cell).tagName=tag.tagName;
+            break;
+        }
+        case CellTypeShowMoreTag:{
+            cell=[tableView dequeueReusableCellWithIdentifier:@"More Tags Cell"];
+            cell.textLabel.text=@"Show More";
+            break;
         }
     }
-    return nil;
+
+    return cell;
+
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 44;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 50;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+
+     HeaderView *headerView=(HeaderView*)[tableView dequeueReusableHeaderFooterViewWithIdentifier:@"Header_View"];
+    if (!headerView) {
+        headerView=[[HeaderView alloc]initWithReuseIdentifier:@"Header_View"];
+        headerView.delegate=self;
+    }
+    headerView.type=section ? HeaderTypeContacts :HeaderTypeTags;
+    headerView.textLabel.text=section ? @"Contacts (...)":@"Tags (...)";
+    return headerView;
 }
 
--(NSString *)relationOfElementAtIndex:(NSUInteger)index1 isElementAtIndex:(NSUInteger)index2{
-    return nil;
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    switch ([self cellTypeAtIndexPath:indexPath]) {
+        case CellTypeContactCellNormal:
+            return YES;
+        case CellTypeTagCellNormal:
+            return YES;
+        default:
+            return NO;
+    }
 }
+#pragma  mark HeaderViewDelegate
+-(void)addNewContact{
+    [self.delegate addNewContactUnderTag:self.currentTag];
+}
+-(void)addNewTagNamed:(NSString *)tagName{
+    Tag *tag=[self createTagWithTagName:tagName];
+    tag.parentTag=self.currentTag;
+    NSLog(@"add :%d",self.currentTag.childrenTags.count);
+    self.tags=nil;
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                  withRowAnimation:UITableViewRowAnimationNone];
+    [self saveContext];
+}
+-(BOOL)tagNameExists:(NSString *)tagName{
+    if ([self tagWithName:tagName]) {
+        return YES;
+    }
+    return NO;
+}
+#pragma mark - tableviewDelegate
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.isEditing) {
+        if (!(DisplayMoreTagCell && indexPath.row == 3)) {
+            return;
+        }
+    }
+    if (indexPath.section == 0) {
+        if (DisplayMoreTagCell && indexPath.row == 3) {
+            DisplayMoreTagCell=NO;
+            NSMutableArray *indexPathsToInsert=[@[] mutableCopy];
+            for (int row = 3; row < self.tags.count; row++) {
+                [indexPathsToInsert addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+            }
+            [tableView beginUpdates];
+            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationBottom];
+            [tableView endUpdates];
+            return;
+        }
+        NSArray *indexPathsBeforeUpdate=[tableView indexPathsForRowsInRect:CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), tableView.contentSize.height)];
+        NSLog(@"cell counts:%@",indexPathsBeforeUpdate);
+
+        Tag *tag=self.tags[indexPath.row];
+        self.currentTag=tag;
+        self.tags=[[tag.childrenTags allObjects] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
+            return [obj1.tagName compare:obj2.tagName];
+        }];
+        self.contacts=[[tag.directlyOwnedContacts allObjects] sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
+            return [obj1.contactName compare:obj2.contactName];
+        }];
+        DisplayMoreTagCell=YES;
+
+        NSArray *cellCountsAfterUpdate=@[@([self tableView:tableView numberOfRowsInSection:0]),@([self tableView:tableView numberOfRowsInSection:1])];
+        NSLog(@"cell counts:%@",cellCountsAfterUpdate);
+
+        [tableView beginUpdates];
+
+        [tableView deleteRowsAtIndexPaths:indexPathsBeforeUpdate withRowAnimation:UITableViewRowAnimationLeft];
+        for (int section =0 ; section<2; section++) {
+            for (int row = 0; row<[cellCountsAfterUpdate[section] integerValue]; row++) {
+                NSLog(@"section :%@,row:%@",@(section),@(row));
+                [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]] withRowAnimation:UITableViewRowAnimationRight];
+            }
+        }
+        [tableView endUpdates];
+        [tableView reloadData];
+
+    }
+    else{
+        Contact *contact=self.contacts[indexPath.row];
+        self.tags=@[];
+        self.contacts=[contact.relationsWithOtherPeople valueForKey:@"otherContact"];
+        [tableView reloadData];
+    }
+
+}
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+// 必须实现该方法，edit action 才有效果
+//    To enable the swipe-to-delete feature of table views (wherein a user swipes horizontally across a row to display a Delete button), you must implement this method
+}
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    switch ([self cellTypeAtIndexPath:indexPath]) {
+        case CellTypeAddNewContact:
+            return nil;
+        case CellTypeAddNewTag:
+            return nil;
+        case CellTypeShowMoreTag:
+            return nil;
+        case CellTypeContactCellNormal:{
+            return @[self.deleteAction,self.shareAction,self.moreAction];
+        }
+        case CellTypeTagCellNormal:
+            return @[self.deleteAction,self.renameAction,self.moreAction];
+    }
+}
+
+
 -(UIImage *)thumbnailOfContact:(Contact *)contact{
 
     ABRecordRef person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
@@ -299,6 +473,8 @@ NSString *const ContactManagerDidFinishUpdatingCoreData=@"ContactManagerDidFinis
             [self.context deleteObject:contact];
         }
 
+        self.currentTag=[self tagWithName:@"RootTag"];
+        NSLog(@"update %d",self.currentTag.childrenTags.count);
         [[NSNotificationCenter defaultCenter] postNotificationName:ContactManagerDidFinishUpdatingCoreData object:nil];
 
         [self saveContext];
@@ -340,6 +516,7 @@ NSString *const ContactManagerDidFinishUpdatingCoreData=@"ContactManagerDidFinis
     Tag *tag=[self tagWithName:name];
     if (!tag) {
         tag=[NSEntityDescription insertNewObjectForEntityForName:@"Tag" inManagedObjectContext:self.context];
+        
         tag.tagName=name;
     }
     return tag;

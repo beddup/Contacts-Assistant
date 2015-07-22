@@ -7,12 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ContactNetView.h"
+#import <UIKit/UIKit.h>
 @class Contact,Tag;
 extern NSString *const FetchResultContactsKey;
 extern NSString *const FetchResultTagsKey;
 extern NSString *const ContactManagerDidFinishUpdatingCoreData;
-@interface ContactsManager : NSObject<ContactNetViewDataSource,ContactNetViewDelegate>
+@protocol ContactsManagerDelegate <NSObject>
+-(void)addNewContactUnderTag:(Tag *)tag;
+@end
+
+
+@interface ContactsManager : NSObject<UITableViewDataSource,UITableViewDelegate>
+
+@property(weak,nonatomic)id<ContactsManagerDelegate>delegate;
 
 -(void)updateCoreDataBasedOnContacts;
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ElementView.h"
 
-@interface ContactView : UIView
+@interface ContactCell : UITableViewCell
 
 @property(copy,nonatomic)NSString *contactName;
 @property(strong,nonatomic)UIImage *contactImage;

@@ -9,18 +9,17 @@
 /* Begin PBXBuildFile section */
 		8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D71801F1B543EF000E372ED /* SearchAssistantView.xib */; };
 		8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180241B55102600E372ED /* SearchAssistantView.m */; };
-		8D7180311B56394000E372ED /* OperationsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180301B56394000E372ED /* OperationsView.m */; };
-		8D7180331B56395600E372ED /* OperationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180321B56395600E372ED /* OperationView.xib */; };
-		8D7180361B565AD000E372ED /* ContactNetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180351B565AD000E372ED /* ContactNetView.m */; };
 		8D7180451B5673E900E372ED /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180431B5673E900E372ED /* AddressBook.framework */; };
 		8D7180461B5673E900E372ED /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180441B5673E900E372ED /* AddressBookUI.framework */; };
 		8D7180731B56A4A600E372ED /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180701B56A4A600E372ED /* Relation.m */; };
 		8D7180761B56B90800E372ED /* ContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180751B56B90800E372ED /* ContactsManager.m */; };
 		8D7180791B56D4BF00E372ED /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180781B56D4BF00E372ED /* Tag.m */; };
 		8D71807C1B56EAE400E372ED /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71807B1B56EAE400E372ED /* Contact.m */; };
-		8D71807F1B593E9200E372ED /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71807E1B593E9200E372ED /* TagView.m */; };
-		8D7180821B593EA400E372ED /* ContactView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180811B593EA400E372ED /* ContactView.m */; };
-		8D71808B1B59627F00E372ED /* ElementView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71808A1B59627F00E372ED /* ElementView.m */; };
+		8D7180911B5D427A00E372ED /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180901B5D427A00E372ED /* HeaderView.m */; };
+		8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180931B5DE96A00E372ED /* ContactCell.m */; };
+		8D7180971B5DE97400E372ED /* TagCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180961B5DE97400E372ED /* TagCell.m */; };
+		8D7180991B5EB55600E372ED /* AddContactOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */; };
+		8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A01B5F5FB300E372ED /* AddTagView.xib */; };
 		8D95A92A1B53ABDD009EB722 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9291B53ABDD009EB722 /* main.m */; };
 		8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92C1B53ABDD009EB722 /* AppDelegate.m */; };
 		8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92E1B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld */; };
@@ -45,11 +44,6 @@
 		8D71801F1B543EF000E372ED /* SearchAssistantView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchAssistantView.xib; path = View/SearchAssistantView.xib; sourceTree = "<group>"; };
 		8D7180231B55102600E372ED /* SearchAssistantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchAssistantView.h; path = View/SearchAssistantView.h; sourceTree = "<group>"; };
 		8D7180241B55102600E372ED /* SearchAssistantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchAssistantView.m; path = View/SearchAssistantView.m; sourceTree = "<group>"; };
-		8D71802F1B56394000E372ED /* OperationsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationsView.h; sourceTree = "<group>"; };
-		8D7180301B56394000E372ED /* OperationsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationsView.m; sourceTree = "<group>"; };
-		8D7180321B56395600E372ED /* OperationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OperationView.xib; sourceTree = "<group>"; };
-		8D7180341B565AD000E372ED /* ContactNetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactNetView.h; path = View/ContactNetView.h; sourceTree = "<group>"; };
-		8D7180351B565AD000E372ED /* ContactNetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactNetView.m; path = View/ContactNetView.m; sourceTree = "<group>"; };
 		8D7180431B5673E900E372ED /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		8D7180441B5673E900E372ED /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		8D71806F1B56A4A600E372ED /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
@@ -60,12 +54,14 @@
 		8D7180781B56D4BF00E372ED /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		8D71807A1B56EAE400E372ED /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
 		8D71807B1B56EAE400E372ED /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
-		8D71807D1B593E9200E372ED /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagView.h; path = View/TagView.h; sourceTree = "<group>"; };
-		8D71807E1B593E9200E372ED /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagView.m; path = View/TagView.m; sourceTree = "<group>"; };
-		8D7180801B593EA400E372ED /* ContactView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactView.h; path = View/ContactView.h; sourceTree = "<group>"; };
-		8D7180811B593EA400E372ED /* ContactView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactView.m; path = View/ContactView.m; sourceTree = "<group>"; };
-		8D7180891B59627F00E372ED /* ElementView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ElementView.h; path = View/ElementView.h; sourceTree = "<group>"; };
-		8D71808A1B59627F00E372ED /* ElementView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ElementView.m; path = View/ElementView.m; sourceTree = "<group>"; };
+		8D71808F1B5D427A00E372ED /* HeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeaderView.h; path = View/HeaderView.h; sourceTree = "<group>"; };
+		8D7180901B5D427A00E372ED /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeaderView.m; path = View/HeaderView.m; sourceTree = "<group>"; };
+		8D7180921B5DE96A00E372ED /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactCell.h; path = View/ContactCell.h; sourceTree = "<group>"; };
+		8D7180931B5DE96A00E372ED /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactCell.m; path = View/ContactCell.m; sourceTree = "<group>"; };
+		8D7180951B5DE97400E372ED /* TagCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagCell.h; path = View/TagCell.h; sourceTree = "<group>"; };
+		8D7180961B5DE97400E372ED /* TagCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagCell.m; path = View/TagCell.m; sourceTree = "<group>"; };
+		8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddContactOptionsView.xib; path = View/AddContactOptionsView.xib; sourceTree = "<group>"; };
+		8D7180A01B5F5FB300E372ED /* AddTagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddTagView.xib; path = View/AddTagView.xib; sourceTree = "<group>"; };
 		8D95A9241B53ABDD009EB722 /* Contacts Assistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contacts Assistant.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D95A9281B53ABDD009EB722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D95A9291B53ABDD009EB722 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -116,20 +112,17 @@
 		8D7180221B55100200E372ED /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8D7180951B5DE97400E372ED /* TagCell.h */,
+				8D7180961B5DE97400E372ED /* TagCell.m */,
+				8D7180921B5DE96A00E372ED /* ContactCell.h */,
+				8D7180931B5DE96A00E372ED /* ContactCell.m */,
+				8D71808F1B5D427A00E372ED /* HeaderView.h */,
+				8D7180901B5D427A00E372ED /* HeaderView.m */,
+				8D7180981B5EB55600E372ED /* AddContactOptionsView.xib */,
+				8D7180A01B5F5FB300E372ED /* AddTagView.xib */,
 				8D7180231B55102600E372ED /* SearchAssistantView.h */,
 				8D7180241B55102600E372ED /* SearchAssistantView.m */,
 				8D71801F1B543EF000E372ED /* SearchAssistantView.xib */,
-				8D71802F1B56394000E372ED /* OperationsView.h */,
-				8D7180301B56394000E372ED /* OperationsView.m */,
-				8D7180321B56395600E372ED /* OperationView.xib */,
-				8D7180341B565AD000E372ED /* ContactNetView.h */,
-				8D7180351B565AD000E372ED /* ContactNetView.m */,
-				8D7180891B59627F00E372ED /* ElementView.h */,
-				8D71808A1B59627F00E372ED /* ElementView.m */,
-				8D71807D1B593E9200E372ED /* TagView.h */,
-				8D71807E1B593E9200E372ED /* TagView.m */,
-				8D7180801B593EA400E372ED /* ContactView.h */,
-				8D7180811B593EA400E372ED /* ContactView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -291,9 +284,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D95A9361B53ABDD009EB722 /* Main.storyboard in Resources */,
-				8D7180331B56395600E372ED /* OperationView.xib in Resources */,
+				8D7180991B5EB55600E372ED /* AddContactOptionsView.xib in Resources */,
 				8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */,
 				8D95A9381B53ABDD009EB722 /* Images.xcassets in Resources */,
+				8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */,
 				8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,15 +307,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D7180791B56D4BF00E372ED /* Tag.m in Sources */,
-				8D7180311B56394000E372ED /* OperationsView.m in Sources */,
+				8D7180971B5DE97400E372ED /* TagCell.m in Sources */,
 				8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */,
-				8D71808B1B59627F00E372ED /* ElementView.m in Sources */,
-				8D71807F1B593E9200E372ED /* TagView.m in Sources */,
+				8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */,
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
+				8D7180911B5D427A00E372ED /* HeaderView.m in Sources */,
 				8D7180731B56A4A600E372ED /* Relation.m in Sources */,
-				8D7180361B565AD000E372ED /* ContactNetView.m in Sources */,
-				8D7180821B593EA400E372ED /* ContactView.m in Sources */,
 				8D71807C1B56EAE400E372ED /* Contact.m in Sources */,
 				8D95A92A1B53ABDD009EB722 /* main.m in Sources */,
 				8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */,

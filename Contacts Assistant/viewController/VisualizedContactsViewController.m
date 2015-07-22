@@ -10,7 +10,6 @@
 #import "SearchAssistantView.h"
 #import "OperationsView.h"
 #import "ContactsManager.h"
-#import "ContactNetView.h"
 
 CGFloat const SearchAssistantViewHeight=150.0;
 
@@ -21,6 +20,8 @@ CGFloat const OperationViewHeight = 238;
 
 @interface VisualizedContactsViewController ()<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,OperationDelegate>
 
+@property (weak, nonatomic) IBOutlet UITableView *contactsTableView;
+
 @property(strong,nonatomic)UISearchController *searchController;
 @property(weak,nonatomic)SearchAssistantView *searchAssistant;
 
@@ -29,7 +30,6 @@ CGFloat const OperationViewHeight = 238;
 @property(weak,nonatomic)OperationsView *operationView;
 
 @property(strong,nonatomic) ContactsManager * contactManager;
-@property(weak,nonatomic)ContactNetView *contactNetView;
 
 @end
 
@@ -45,9 +45,6 @@ CGFloat const OperationViewHeight = 238;
     dispatch_async(updateCoreDataQueue, ^{
         [self.contactManager updateCoreDataBasedOnContacts];
     });
-    ContactNetView *contactNetView=[[ContactNetView alloc]initWithFrame:CGRectZero];
-    self.contactNetView=contactNetView;
-    [self.view addSubview:contactNetView];
 
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -61,23 +58,19 @@ CGFloat const OperationViewHeight = 238;
 -(void)coreDataUpdatingFinished:(NSNotification *)notification{
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"y:%f",CGRectGetMaxY(self.navigationController.navigationBar.frame));
-
-        self.contactNetView.dataSource=self.contactManager;
-        self.contactNetView.delegate=self.contactManager;
-
-        self.contactNetView.frame=CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame)-CGRectGetMaxY(self.navigationController.navigationBar.frame));
-        [self.contactNetView setNeedsLayout];
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.contactsTableView reloadData];
+        });
 
     });
-
-
 }
 -(ContactsManager *)contactManager{
 
     if (!_contactManager) {
         _contactManager=[[ContactsManager alloc]init];
+        self.contactsTableView.delegate=_contactManager;
+        self.contactsTableView.dataSource=_contactManager;
+
     }
     return _contactManager;
 }
@@ -98,9 +91,9 @@ CGFloat const OperationViewHeight = 238;
 }
 -(UIBarButtonItem *)createRightButtonItem{
 
-    return [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                        target:self
-                                                        action:@selector(add:)];
+    return [[UIBarButtonItem alloc]initWithTitle:@"More"
+                                           style:UIBarButtonItemStylePlain
+                                          target:self action:@selector(add:)];
 
 }
 
@@ -124,7 +117,8 @@ CGFloat const OperationViewHeight = 238;
 
     // create operations View
     OperationsView *operationView=[[[NSBundle mainBundle]loadNibNamed:@"OperationView" owner:nil options:nil]lastObject];
-    operationView.frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, -OperationViewHeight+CGRectGetMaxY(self.navigationController.navigationBar.frame), OperationViewWidth, OperationViewHeight);
+    CGRect frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, 0, OperationViewWidth, OperationViewHeight);
+    operationView.frame=CGRectOffset(frame, 0, -OperationViewHeight);
     [self.view addSubview:operationView];
     operationView.delegate=self;
     self.operationView=operationView;
@@ -134,7 +128,7 @@ CGFloat const OperationViewHeight = 238;
     [UIView animateWithDuration:0.3 animations:^{
         contentDimmingView.alpha=0.5;
         navigationDimmingView.alpha=0.3;
-        operationView.frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, CGRectGetMaxY(self.navigationController.navigationBar.frame), OperationViewWidth, OperationViewHeight);
+        operationView.frame=frame;
     }];
 }
 -(void)dismissOperationViewAnimation:(BOOL)animated{
@@ -143,7 +137,7 @@ CGFloat const OperationViewHeight = 238;
         if (animated) {
             self.navigationDimmingView.alpha=0.0;
             self.contentDimmingView.alpha=0.0;
-            self.operationView.frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, -OperationViewHeight+CGRectGetMaxY(self.navigationController.navigationBar.frame), OperationViewWidth, OperationViewHeight);
+            self.operationView.frame=CGRectMake(CGRectGetWidth(self.view.bounds)-OperationViewWidth-8, -OperationViewHeight, OperationViewWidth, OperationViewHeight);
         }
         } completion:^(BOOL finished) {
             [self.navigationDimmingView removeFromSuperview];
@@ -202,7 +196,7 @@ CGFloat const OperationViewHeight = 238;
 -(void)dismissSearchAssistantView{
     [UIView animateWithDuration:0.3 animations:^{
 
-        self.searchAssistant.frame=CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame)-SearchAssistantViewHeight, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
+        self.searchAssistant.frame=CGRectMake(0, -SearchAssistantViewHeight, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
 
     } completion:^(BOOL finished) {
         if (finished) {
@@ -227,15 +221,13 @@ CGFloat const OperationViewHeight = 238;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // update UI in main queue
-            CGFloat y=CGRectGetMaxY(self.navigationController.navigationBar.frame);
-            CGRect frame=CGRectMake(0, y-SearchAssistantViewHeight, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
+            CGRect frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), SearchAssistantViewHeight);
             frame=CGRectInset(frame, 4, 4);
-            searchAssistantView.frame=frame;
+            searchAssistantView.frame=CGRectOffset(frame, 0, -SearchAssistantViewHeight);
             [self.view addSubview:searchAssistantView];
             self.searchAssistant=searchAssistantView;
-            [UIView animateWithDuration:2 animations:^{
-                searchAssistantView.frame=CGRectOffset(frame, 0, SearchAssistantViewHeight);
-                NSLog(@"searchAssistantView y %f",searchAssistantView.frame.origin.y);
+            [UIView animateWithDuration:0.5 animations:^{
+                searchAssistantView.frame=frame;
             }];
         });
     });

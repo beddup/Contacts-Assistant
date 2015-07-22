@@ -8,12 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ElementView.h"
-@interface TagView : UIView
+@interface TagCell : UITableViewCell
 
 @property(copy,nonatomic)NSString *tagName;
-@property(nonatomic) BOOL isChosen;
-
--(CGSize)suggestedSize;
-
 
 @end

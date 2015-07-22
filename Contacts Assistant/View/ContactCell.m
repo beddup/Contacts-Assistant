@@ -6,15 +6,15 @@
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
-#import "ContactView.h"
+#import "ContactCell.h"
 
-@interface ContactView()
+@interface ContactCell()
 
 @property(strong,nonatomic)UIImage *defaultBKGImage;
 
 @end
 
-@implementation ContactView
+@implementation ContactCell
 #pragma mark - properties
 
 -(UIImage *)defaultBKGImage{
