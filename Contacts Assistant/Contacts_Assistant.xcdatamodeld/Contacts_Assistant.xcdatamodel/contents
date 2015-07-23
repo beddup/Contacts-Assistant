@@ -3,9 +3,15 @@
     <entity name="Contact" representedClassName="Contact" syncable="YES">
         <attribute name="contactID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="contactName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="attendWhichEvents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event" inverseName="contactsWhichAttend" inverseEntity="Event" syncable="YES"/>
         <relationship name="belongWhichRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relation" inverseName="otherContact" inverseEntity="Relation" syncable="YES"/>
         <relationship name="directUnderWhichTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="directlyOwnedContacts" inverseEntity="Tag" syncable="YES"/>
         <relationship name="relationsWithOtherPeople" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relation" inverseName="whoseRelation" inverseEntity="Relation" syncable="YES"/>
+    </entity>
+    <entity name="Event" representedClassName="Event" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="event" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="contactsWhichAttend" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Contact" inverseName="attendWhichEvents" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="Relation" representedClassName="Relation" syncable="YES">
         <attribute name="relationName" optional="YES" attributeType="String" syncable="YES"/>
@@ -20,8 +26,9 @@
         <relationship name="parentTag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Tag" inverseName="childrenTags" inverseEntity="Tag" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Tag" positionX="-1712" positionY="62" width="128" height="118"/>
+        <element name="Contact" positionX="-1604" positionY="-243" width="191" height="133"/>
         <element name="Relation" positionX="-1368" positionY="27" width="180" height="88"/>
-        <element name="Contact" positionX="-1604" positionY="-243" width="191" height="118"/>
+        <element name="Tag" positionX="-1712" positionY="62" width="128" height="118"/>
+        <element name="Event" positionX="-1800" positionY="-225" width="128" height="88"/>
     </elements>
 </model>

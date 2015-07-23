@@ -2,7 +2,7 @@
 //  Tag.m
 //  
 //
-//  Created by Amay on 7/16/15.
+//  Created by Amay on 7/24/15.
 //
 //
 
@@ -13,10 +13,10 @@
 
 @implementation Tag
 
-@dynamic tagName;
 @dynamic tagID;
-@dynamic directlyOwnedContacts;
+@dynamic tagName;
 @dynamic childrenTags;
+@dynamic directlyOwnedContacts;
 @dynamic parentTag;
 
 @end

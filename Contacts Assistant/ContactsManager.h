@@ -21,8 +21,16 @@ extern NSString *const ContactManagerDidFinishUpdatingCoreData;
 
 @property(weak,nonatomic)id<ContactsManagerDelegate>delegate;
 
++(instancetype)sharedContactManager;
+
 -(void)updateCoreDataBasedOnContacts;
 
 -(NSDictionary *)searchResultByKeyword:(NSString *)string;
+
+-(UIImage *)thumbnailOfContact:(Contact *)contact;
+-(NSString *)companyAndDepartmentOfContact:(Contact *)contact;
+-(NSArray *)phoneNumbersOfContact:(Contact *)contact;
+-(NSArray *)emailsOfContact:(Contact *)contact;
+-(NSArray *)addressesOfContact:(Contact *)contact;
 
 @end

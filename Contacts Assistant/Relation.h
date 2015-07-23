@@ -2,7 +2,7 @@
 //  Relation.h
 //  
 //
-//  Created by Amay on 7/15/15.
+//  Created by Amay on 7/24/15.
 //
 //
 
@@ -14,7 +14,7 @@
 @interface Relation : NSManagedObject
 
 @property (nonatomic, retain) NSString * relationName;
-@property (nonatomic, retain) Contact *whoseRelation;
 @property (nonatomic, retain) Contact *otherContact;
+@property (nonatomic, retain) Contact *whoseRelation;
 
 @end

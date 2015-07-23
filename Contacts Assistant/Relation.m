@@ -2,7 +2,7 @@
 //  Relation.m
 //  
 //
-//  Created by Amay on 7/15/15.
+//  Created by Amay on 7/24/15.
 //
 //
 
@@ -13,7 +13,7 @@
 @implementation Relation
 
 @dynamic relationName;
-@dynamic whoseRelation;
 @dynamic otherContact;
+@dynamic whoseRelation;
 
 @end

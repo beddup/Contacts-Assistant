@@ -22,13 +22,13 @@ CGFloat const OperationViewHeight = 238;
 @interface VisualizedContactsViewController ()<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *contactsTableView;
-@property (weak, nonatomic) IBOutlet UIButton *moreFunctionsButton;
+@property (weak, nonatomic) UIButton *moreFunctionsButton;
 
 @property(strong,nonatomic)UISearchController *searchController;
 
 @property(weak,nonatomic)UIView *customDimmingView;
-@property(weak,nonatomic)ActionsView *batchEditingView;
-@property(weak,nonatomic)ActionsView *moreFunctionsView;
+@property(weak,nonatomic)UIView *batchEditingContainerView;
+@property(weak,nonatomic)UIView *moreFunctionsContainerView;
 @property(weak,nonatomic)SearchAssistantView *searchAssistant;
 @property(weak,nonatomic)TagNavigationView *tagNavigationView;
 
@@ -42,22 +42,31 @@ CGFloat const OperationViewHeight = 238;
 - (void)viewDidLoad {
 
     [super viewDidLoad];
+    [self prepareSearchController];
     [self configureMoreFunctionButton];
     [self configureTitleView];
-//    dispatch_queue_t updateCoreDataQueue = dispatch_queue_create("UpdateCoreDataQueue", NULL);
-//    dispatch_async(updateCoreDataQueue, ^{
-//        [self.contactManager updateCoreDataBasedOnContacts];
-//    });
-//
+
+
+    dispatch_queue_t updateCoreDataQueue = dispatch_queue_create("UpdateCoreDataQueue", NULL);
+    dispatch_async(updateCoreDataQueue, ^{
+        [self.contactManager updateCoreDataBasedOnContacts];
+    });
+
+
 }
 -(void)viewWillAppear:(BOOL)animated{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coreDataUpdatingFinished:) name:ContactManagerDidFinishUpdatingCoreData object:nil];
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coreDataUpdatingFinished:) name:ContactManagerDidFinishUpdatingCoreData object:nil];
+
+    self.moreFunctionsButton.frame=CGRectMake(CGRectGetWidth(self.view.bounds)/2-70/2, CGRectGetHeight(self.view.bounds)-44-12, 70, 44);
+
 }
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ContactManagerDidFinishUpdatingCoreData object:nil];
 }
+
 -(void)coreDataUpdatingFinished:(NSNotification *)notification{
 
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -70,14 +79,23 @@ CGFloat const OperationViewHeight = 238;
 -(ContactsManager *)contactManager{
 
     if (!_contactManager) {
-        _contactManager=[[ContactsManager alloc]init];
+        _contactManager=[ContactsManager sharedContactManager];
         self.contactsTableView.delegate=_contactManager;
         self.contactsTableView.dataSource=_contactManager;
-
     }
     return _contactManager;
 }
 -(void)configureMoreFunctionButton{
+
+    UIButton *moreFunctionButton=[[UIButton alloc]init];
+
+    UIImage *image=[[UIImage imageNamed:@"ActionIconNoFill"] resizableImageWithCapInsets:UIEdgeInsetsMake(4, 4, 4, 4) resizingMode:UIImageResizingModeStretch];
+    [moreFunctionButton setBackgroundImage:image forState:UIControlStateNormal];
+    self.moreFunctionsButton=moreFunctionButton;
+
+    [self.view addSubview:moreFunctionButton];
+
+    [moreFunctionButton addTarget:self action:@selector(displayMoreActions:) forControlEvents:UIControlEventTouchUpInside];
 
 }
 -(void)configureTitleView{
@@ -112,26 +130,23 @@ CGFloat const OperationViewHeight = 238;
     self.tagNavigationView=tagNavigationView;
 
     //calculate geometry
-    CGRect rect = [self.navigationController.navigationBar convertRect:self.navigationController.navigationBar.bounds toView:self.view];
-    CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.view.bounds), 0);
+    CGRect frame=CGRectMake(0, -150, CGRectGetWidth(self.view.bounds), 150);
     tagNavigationView.frame=frame;
     [tagNavigationView layoutIfNeeded];
 
     // display with animation
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
         self.customDimmingView.alpha=0.7;
-        tagNavigationView.frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.view.bounds), 150);
+        tagNavigationView.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150);
     } completion:nil];
 
 }
-- (IBAction)prepareToSearch:(UIBarButtonItem *)sender {
 
-    [self prepareSearchController];
-    [self.searchController.searchBar becomeFirstResponder];
-
-}
 -(void )prepareSearchController{
 
+    if (self.searchController) {
+        return;
+    }
     //configure Search Controller
     UISearchController *searchController=[[UISearchController alloc]initWithSearchResultsController:nil];
     self.searchController=searchController;
@@ -145,8 +160,11 @@ CGFloat const OperationViewHeight = 238;
     searchBar.placeholder=@"Keyword: Contact Info or Tag Name";
     searchBar.delegate=self;
     searchBar.showsCancelButton=NO;
-    self.contactsTableView.tableHeaderView=searchBar;
-    
+
+    searchBar.bounds=CGRectMake(0, 0, 0, 44);
+    self.contactsTableView.tableHeaderView =searchBar;
+    [self.contactsTableView setContentOffset:CGPointMake(0, 44)];
+
 }
 -(void)dim{
     UIView *dimmingView=[[UIView alloc]initWithFrame:self.contactsTableView.frame];
@@ -160,21 +178,28 @@ CGFloat const OperationViewHeight = 238;
 }
 -(void)dismissDimmingView:(UITapGestureRecognizer *)gesture{
 
-    [self.customDimmingView removeFromSuperview];
-    [self.moreFunctionsView removeFromSuperview];
-    [self.batchEditingView removeFromSuperview];
-    [self.tagNavigationView removeFromSuperview];
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:-0.5 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut animations:^{
+
+        self.customDimmingView.alpha=0.0;
+        self.moreFunctionsButton.frame=CGRectMake(CGRectGetWidth(self.view.bounds)/2-70/2, CGRectGetHeight(self.view.bounds)-44-12, 70, 44);
+        self.moreFunctionsContainerView.frame=CGRectInset(self.moreFunctionsButton.frame, 35, 22);
+        self.batchEditingContainerView.frame=CGRectMake(0, -100-70, CGRectGetWidth(self.view.bounds), 100);
+        self.tagNavigationView.frame=CGRectMake(0, -150-70, CGRectGetWidth(self.view.bounds), 150);
+        self.searchAssistant.frame=CGRectMake(0, -120-70, CGRectGetWidth(self.view.bounds), 120);
+
+    } completion:^(BOOL finished) {
+        [self.customDimmingView removeFromSuperview];
+        [self.moreFunctionsContainerView removeFromSuperview];
+        [self.batchEditingContainerView removeFromSuperview];
+        [self.tagNavigationView removeFromSuperview];
+    }];
 
     self.navigationItem.rightBarButtonItem.enabled=YES;
     self.navigationItem.leftBarButtonItem.enabled=YES;
 
-
-    CGRect rect=self.view.bounds;
-    self.moreFunctionsButton.frame=CGRectMake(CGRectGetWidth(rect)/2-70/2, CGRectGetHeight(rect)-44-12, 70, 44);
-
 }
 - (IBAction)prepareToBatchEditContacts:(UIBarButtonItem *)sender {
-    if (self.batchEditingView) {
+    if (self.batchEditingContainerView) {
         [self dismissDimmingView:nil];
         return;
     }
@@ -182,21 +207,26 @@ CGFloat const OperationViewHeight = 238;
     [self dim];
     self.navigationItem.rightBarButtonItem.enabled=NO;
 
+    // prepare scrollView
+    UIScrollView *scrollView=[[UIScrollView alloc]init];
+    scrollView.backgroundColor=[UIColor lightGrayColor];
+    [self.view addSubview:scrollView];
+    self.batchEditingContainerView=scrollView;
     // prepare action view
-    ActionsView *batchEditingView=[[[NSBundle mainBundle]loadNibNamed:@"BatchEditOptionsView" owner:nil options:nil] lastObject];
-    [self.view addSubview:batchEditingView];
-    self.batchEditingView=batchEditingView;
+    ActionsView *batchEditing=[[[NSBundle mainBundle]loadNibNamed:@"BatchEditOptionsView" owner:nil options:nil] lastObject];
+    [scrollView addSubview:batchEditing];
 
     //calculate geometry
-    CGRect rect = [self.navigationController.navigationBar convertRect:self.navigationController.navigationBar.bounds toView:self.view];
-    CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), 200, 0);
-    batchEditingView.frame=frame;
-    [batchEditingView layoutIfNeeded];
+    scrollView.contentSize=CGSizeMake(CGRectGetWidth(self.view.bounds)+5, 100);
+    CGRect frame=CGRectMake(0, -100, CGRectGetWidth(self.view.bounds), 100);
+    scrollView.frame=frame;
 
     // display with animation
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
         self.customDimmingView.alpha=0.7;
-        batchEditingView.frame=CGRectMake(0, CGRectGetMaxY(rect), 200, 100);
+        scrollView.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 100);
+        batchEditing.frame=CGRectOffset(scrollView.bounds, 4, 4);
+
     } completion:nil];
 
 }
@@ -206,22 +236,30 @@ CGFloat const OperationViewHeight = 238;
 
     self.navigationItem.rightBarButtonItem.enabled=NO;
     self.navigationItem.leftBarButtonItem.enabled=NO;
+    // prepare scroll view
+    UIScrollView *scrollView=[[UIScrollView alloc]init];
+    self.moreFunctionsContainerView=scrollView;
+    scrollView.backgroundColor=[UIColor lightGrayColor];
+    [self.view addSubview:scrollView];
 
     // prepare action view
     ActionsView *moreActionsView=[[[NSBundle mainBundle]loadNibNamed:@"MoreFuctionsView" owner:nil options:nil] lastObject];
-    [self.view addSubview:moreActionsView];
-    self.moreFunctionsView=moreActionsView;
+    [scrollView addSubview:moreActionsView];
 
     //calculate geometry
-    moreActionsView.frame=self.moreFunctionsButton.frame;
+    scrollView.contentSize=CGSizeMake(CGRectGetWidth(self.view.bounds), 100);
+    scrollView.frame=CGRectInset(self.moreFunctionsButton.frame, 35, 22);
+    moreActionsView.frame=scrollView.bounds;
     [moreActionsView layoutIfNeeded];
-    CGRect frame=CGRectMake(4, CGRectGetHeight(self.view.bounds)-100-20, CGRectGetWidth(self.view.bounds)-8,100);
+    NSLog(@"%@",self.moreFunctionsButton);
+    CGRect frame=CGRectMake(4, CGRectGetHeight(self.view.bounds)-200-20, CGRectGetWidth(self.view.bounds)-8,200);
 
     // display with animation
     [UIView animateWithDuration:.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
         self.customDimmingView.alpha=0.7;
         self.moreFunctionsButton.frame=frame;
-        moreActionsView.frame=CGRectInset(frame, 4, 4);
+        scrollView.frame=CGRectInset(frame, 4, 4);
+        moreActionsView.frame=CGRectInset(scrollView.bounds, 4, 4);
     } completion:nil];
 
 }
@@ -240,10 +278,17 @@ CGFloat const OperationViewHeight = 238;
 
     // dismiss searchAssistantView
     [self dismissDimmingView:nil];
-
 }
+
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+
     [self.searchAssistant removeFromSuperview];
+    [UIView animateWithDuration:0.5 animations:^{
+        self.contactsTableView.tableHeaderView.alpha=0.1;
+    }completion:^(BOOL finished) {
+        [self.contactsTableView setContentOffset:CGPointMake(0, 44) animated:YES];
+    }];
+
 }
 
 -(void)showSearchAssistantView{
@@ -268,9 +313,8 @@ CGFloat const OperationViewHeight = 238;
             self.searchAssistant=searchAssistantView;
 
             // calcute geometry info
-            CGRect rect=[self.searchController.searchBar convertRect:self.searchController.searchBar.bounds toView:self.view];
-            CGRect frame=CGRectMake(0, CGRectGetMaxY(rect), CGRectGetWidth(self.searchController.searchBar.bounds), 120);
-            searchAssistantView.frame=CGRectMake(0, CGRectGetMinY(frame),CGRectGetWidth(frame), 0);
+            CGRect frame=CGRectMake(0, 0, CGRectGetWidth(self.searchController.searchBar.bounds), 120);
+            searchAssistantView.frame=CGRectMake(0, -120,CGRectGetWidth(frame), 120);
             [searchAssistantView layoutIfNeeded];
 
             // display with animation

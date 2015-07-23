@@ -36,38 +36,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="53" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="IRI-Dn-SwU">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="71" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="IRI-Dn-SwU">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Contact Cell" rowHeight="53" id="eqb-Sc-PtD">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eqb-Sc-PtD" id="umc-n5-OQi">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
+                                <sections/>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sQK-tg-Yas">
-                                <rect key="frame" x="265" y="480" width="70" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Voi-f5-789"/>
-                                    <constraint firstAttribute="width" constant="70" id="grG-fG-2bx"/>
-                                </constraints>
-                                <state key="normal" backgroundImage="ActionIconNoFill">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="displayMoreActions:" destination="3ch-wW-1vp" eventType="touchUpInside" id="XYi-7I-cu2"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="sQK-tg-Yas" secondAttribute="centerX" id="Qh8-Z2-fnZ"/>
                             <constraint firstAttribute="centerX" secondItem="IRI-Dn-SwU" secondAttribute="centerX" id="XS8-VI-TAr"/>
                             <constraint firstAttribute="width" secondItem="IRI-Dn-SwU" secondAttribute="width" id="dzH-bd-lRc"/>
-                            <constraint firstItem="Gjh-sT-NzE" firstAttribute="top" secondItem="sQK-tg-Yas" secondAttribute="bottom" constant="12" id="hIw-fV-W49"/>
                             <constraint firstAttribute="height" secondItem="IRI-Dn-SwU" secondAttribute="height" id="siJ-cf-g0u"/>
                             <constraint firstAttribute="centerY" secondItem="IRI-Dn-SwU" secondAttribute="centerY" id="vF4-FX-WUC"/>
                         </constraints>
@@ -80,15 +58,9 @@
                                 <action selector="prepareToBatchEditContacts:" destination="3ch-wW-1vp" id="3hs-t0-Lcf"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="7mw-su-Q1T">
-                            <connections>
-                                <action selector="prepareToSearch:" destination="3ch-wW-1vp" id="6Ci-ey-Pee"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="contactsTableView" destination="IRI-Dn-SwU" id="Xgh-Il-apK"/>
-                        <outlet property="moreFunctionsButton" destination="sQK-tg-Yas" id="KJP-cS-8G1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0HK-Xi-Qf8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -96,7 +68,4 @@
             <point key="canvasLocation" x="1410" y="301"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="ActionIconNoFill" width="70" height="44"/>
-    </resources>
 </document>

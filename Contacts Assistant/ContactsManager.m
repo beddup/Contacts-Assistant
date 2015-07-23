@@ -13,6 +13,8 @@
 #import "Tag.h"
 #import "HeaderView.h"
 #import "TagCell.h"
+#import "ContactCell.h"
+
 #import <AddressBook/AddressBook.h>
 
 #import <CoreData/CoreData.h>
@@ -37,6 +39,7 @@ typedef enum : NSUInteger {
 
 @property(strong,nonatomic)NSArray *tags;
 @property(strong,nonatomic)NSArray *contacts;
+@property(strong,nonatomic)NSArray *cellHeightArray;
 
 @property(strong,nonatomic)Tag *currentTag;
 
@@ -51,6 +54,32 @@ typedef enum : NSUInteger {
 @end
 
 @implementation ContactsManager
+
+@synthesize contacts=_contacts;
+
+static ContactsManager * shareManager;
++(instancetype)sharedContactManager{
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shareManager=[[self alloc]init];
+    });
+    return shareManager;
+
+}
++(instancetype)allocWithZone:(struct _NSZone *)zone{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shareManager=[[super allocWithZone:zone]init];
+    });
+    return shareManager;
+
+}
+-(id)copy{
+    return shareManager;
+}
+
+
 -(UITableViewRowAction *)deleteAction{
     if (!_deleteAction) {
         _deleteAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
@@ -102,119 +131,46 @@ typedef enum : NSUInteger {
         _contacts=[[self.currentTag.directlyOwnedContacts allObjects]sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
             return [obj1.contactName compare:obj2.contactName];
         }];
-;
     }
     return _contacts;
 }
+-(void)setContacts:(NSArray *)contacts{
+    _contacts=contacts;
+    [self.tableView reloadData];
+
+}
 #pragma  mark - tableViewDataSource
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if (!self.tableView) {
-        self.tableView=tableView;
-    }
-    return 2;
-}
 
-static BOOL DisplayMoreTagCell = YES;
--(NSInteger)countOfTagsSectionCells{
-    if (!self.tags.count) {
-        return 1;
-    }
-    if (!DisplayMoreTagCell) {
-        return self.tags.count;
-    }
-    if (self.tags.count > 3) {
-        return 3+1; // 1 is for showing more
-    }
-    return self.tags.count <=3 ? self.tags.count : 4 ;
-}
+    return 1;
 
--(CellType)cellTypeAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 1) {
-        return self.contacts.count ? CellTypeContactCellNormal : CellTypeAddNewContact;
-
-    }else{
-
-        if (!self.tags.count) {
-            return CellTypeAddNewTag;
-        }
-
-        if (DisplayMoreTagCell && self.tags.count > 3 && indexPath.row == 3 ) {
-            return CellTypeShowMoreTag;
-        }
-
-        return CellTypeTagCellNormal;
-    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0) {
-        return [self countOfTagsSectionCells];
-    }
-    return self.contacts.count ? self.contacts.count : 1 ;
+    NSLog(@"count:%@",@(self.contacts.count));
+    return self.contacts.count;
+
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    UITableViewCell *cell;
-    switch ([self cellTypeAtIndexPath:indexPath]) {
-        case CellTypeAddNewContact:{
-            cell=[tableView dequeueReusableCellWithIdentifier:@"No Result Cell"];
-            cell.textLabel.text= @"无联系人";
-            break;
-        }
-        case CellTypeAddNewTag:{
-            cell=[tableView dequeueReusableCellWithIdentifier:@"No Result Cell"];
-            cell.textLabel.text=@"无标签";
-            break;
-        }
-        case CellTypeContactCellNormal:{
-            cell=[tableView dequeueReusableCellWithIdentifier:@"Contact Cell"];
-            Contact *contact=self.contacts[indexPath.row];
-            cell.textLabel.text=contact.contactName;
-            break;
-        }
-        case CellTypeTagCellNormal:{
-            cell=[tableView dequeueReusableCellWithIdentifier:@"Tag Cell"];
-            Tag *tag=self.tags[indexPath.row];
-            ((TagCell *)cell).tagName=tag.tagName;
-            break;
-        }
-        case CellTypeShowMoreTag:{
-            cell=[tableView dequeueReusableCellWithIdentifier:@"More Tags Cell"];
-            cell.textLabel.text=@"Show More";
-            break;
-        }
+    ContactCell *cell=[tableView dequeueReusableCellWithIdentifier:@"Contact Cell"];
+    if (!cell) {
+        cell=[[ContactCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Contact Cell"];
     }
+
+    cell.contact=self.contacts[indexPath.row];
 
     return cell;
 
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 44;
-}
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
-}
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
 
-     HeaderView *headerView=(HeaderView*)[tableView dequeueReusableHeaderFooterViewWithIdentifier:@"Header_View"];
-    if (!headerView) {
-        headerView=[[HeaderView alloc]initWithReuseIdentifier:@"Header_View"];
-        headerView.delegate=self;
-    }
-    headerView.type=section ? HeaderTypeContacts :HeaderTypeTags;
-    headerView.textLabel.text=section ? @"Contacts (...)":@"Tags (...)";
-    return headerView;
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 120;
 }
+
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    switch ([self cellTypeAtIndexPath:indexPath]) {
-        case CellTypeContactCellNormal:
-            return YES;
-        case CellTypeTagCellNormal:
-            return YES;
-        default:
-            return NO;
-    }
+    return YES;
 }
 #pragma  mark HeaderViewDelegate
 -(void)addNewContact{
@@ -237,59 +193,6 @@ static BOOL DisplayMoreTagCell = YES;
 }
 #pragma mark - tableviewDelegate
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView.isEditing) {
-        if (!(DisplayMoreTagCell && indexPath.row == 3)) {
-            return;
-        }
-    }
-    if (indexPath.section == 0) {
-        if (DisplayMoreTagCell && indexPath.row == 3) {
-            DisplayMoreTagCell=NO;
-            NSMutableArray *indexPathsToInsert=[@[] mutableCopy];
-            for (int row = 3; row < self.tags.count; row++) {
-                [indexPathsToInsert addObject:[NSIndexPath indexPathForRow:row inSection:0]];
-            }
-            [tableView beginUpdates];
-            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-            [tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationBottom];
-            [tableView endUpdates];
-            return;
-        }
-        NSArray *indexPathsBeforeUpdate=[tableView indexPathsForRowsInRect:CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), tableView.contentSize.height)];
-        NSLog(@"cell counts:%@",indexPathsBeforeUpdate);
-
-        Tag *tag=self.tags[indexPath.row];
-        self.currentTag=tag;
-        self.tags=[[tag.childrenTags allObjects] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
-            return [obj1.tagName compare:obj2.tagName];
-        }];
-        self.contacts=[[tag.directlyOwnedContacts allObjects] sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
-            return [obj1.contactName compare:obj2.contactName];
-        }];
-        DisplayMoreTagCell=YES;
-
-        NSArray *cellCountsAfterUpdate=@[@([self tableView:tableView numberOfRowsInSection:0]),@([self tableView:tableView numberOfRowsInSection:1])];
-        NSLog(@"cell counts:%@",cellCountsAfterUpdate);
-
-        [tableView beginUpdates];
-
-        [tableView deleteRowsAtIndexPaths:indexPathsBeforeUpdate withRowAnimation:UITableViewRowAnimationLeft];
-        for (int section =0 ; section<2; section++) {
-            for (int row = 0; row<[cellCountsAfterUpdate[section] integerValue]; row++) {
-                NSLog(@"section :%@,row:%@",@(section),@(row));
-                [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]] withRowAnimation:UITableViewRowAnimationRight];
-            }
-        }
-        [tableView endUpdates];
-        [tableView reloadData];
-
-    }
-    else{
-        Contact *contact=self.contacts[indexPath.row];
-        self.tags=@[];
-        self.contacts=[contact.relationsWithOtherPeople valueForKey:@"otherContact"];
-        [tableView reloadData];
-    }
 
 }
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -297,20 +200,7 @@ static BOOL DisplayMoreTagCell = YES;
 //    To enable the swipe-to-delete feature of table views (wherein a user swipes horizontally across a row to display a Delete button), you must implement this method
 }
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    switch ([self cellTypeAtIndexPath:indexPath]) {
-        case CellTypeAddNewContact:
-            return nil;
-        case CellTypeAddNewTag:
-            return nil;
-        case CellTypeShowMoreTag:
-            return nil;
-        case CellTypeContactCellNormal:{
-            return @[self.deleteAction,self.shareAction,self.moreAction];
-        }
-        case CellTypeTagCellNormal:
-            return @[self.deleteAction,self.renameAction,self.moreAction];
-    }
+    return @[self.deleteAction,self.shareAction,self.moreAction];
 }
 
 
@@ -322,6 +212,35 @@ static BOOL DisplayMoreTagCell = YES;
     return image;
 
 }
+-(NSString *)companyAndDepartmentOfContact:(Contact *)contact{
+    ABRecordRef person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
+    NSString *companyName=(__bridge NSString*)ABRecordCopyValue(person, kABPersonOrganizationProperty);
+    NSString *departmentName=(__bridge NSString*)ABRecordCopyValue(person, kABPersonDepartmentProperty);
+    NSString *combinedString= [companyName ? companyName : @"" stringByAppendingString:departmentName ? departmentName : @""];
+    return combinedString.length ? combinedString : nil;
+
+}
+-(NSArray *)phoneNumbersOfContact:(Contact *)contact{
+
+    ABRecordRef person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
+    ABMultiValueRef phones=ABRecordCopyValue(person, kABPersonPhoneProperty);
+    NSArray *phonesArray =(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(phones);
+    return phonesArray.count ? phonesArray : nil;
+
+}
+-(NSArray *)emailsOfContact:(Contact *)contact{
+    ABRecordRef person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
+    ABMultiValueRef emails=ABRecordCopyValue(person, kABPersonEmailProperty);
+    NSArray *emailsArray =(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(emails);
+
+    return emailsArray.count ? emailsArray : nil;
+
+}
+-(NSArray *)addressesOfContact:(Contact *)contact{
+
+    return nil;
+}
+
 -(NSManagedObjectContext *)context{
     return ((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
 }
@@ -409,7 +328,7 @@ static BOOL DisplayMoreTagCell = YES;
         if (authorizationStatus != kABAuthorizationStatusAuthorized) {
             return ; // not authorizated
         }
-
+        self.addressBook=addressBook;
         // Update Tags
         NSMutableArray *tags=[[self fetchAllTags] mutableCopy];
         BOOL isFirstLaunch=!tags.count;
@@ -438,9 +357,10 @@ static BOOL DisplayMoreTagCell = YES;
         for (signed long i= 0; i< CFArrayGetCount(allPeopleRecords); i++) {
             ABRecordRef recordRef=CFArrayGetValueAtIndex(allPeopleRecords, i);
             ABRecordID recordID=ABRecordGetRecordID(recordRef);
-//            NSLog(@"name:%@",[self nameOfPerson:recordRef]);
             [allPeopleRecordIDs addObject:@(recordID)];
             Contact *contact=[self contactOfRecord:recordRef];
+            NSLog(@"id:%@,contact:%@",@(recordID),contact);
+
             if (contact) {
                 // if contact exist in core data, update its info, because it may have been changed
                 contact.contactName=[self nameOfPerson:recordRef];
@@ -462,9 +382,9 @@ static BOOL DisplayMoreTagCell = YES;
                     NSLog(@"tagname:%@",tag.tagName);
                 }
             }
-            CFRelease(recordRef);
+//            CFRelease(recordRef);
         }
-        CFRelease(allPeopleRecords);
+//        CFRelease(allPeopleRecords);
         // Remove the contacts in core data which are not included in the addressbook
         NSPredicate *removePredicator=[NSPredicate predicateWithFormat:@"NOT contactID IN %@",allPeopleRecordIDs];
         NSArray *objectsToBeRemoved=[allContactsInCoreData filteredArrayUsingPredicate:removePredicator];
@@ -473,7 +393,7 @@ static BOOL DisplayMoreTagCell = YES;
             [self.context deleteObject:contact];
         }
 
-        self.currentTag=[self tagWithName:@"RootTag"];
+        self.contacts=[self fetchAllContacts];
         NSLog(@"update %lu",(unsigned long)self.currentTag.childrenTags.count);
         [[NSNotificationCenter defaultCenter] postNotificationName:ContactManagerDidFinishUpdatingCoreData object:nil];
 

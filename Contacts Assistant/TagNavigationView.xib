@@ -40,12 +40,12 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="oez-QV-0KO" firstAttribute="leading" secondItem="Iuk-ny-8HR" secondAttribute="leading" constant="8" id="9Uf-Bv-kDs"/>
-                        <constraint firstAttribute="height" constant="44" id="IMp-nu-0aL"/>
+                        <constraint firstItem="oez-QV-0KO" firstAttribute="leading" secondItem="Iuk-ny-8HR" secondAttribute="leading" priority="750" constant="8" id="9Uf-Bv-kDs"/>
+                        <constraint firstAttribute="height" priority="750" constant="44" id="IMp-nu-0aL"/>
                         <constraint firstItem="oez-QV-0KO" firstAttribute="top" secondItem="Iuk-ny-8HR" secondAttribute="top" id="IRe-rI-7Mm"/>
-                        <constraint firstAttribute="trailing" secondItem="8Za-gp-BWg" secondAttribute="trailing" constant="8" id="Spm-aM-jkE"/>
+                        <constraint firstAttribute="trailing" secondItem="8Za-gp-BWg" secondAttribute="trailing" priority="750" constant="8" id="Spm-aM-jkE"/>
                         <constraint firstAttribute="bottom" secondItem="8Za-gp-BWg" secondAttribute="bottom" id="Wan-Cg-UrG"/>
                         <constraint firstItem="8Za-gp-BWg" firstAttribute="top" secondItem="Iuk-ny-8HR" secondAttribute="top" id="a48-Ee-RAO"/>
                         <constraint firstAttribute="bottom" secondItem="oez-QV-0KO" secondAttribute="bottom" id="bJQ-tP-pzf"/>
