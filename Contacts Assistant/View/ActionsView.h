@@ -10,12 +10,24 @@
 
 typedef enum : NSUInteger {
     ActionViewBatchEditingView,
-    ActionViewBatchMoreFunctionsView,
+    ActionViewMoreFunctionsView,
 } ActionViewType;
 
+typedef enum : NSUInteger {
+//    ActionViewButtonEditDelete =181,
+//    ActionViewButtonEditMove,
+//
+    ActionViewButtonMoreFunctionSMS =281,
+    ActionViewButtonMoreFunctionEmail,
+    ActionViewButtonMoreFunctionManuallyAdd,
+    ActionViewButtonMoreFunctionScanQR,
+    ActionViewButtonMoreFunctionExchangeCard,
+    ActionViewButtonMoreFunctionShareContacts,
+} ActionViewButton;
+@class ActionsView;
 @protocol ActionsViewDelegate <NSObject>
 
--(void)actionButtonTapped:(NSInteger)buttonTag;  // the most left button tag is 81, and its nearest right button is 82, and so on
+-(void)actionView:(ActionsView *)actionView actionButtonTapped:(NSInteger)buttonTag;  // the most left button tag is 81, and its nearest right button is 82, and so on
 
 @end
 @interface ActionsView : UIView

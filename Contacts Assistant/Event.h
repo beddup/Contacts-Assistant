@@ -1,9 +1,9 @@
 //
 //  Event.h
-//  
+//  Contacts Assistant
 //
 //  Created by Amay on 7/24/15.
-//
+//  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,8 +13,8 @@
 
 @interface Event : NSManagedObject
 
-@property (nonatomic, retain) NSString * event;
 @property (nonatomic, retain) NSDate * date;
+@property (nonatomic, retain) NSString * event;
 @property (nonatomic, retain) NSSet *contactsWhichAttend;
 @end
 

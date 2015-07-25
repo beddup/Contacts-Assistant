@@ -1,5 +1,5 @@
 //
-//  Event.m
+//  Event+Utility.h
 //  Contacts Assistant
 //
 //  Created by Amay on 7/24/15.
@@ -7,13 +7,8 @@
 //
 
 #import "Event.h"
-#import "Contact.h"
 
+@interface Event (Utility)
 
-@implementation Event
-
-@dynamic date;
-@dynamic event;
-@dynamic contactsWhichAttend;
 
 @end

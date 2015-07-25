@@ -8,10 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CD11B60D877000B73BB /* Contact+Utility.m */; };
-		8D074CDE1B615CFA000B73BB /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CD71B615CFA000B73BB /* Tag.m */; };
-		8D074CDF1B615CFA000B73BB /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CD91B615CFA000B73BB /* Contact.m */; };
-		8D074CE01B615CFA000B73BB /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CDB1B615CFA000B73BB /* Relation.m */; };
-		8D074CE11B615CFA000B73BB /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CDD1B615CFA000B73BB /* Event.m */; };
 		8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D71801F1B543EF000E372ED /* SearchAssistantView.xib */; };
 		8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180241B55102600E372ED /* SearchAssistantView.m */; };
 		8D7180451B5673E900E372ED /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180431B5673E900E372ED /* AddressBook.framework */; };
@@ -27,6 +23,15 @@
 		8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */; };
 		8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180AA1B5FD63800E372ED /* TagNavigationView.m */; };
 		8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180B01B5FDEC700E372ED /* Tag+Utility.m */; };
+		8D841FAA1B62157F00801362 /* Event+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FA91B62157F00801362 /* Event+Utility.m */; };
+		8D841FB61B624B0E00801362 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FB51B624B0E00801362 /* Contact.m */; };
+		8D841FB91B624B0E00801362 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FB81B624B0E00801362 /* Event.m */; };
+		8D841FBC1B624B0E00801362 /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FBB1B624B0E00801362 /* Relation.m */; };
+		8D841FBF1B624B0E00801362 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FBE1B624B0E00801362 /* Tag.m */; };
+		8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FC51B62910B00801362 /* SMSReceiversView.m */; };
+		8D841FC81B6292C200801362 /* SMSReceiversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC71B6292C200801362 /* SMSReceiversView.xib */; };
+		8D841FCA1B63331B00801362 /* EmailReceversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC91B63331B00801362 /* EmailReceversView.xib */; };
+		8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FCC1B63333B00801362 /* EmailReceiversView.m */; };
 		8D95A92A1B53ABDD009EB722 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9291B53ABDD009EB722 /* main.m */; };
 		8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92C1B53ABDD009EB722 /* AppDelegate.m */; };
 		8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92E1B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld */; };
@@ -50,14 +55,6 @@
 /* Begin PBXFileReference section */
 		8D074CD01B60D877000B73BB /* Contact+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Contact+Utility.h"; sourceTree = "<group>"; };
 		8D074CD11B60D877000B73BB /* Contact+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Contact+Utility.m"; sourceTree = "<group>"; };
-		8D074CD61B615CFA000B73BB /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
-		8D074CD71B615CFA000B73BB /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
-		8D074CD81B615CFA000B73BB /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
-		8D074CD91B615CFA000B73BB /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
-		8D074CDA1B615CFA000B73BB /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
-		8D074CDB1B615CFA000B73BB /* Relation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relation.m; sourceTree = "<group>"; };
-		8D074CDC1B615CFA000B73BB /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		8D074CDD1B615CFA000B73BB /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		8D71801F1B543EF000E372ED /* SearchAssistantView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchAssistantView.xib; path = View/SearchAssistantView.xib; sourceTree = "<group>"; };
 		8D7180231B55102600E372ED /* SearchAssistantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchAssistantView.h; path = View/SearchAssistantView.h; sourceTree = "<group>"; };
 		8D7180241B55102600E372ED /* SearchAssistantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchAssistantView.m; path = View/SearchAssistantView.m; sourceTree = "<group>"; };
@@ -81,6 +78,22 @@
 		8D7180AA1B5FD63800E372ED /* TagNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagNavigationView.m; path = View/TagNavigationView.m; sourceTree = "<group>"; };
 		8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Tag+Utility.h"; sourceTree = "<group>"; };
 		8D7180B01B5FDEC700E372ED /* Tag+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Tag+Utility.m"; sourceTree = "<group>"; };
+		8D841FA81B62157F00801362 /* Event+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Event+Utility.h"; sourceTree = "<group>"; };
+		8D841FA91B62157F00801362 /* Event+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Event+Utility.m"; sourceTree = "<group>"; };
+		8D841FB41B624B0E00801362 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		8D841FB51B624B0E00801362 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		8D841FB71B624B0E00801362 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		8D841FB81B624B0E00801362 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		8D841FBA1B624B0E00801362 /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
+		8D841FBB1B624B0E00801362 /* Relation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relation.m; sourceTree = "<group>"; };
+		8D841FBD1B624B0E00801362 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		8D841FBE1B624B0E00801362 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		8D841FC41B62910B00801362 /* SMSReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSReceiversView.h; sourceTree = "<group>"; };
+		8D841FC51B62910B00801362 /* SMSReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSReceiversView.m; sourceTree = "<group>"; };
+		8D841FC71B6292C200801362 /* SMSReceiversView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SMSReceiversView.xib; path = View/SMSReceiversView.xib; sourceTree = "<group>"; };
+		8D841FC91B63331B00801362 /* EmailReceversView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmailReceversView.xib; sourceTree = "<group>"; };
+		8D841FCB1B63333B00801362 /* EmailReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailReceiversView.h; sourceTree = "<group>"; };
+		8D841FCC1B63333B00801362 /* EmailReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailReceiversView.m; sourceTree = "<group>"; };
 		8D95A9241B53ABDD009EB722 /* Contacts Assistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contacts Assistant.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D95A9281B53ABDD009EB722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D95A9291B53ABDD009EB722 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -148,6 +161,12 @@
 				8D7180A91B5FD63800E372ED /* TagNavigationView.h */,
 				8D7180AA1B5FD63800E372ED /* TagNavigationView.m */,
 				8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */,
+				8D841FC41B62910B00801362 /* SMSReceiversView.h */,
+				8D841FC51B62910B00801362 /* SMSReceiversView.m */,
+				8D841FC71B6292C200801362 /* SMSReceiversView.xib */,
+				8D841FCB1B63333B00801362 /* EmailReceiversView.h */,
+				8D841FCC1B63333B00801362 /* EmailReceiversView.m */,
+				8D841FC91B63331B00801362 /* EmailReceversView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -155,14 +174,16 @@
 		8D7180391B5667D600E372ED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8D074CD61B615CFA000B73BB /* Tag.h */,
-				8D074CD71B615CFA000B73BB /* Tag.m */,
-				8D074CD81B615CFA000B73BB /* Contact.h */,
-				8D074CD91B615CFA000B73BB /* Contact.m */,
-				8D074CDA1B615CFA000B73BB /* Relation.h */,
-				8D074CDB1B615CFA000B73BB /* Relation.m */,
-				8D074CDC1B615CFA000B73BB /* Event.h */,
-				8D074CDD1B615CFA000B73BB /* Event.m */,
+				8D841FBD1B624B0E00801362 /* Tag.h */,
+				8D841FBE1B624B0E00801362 /* Tag.m */,
+				8D841FBA1B624B0E00801362 /* Relation.h */,
+				8D841FBB1B624B0E00801362 /* Relation.m */,
+				8D841FB71B624B0E00801362 /* Event.h */,
+				8D841FB81B624B0E00801362 /* Event.m */,
+				8D841FB41B624B0E00801362 /* Contact.h */,
+				8D841FB51B624B0E00801362 /* Contact.m */,
+				8D841FA81B62157F00801362 /* Event+Utility.h */,
+				8D841FA91B62157F00801362 /* Event+Utility.m */,
 				8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */,
 				8D7180B01B5FDEC700E372ED /* Tag+Utility.m */,
 				8D074CD01B60D877000B73BB /* Contact+Utility.h */,
@@ -314,7 +335,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D841FCA1B63331B00801362 /* EmailReceversView.xib in Resources */,
 				8D95A9361B53ABDD009EB722 /* Main.storyboard in Resources */,
+				8D841FC81B6292C200801362 /* SMSReceiversView.xib in Resources */,
 				8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */,
 				8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */,
 				8D95A9381B53ABDD009EB722 /* Images.xcassets in Resources */,
@@ -339,20 +362,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D841FBF1B624B0E00801362 /* Tag.m in Sources */,
 				8D7180971B5DE97400E372ED /* TagCell.m in Sources */,
+				8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */,
 				8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */,
+				8D841FBC1B624B0E00801362 /* Relation.m in Sources */,
 				8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */,
-				8D074CE01B615CFA000B73BB /* Relation.m in Sources */,
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
+				8D841FB91B624B0E00801362 /* Event.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
-				8D074CE11B615CFA000B73BB /* Event.m in Sources */,
+				8D841FAA1B62157F00801362 /* Event+Utility.m in Sources */,
 				8D7180911B5D427A00E372ED /* HeaderView.m in Sources */,
+				8D841FB61B624B0E00801362 /* Contact.m in Sources */,
 				8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */,
-				8D074CDF1B615CFA000B73BB /* Contact.m in Sources */,
 				8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */,
+				8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */,
 				8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */,
 				8D95A92A1B53ABDD009EB722 /* main.m in Sources */,
-				8D074CDE1B615CFA000B73BB /* Tag.m in Sources */,
 				8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */,
 				8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */,
 				8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */,

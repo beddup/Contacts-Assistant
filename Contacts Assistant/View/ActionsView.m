@@ -16,14 +16,15 @@
 
 @implementation ActionsView
 
+- (IBAction)actionButtonTapped:(UIButton *)sender {
+
+    [self.delegate actionView:self actionButtonTapped:sender.tag];
+}
+
 #pragma  mark - setup
 -(void)awakeFromNib{
     [self setup];
 }
-- (IBAction)actionButtonTapped:(UIButton *)sender {
-    [self.delegate actionButtonTapped:sender.tag];
-}
-
 -(void)setup{
 
 }

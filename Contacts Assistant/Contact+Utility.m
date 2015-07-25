@@ -8,13 +8,56 @@
 
 #import "Contact+Utility.h"
 #import "ContactsManager.h"
-
+#import "AppDelegate.h"
  NSString * const CommunicationPhones=@"CommunicationPhones";
  NSString * const CommunicationEmails=@"CommunicationEmails";
 
 @implementation Contact (Utility)
++(NSManagedObjectContext *)context{
+    return ((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
 
-#pragma mark - public api
+}
++(NSArray *)allContacts{
+    // prepare core data
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    [fetchRequest setFetchBatchSize:20];
+    NSError *error = nil;
+    NSArray *fetchedObjects = [[Contact context] executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@"fetchedObjects nil");
+    }
+    NSLog(@"fetchedObjects:%@",fetchedObjects);
+    return fetchedObjects;
+}
+
++(NSArray*)contactsWhoseNameContains:(NSString *)keyword{
+
+    NSFetchRequest *contactFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    contactFectchRequest.predicate=[NSPredicate predicateWithFormat:@"contactName CONTAINS %@",keyword];
+    NSArray * advicedContacts=[[Contact context] executeFetchRequest:contactFectchRequest error:NULL];
+    return advicedContacts;
+}
+
+
++(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs{
+
+    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"contactID IN %@",contactIDs];
+    NSArray *contacts=[[Contact context] executeFetchRequest:fetchRequest error:NULL];
+    
+    return  [contacts firstObject];
+    
+}
++(Contact *)contactOfContactID:(int)contactID{
+
+    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"contactID == %@",@(contactID)];
+    NSArray *contacts=[[Contact context] executeFetchRequest:fetchRequest error:NULL];
+    return  [contacts firstObject];
+
+}
+
+
 -(NSDictionary *)avaibleCommunications{
 
     NSMutableDictionary *dic=[@{} mutableCopy];
@@ -30,11 +73,6 @@
     NSLog(@"self:%@,avaibleCommunications:%@",self.contactName, dic);
 
     return dic;
-}
-
--(UIImage *)photoImage{
-    return [[ContactsManager sharedContactManager] thumbnailOfContact:self];
-
 }
 
 -(NSString *)companyAndDepartment{

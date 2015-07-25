@@ -14,9 +14,11 @@ extern NSString * const CommunicationEmails;  // nsarray
 
 @interface Contact (Utility)
 
++(NSArray *)allContacts;
++(NSArray *)contactsWhoseNameContains:(NSString *)keyword;
++(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs;
++(Contact *)contactOfContactID:(int)contactID;
 -(NSDictionary *)avaibleCommunications;
-
--(UIImage *)photoImage;
 
 -(NSString *)companyAndDepartment;
 

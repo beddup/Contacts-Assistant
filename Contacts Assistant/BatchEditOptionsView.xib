@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="150" height="95"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" tag="81" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gd5-PB-cU8">
+                <button opaque="NO" tag="181" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gd5-PB-cU8">
                     <rect key="frame" x="0.0" y="0.0" width="75" height="95"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="95" id="1b0-ub-yJ3"/>
@@ -24,7 +24,7 @@
                         <action selector="actionButtonTapped:" destination="ZbE-9m-faV" eventType="touchUpInside" id="Z9W-4Y-yGG"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="82" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vf-2v-5wM">
+                <button opaque="NO" tag="182" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7vf-2v-5wM">
                     <rect key="frame" x="75" y="0.0" width="75" height="95"/>
                     <state key="normal">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>

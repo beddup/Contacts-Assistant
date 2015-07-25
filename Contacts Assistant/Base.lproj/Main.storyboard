@@ -40,6 +40,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="3ch-wW-1vp" id="EU5-So-uro"/>
+                                    <outlet property="delegate" destination="3ch-wW-1vp" id="ZXq-9P-XWH"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -53,14 +57,9 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="eWr-O4-jMR">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="管理" id="IfD-sc-cGC">
-                            <connections>
-                                <action selector="prepareToBatchEditContacts:" destination="3ch-wW-1vp" id="3hs-t0-Lcf"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="contactsTableView" destination="IRI-Dn-SwU" id="Xgh-Il-apK"/>
+                        <outlet property="tableView" destination="IRI-Dn-SwU" id="uLr-zv-CQy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0HK-Xi-Qf8" userLabel="First Responder" sceneMemberID="firstResponder"/>

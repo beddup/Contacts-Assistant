@@ -8,10 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "Tag.h"
+
+typedef enum : NSUInteger {
+    ContactCellModeNormal,
+    ContactCellModeSMS,
+    ContactCellModeEmail,
+} ContactCellMode;
+
 @interface ContactCell : UITableViewCell
 
 @property(strong,nonatomic)Contact *contact;
-
+@property(nonatomic)ContactCellMode mode;
 /*
  考虑显示的内容：
  1. 目前不定位于社交，不显示图片

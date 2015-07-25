@@ -13,11 +13,14 @@ extern NSString *const FetchResultContactsKey;
 extern NSString *const FetchResultTagsKey;
 extern NSString *const ContactManagerDidFinishUpdatingCoreData;
 @protocol ContactsManagerDelegate <NSObject>
--(void)addNewContactUnderTag:(Tag *)tag;
+
+////-(void)addNewContactUnderTag:(Tag *)tag;
+//-(void)selectionChanged;
+
 @end
 
 
-@interface ContactsManager : NSObject<UITableViewDataSource,UITableViewDelegate>
+@interface ContactsManager : NSObject
 
 @property(weak,nonatomic)id<ContactsManagerDelegate>delegate;
 
@@ -27,10 +30,11 @@ extern NSString *const ContactManagerDidFinishUpdatingCoreData;
 
 -(NSDictionary *)searchResultByKeyword:(NSString *)string;
 
--(UIImage *)thumbnailOfContact:(Contact *)contact;
 -(NSString *)companyAndDepartmentOfContact:(Contact *)contact;
 -(NSArray *)phoneNumbersOfContact:(Contact *)contact;
 -(NSArray *)emailsOfContact:(Contact *)contact;
--(NSArray *)addressesOfContact:(Contact *)contact;
+
+-(NSArray *)filterContactsWithoutPhoneNumbers:(NSArray *)contacts;
+-(NSArray *)filterContactsWithoutemail:(NSArray *)contacts;
 
 @end
