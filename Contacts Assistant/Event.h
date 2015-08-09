@@ -2,7 +2,7 @@
 //  Event.h
 //  Contacts Assistant
 //
-//  Created by Amay on 7/24/15.
+//  Created by Amay on 8/7/15.
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
@@ -15,6 +15,10 @@
 
 @property (nonatomic, retain) NSDate * date;
 @property (nonatomic, retain) NSString * event;
+@property (nonatomic, retain) NSNumber * latitude;
+@property (nonatomic, retain) NSNumber * longtitude;
+@property (nonatomic, retain) NSString * place;
+@property (nonatomic, retain) NSString * repeatedDays;
 @property (nonatomic, retain) NSSet *contactsWhichAttend;
 @end
 

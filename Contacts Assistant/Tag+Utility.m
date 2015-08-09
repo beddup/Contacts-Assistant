@@ -9,7 +9,7 @@
 #import "Tag+Utility.h"
 #import "AppDelegate.h"
 
-NSString * const RootTagName =@"RootTagName";
+NSString * const RootTagName =@"All Contacts";
 
 @implementation Tag (Utility)
 -(BOOL)isRootTag{
@@ -17,8 +17,12 @@ NSString * const RootTagName =@"RootTagName";
 }
 
 -(NSArray *)allOwnedContacts{
-    return nil;
+    return [self.ownedContacts allObjects];
 }
+-(NSInteger)numberOfAllOwnedContacts{
+    return self.ownedContacts.count;
+}
+
 +(Tag *)tagWithName:(NSString *)name{
     NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Tag"];
 # warning upper case and lower case
@@ -28,8 +32,7 @@ NSString * const RootTagName =@"RootTagName";
     return  [tags firstObject];
 }
 
-+(Tag *)createTagWithTagName:(NSString *)name{
-
++(Tag *)getTagWithTagName:(NSString *)name{
     Tag *tag=[Tag tagWithName:name];
     if (!tag) {
         NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
@@ -37,10 +40,17 @@ NSString * const RootTagName =@"RootTagName";
         tag.tagName=name;
     }
     return tag;
+
 }
 +(Tag *)rootTag{
-    return [Tag tagWithName:RootTagName];
+    return [self tagWithName:RootTagName];
 }
+
++(BOOL)tagExists:(NSString *)tagName{
+
+    return [self tagWithName:tagName];
+}
+
 +(NSArray *)tagsWhoseNameContains:(NSString *)keyword{
     //get possible tags
     NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
@@ -50,4 +60,18 @@ NSString * const RootTagName =@"RootTagName";
     NSArray *advicedtags=[context executeFetchRequest:tagFectchRequest error:NULL];
     return advicedtags;
 }
++(NSArray *)allTags{
+
+    NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
+
+    NSFetchRequest *tagFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Tag"];
+    NSArray *advicedtags=[context executeFetchRequest:tagFectchRequest error:NULL];
+    return advicedtags;
+
+}
++(void)deleteTag:(Tag *)tag{
+    NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
+    [context deleteObject:tag];
+}
+
 @end

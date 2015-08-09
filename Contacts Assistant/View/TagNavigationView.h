@@ -11,8 +11,6 @@
 
 @interface TagNavigationView : UIView
 
-@property(strong,nonatomic)Tag * currentTag;
-
 @property(copy)void(^didSelectTag)(Tag *selectedTag);
 @property(copy)void(^manageTags)();
 

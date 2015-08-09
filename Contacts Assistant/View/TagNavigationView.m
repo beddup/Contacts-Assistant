@@ -13,67 +13,79 @@
 @interface TagNavigationView()<UITableViewDataSource,UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIButton *backToParentTagButton;
 
 @property(strong,nonatomic)NSArray *tags;
 
 @end
 
 @implementation TagNavigationView
-@synthesize tags=_tags;
 
-#pragma mark - Properties
--(void)setCurrentTag:(Tag *)currentTag{
-    _currentTag=currentTag;
-    self.tags=[currentTag.childrenTags allObjects];
-    self.backToParentTagButton.hidden=[currentTag isRootTag];
-}
-
--(NSArray *)tags{
-    if (!_tags) {
-        _tags=@[];
-    }
-    return _tags;
-}
--(void)setTags:(NSArray *)tags{
-    _tags=tags;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationRight];
-}
-
-#pragma mark - actions
-- (IBAction)backToParentTag:(UIButton *)sender {
-    self.currentTag=self.currentTag.parentTag;
-}
-- (IBAction)manageTags:(UIButton *)sender {
-    self.manageTags();
-}
 #pragma  mark - UITableViewDataSource
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.tags.count;
 }
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     TagCell *cell=(TagCell *)[tableView dequeueReusableCellWithIdentifier:@"Tag Cell"];
     if (!cell) {
         cell= [[TagCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Tag Cell"];
-        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+        cell.separatorInset=UIEdgeInsetsMake(0, 15, 0, 15);
     }
     Tag *tag=self.tags[indexPath.row];
-    cell.tagName=tag.tagName;
-
+    cell.myTag=tag;    
     return cell;
 }
+
 #pragma  mark - UITableViewDelegate
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
     self.didSelectTag(self.tags[indexPath.row]);
     
 }
--(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    self.currentTag=self.tags[indexPath.row];
+
+#pragma  mark - setup
+-(void)awakeFromNib{
+    [self setup];
 }
 
+-(void)setup{
+
+    UIButton *buttonfooter=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 0, 44)];
+    self.tableView.tableFooterView=buttonfooter;
+    [buttonfooter setTitle:@"管理标签" forState:UIControlStateNormal];
+    [buttonfooter setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    buttonfooter.titleLabel.font=[UIFont systemFontOfSize:17];
+    [buttonfooter addTarget:self action:@selector(manageTags:) forControlEvents:UIControlEventTouchUpInside];
+
+    UILabel *headerLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25)];
+    self.tableView.tableHeaderView=headerLabel;
+    headerLabel.textColor=[UIColor lightGrayColor];
+    headerLabel.text=@"选择标签筛选联系人";
+    headerLabel.font=[UIFont systemFontOfSize:14];
+    headerLabel.textAlignment=NSTextAlignmentCenter;
+
+    self.tags = [[Tag allTags] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
+        return [obj1.tagName compare:obj2.tagName];
+    }];
+
+
+}
+-(void)manageTags:(UIButton *)button{
+    self.manageTags();
+}
+
+-(instancetype)initWithFrame:(CGRect)frame{
+    self=[super initWithFrame:frame];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
 
 
 

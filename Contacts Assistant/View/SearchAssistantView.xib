@@ -11,7 +11,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" tag="925" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="lyX-nF-Vve">
-                    <rect key="frame" x="0.0" y="21" width="300" height="294"/>
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="315"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="separatorInset" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
                     <connections>
@@ -19,39 +19,16 @@
                         <outlet property="delegate" destination="iN0-l3-epB" id="Xfu-II-QN3"/>
                     </connections>
                 </tableView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do you mean..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCC-8p-4b3">
-                    <rect key="frame" x="30" y="0.0" width="270" height="21"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="21" id="7Uj-Gw-XRl"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="bCC-8p-4b3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="0qo-br-Keh"/>
-                <constraint firstItem="bCC-8p-4b3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="5cL-pn-GVL"/>
-                <constraint firstAttribute="trailing" secondItem="bCC-8p-4b3" secondAttribute="trailing" id="85B-Oq-1j3"/>
                 <constraint firstAttribute="bottom" secondItem="lyX-nF-Vve" secondAttribute="bottom" id="KeW-gu-GcL"/>
-                <constraint firstItem="lyX-nF-Vve" firstAttribute="leading" secondItem="bCC-8p-4b3" secondAttribute="leading" id="NIN-g1-NEF"/>
-                <constraint firstItem="lyX-nF-Vve" firstAttribute="width" secondItem="bCC-8p-4b3" secondAttribute="width" id="Rij-WH-gLg"/>
                 <constraint firstItem="lyX-nF-Vve" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Zkt-3p-UcL"/>
-                <constraint firstItem="lyX-nF-Vve" firstAttribute="top" secondItem="bCC-8p-4b3" secondAttribute="top" constant="32" id="otU-Ri-2Ed"/>
-                <constraint firstItem="lyX-nF-Vve" firstAttribute="top" secondItem="bCC-8p-4b3" secondAttribute="bottom" id="wv6-Qw-pb7"/>
+                <constraint firstItem="lyX-nF-Vve" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="trD-bO-dWi"/>
                 <constraint firstAttribute="trailing" secondItem="lyX-nF-Vve" secondAttribute="trailing" id="ysN-BG-4Co"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="NIN-g1-NEF"/>
-                    <exclude reference="Rij-WH-gLg"/>
-                    <exclude reference="otU-Ri-2Ed"/>
-                </mask>
-            </variation>
             <connections>
                 <outlet property="searchAdviceTV" destination="lyX-nF-Vve" id="0g8-Ka-rpf"/>
             </connections>

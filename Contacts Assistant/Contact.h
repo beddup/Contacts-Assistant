@@ -2,7 +2,7 @@
 //  Contact.h
 //  Contacts Assistant
 //
-//  Created by Amay on 7/24/15.
+//  Created by Amay on 8/7/15.
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
@@ -14,11 +14,12 @@
 @interface Contact : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * contactID;
-@property (nonatomic, retain) NSString * contactName;
 @property (nonatomic, retain) NSNumber * contactIsDeleted;
+@property (nonatomic, retain) NSString * contactName;
+@property (nonatomic, retain) NSNumber * contactOrderWeight;
 @property (nonatomic, retain) NSSet *attendWhichEvents;
 @property (nonatomic, retain) NSSet *belongWhichRelations;
-@property (nonatomic, retain) NSSet *directUnderWhichTags;
+@property (nonatomic, retain) NSSet *underWhichTags;
 @property (nonatomic, retain) NSSet *relationsWithOtherPeople;
 @end
 
@@ -34,10 +35,10 @@
 - (void)addBelongWhichRelations:(NSSet *)values;
 - (void)removeBelongWhichRelations:(NSSet *)values;
 
-- (void)addDirectUnderWhichTagsObject:(Tag *)value;
-- (void)removeDirectUnderWhichTagsObject:(Tag *)value;
-- (void)addDirectUnderWhichTags:(NSSet *)values;
-- (void)removeDirectUnderWhichTags:(NSSet *)values;
+- (void)addUnderWhichTagsObject:(Tag *)value;
+- (void)removeUnderWhichTagsObject:(Tag *)value;
+- (void)addUnderWhichTags:(NSSet *)values;
+- (void)removeUnderWhichTags:(NSSet *)values;
 
 - (void)addRelationsWithOtherPeopleObject:(Relation *)value;
 - (void)removeRelationsWithOtherPeopleObject:(Relation *)value;

@@ -11,61 +11,26 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="mr5-sU-V5j">
-                    <rect key="frame" x="0.0" y="44" width="261" height="264"/>
+                    <rect key="frame" x="0.0" y="0.0" width="261" height="308"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                     <connections>
                         <outlet property="dataSource" destination="iN0-l3-epB" id="hCG-Bq-8X4"/>
                         <outlet property="delegate" destination="iN0-l3-epB" id="hbe-3u-7gL"/>
                     </connections>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iuk-ny-8HR">
-                    <rect key="frame" x="0.0" y="0.0" width="261" height="44"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-gp-BWg">
-                            <rect key="frame" x="193" y="0.0" width="60" height="44"/>
-                            <state key="normal" title="管理群组">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="manageTags:" destination="iN0-l3-epB" eventType="touchUpInside" id="QiN-YP-23Y"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oez-QV-0KO">
-                            <rect key="frame" x="8" y="0.0" width="90" height="44"/>
-                            <state key="normal" title="返回上级群组">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="backToParentTag:" destination="iN0-l3-epB" eventType="touchUpInside" id="bjA-uT-RTA"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstItem="oez-QV-0KO" firstAttribute="leading" secondItem="Iuk-ny-8HR" secondAttribute="leading" priority="750" constant="8" id="9Uf-Bv-kDs"/>
-                        <constraint firstAttribute="height" priority="750" constant="44" id="IMp-nu-0aL"/>
-                        <constraint firstItem="oez-QV-0KO" firstAttribute="top" secondItem="Iuk-ny-8HR" secondAttribute="top" id="IRe-rI-7Mm"/>
-                        <constraint firstAttribute="trailing" secondItem="8Za-gp-BWg" secondAttribute="trailing" priority="750" constant="8" id="Spm-aM-jkE"/>
-                        <constraint firstAttribute="bottom" secondItem="8Za-gp-BWg" secondAttribute="bottom" id="Wan-Cg-UrG"/>
-                        <constraint firstItem="8Za-gp-BWg" firstAttribute="top" secondItem="Iuk-ny-8HR" secondAttribute="top" id="a48-Ee-RAO"/>
-                        <constraint firstAttribute="bottom" secondItem="oez-QV-0KO" secondAttribute="bottom" id="bJQ-tP-pzf"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="Iuk-ny-8HR" secondAttribute="trailing" id="9EW-l6-IKb"/>
                 <constraint firstAttribute="trailing" secondItem="mr5-sU-V5j" secondAttribute="trailing" id="AAd-46-1Ok"/>
                 <constraint firstAttribute="bottom" secondItem="mr5-sU-V5j" secondAttribute="bottom" id="J40-GS-VlK"/>
-                <constraint firstItem="mr5-sU-V5j" firstAttribute="top" secondItem="Iuk-ny-8HR" secondAttribute="bottom" id="X5P-Ol-peF"/>
+                <constraint firstItem="mr5-sU-V5j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Tsy-V6-XEH"/>
                 <constraint firstItem="mr5-sU-V5j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cKp-pT-zYE"/>
-                <constraint firstItem="Iuk-ny-8HR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="f4m-RG-dLQ"/>
-                <constraint firstItem="Iuk-ny-8HR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pgZ-cl-WYF"/>
+                <constraint firstItem="mr5-sU-V5j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="lpy-xB-rrq"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="backToParentTagButton" destination="oez-QV-0KO" id="l8Z-Au-zY4"/>
                 <outlet property="tableView" destination="mr5-sU-V5j" id="AJw-YT-rd4"/>
             </connections>
             <point key="canvasLocation" x="59.5" y="200"/>

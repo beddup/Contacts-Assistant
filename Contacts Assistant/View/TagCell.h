@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ElementView.h"
+#import "Tag.h"
 @interface TagCell : UITableViewCell
 
-@property(copy,nonatomic)NSString *tagName;
+@property(copy,nonatomic)Tag *myTag;
+@property(nonatomic)BOOL hasCloseButton;
+
+@property(copy)void(^closeButtonTapped)(Tag *tag);
 
 @end

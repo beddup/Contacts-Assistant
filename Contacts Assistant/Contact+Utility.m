@@ -9,8 +9,7 @@
 #import "Contact+Utility.h"
 #import "ContactsManager.h"
 #import "AppDelegate.h"
- NSString * const CommunicationPhones=@"CommunicationPhones";
- NSString * const CommunicationEmails=@"CommunicationEmails";
+#import "Event.h"
 
 @implementation Contact (Utility)
 +(NSManagedObjectContext *)context{
@@ -21,6 +20,9 @@
     // prepare core data
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
     [fetchRequest setFetchBatchSize:20];
+    NSPredicate *predicate=[NSPredicate predicateWithFormat:@"contactIsDeleted.boolValue == %d",NO];
+    fetchRequest.predicate=predicate;
+    
     NSError *error = nil;
     NSArray *fetchedObjects = [[Contact context] executeFetchRequest:fetchRequest error:&error];
     if (fetchedObjects == nil) {
@@ -30,14 +32,14 @@
     return fetchedObjects;
 }
 
-+(NSArray*)contactsWhoseNameContains:(NSString *)keyword{
-
-    NSFetchRequest *contactFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
-    contactFectchRequest.predicate=[NSPredicate predicateWithFormat:@"contactName CONTAINS %@",keyword];
-    NSArray * advicedContacts=[[Contact context] executeFetchRequest:contactFectchRequest error:NULL];
-    return advicedContacts;
-}
-
+//+(NSArray*)contactsWhoseNameContains:(NSString *)keyword{
+//
+//    NSFetchRequest *contactFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+//    contactFectchRequest.predicate=[NSPredicate predicateWithFormat:@"contactName CONTAINS %@",keyword];
+//    NSArray * advicedContacts=[[Contact context] executeFetchRequest:contactFectchRequest error:NULL];
+//    return advicedContacts;
+//}
+//
 
 +(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs{
 
@@ -78,5 +80,43 @@
 -(NSString *)companyAndDepartment{
     return [[ContactsManager sharedContactManager] companyAndDepartmentOfContact:self];
 }
+
++(NSString *)QRStringOfContact:(Contact *)contact{
+    NSDictionary *info=@{@"N":contact.contactName,
+                         @"C":[contact avaibleCommunications]};
+    NSData *data= [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:NULL];
+    NSString *string=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    return string;
+}
++(NSDictionary *)infoFromQRString:(NSString *)qrstring{
+    NSData *data=[qrstring dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *info=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
+    return info;
+}
+
+-(Event *)recentEvent{
+    Event *lastEvent=[[self.attendWhichEvents allObjects] firstObject];
+    if (lastEvent) {
+        if ([lastEvent.date timeIntervalSinceNow] > -60 *60 || !lastEvent.date) {
+            // if event has not pass or pass less than 1 h, or no date
+            return lastEvent;
+        }
+    }
+    return nil;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

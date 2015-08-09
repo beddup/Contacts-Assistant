@@ -10,5 +10,6 @@
 
 @interface Event (Utility)
 
-
+-(NSDate *)nextdate;
+-(BOOL)passed;
 @end

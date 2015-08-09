@@ -8,7 +8,9 @@
 
 #import "SearchAssistantView.h"
 #import "VisualizedContactsViewController.h"
-
+#import "ContactsManager.h"
+#import "Tag.h"
+#import "Contact.h"
 @interface SearchAssistantView()
 
 @property (weak, nonatomic) IBOutlet UITableView *searchAdviceTV;
@@ -18,24 +20,24 @@
 @implementation SearchAssistantView
 @synthesize searchAdvice=_searchAdvice;
 
--(NSOrderedSet *)searchAdvice{
-    if (!_searchAdvice) {
-        _searchAdvice=[NSOrderedSet orderedSetWithObjects:@"Frienasdfasfsdsdsdafdd",@"Family",@"Stranger",@"Others",nil];
-    }
-    return _searchAdvice;
-}
--(void)setSearchAdvice:(NSOrderedSet *)searchAdvice{
+
+-(void)setSearchAdvice:(NSDictionary *)searchAdvice{
 
     _searchAdvice=searchAdvice;
     [self.searchAdviceTV reloadData];
 }
 
 #pragma mark - TVDelegate
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    NSLog(@"selected");
-    self.keyWordSelectedHandler(self.searchAdvice[indexPath.row]);
-    
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSInteger tagCount = [self.searchAdvice[AdvicedTagsKey] count];
+    if (indexPath.row < tagCount) {
+        self.advicedTagSelectedHandler([self.searchAdvice[AdvicedTagsKey] objectAtIndex:indexPath.row]);
+
+    }else{
+        self.advicedContactSelectedHandler([self.searchAdvice[AdvicedContactsKey] objectAtIndex:indexPath.row-tagCount]);
+    }
+
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -46,14 +48,14 @@
     return 1;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.searchAdvice.count;
+    return [self.searchAdvice[AdvicedTagsKey] count] + [self.searchAdvice[AdvicedContactsKey] count];
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"search advice"];
 
     if (!cell) {
-            cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"search advice"];
+            cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"search advice"];
             cell.textLabel.textColor=[UIColor darkGrayColor];
             cell.textLabel.font=[UIFont systemFontOfSize:13.0 weight:UIFontWeightLight];
             cell.textLabel.lineBreakMode=NSLineBreakByTruncatingTail;
@@ -62,12 +64,15 @@
             cell.detailTextLabel.textColor=[UIColor lightGrayColor];
             cell.detailTextLabel.font=[UIFont systemFontOfSize:10.0 weight:UIFontWeightLight];
             cell.detailTextLabel.textAlignment=NSTextAlignmentRight;
-        cell.backgroundColor=[UIColor lightGrayColor];
-            
     }
-
-    cell.textLabel.text=self.searchAdvice[indexPath.row];
-    cell.detailTextLabel.text=@"tag";
+    NSInteger tagCount = [self.searchAdvice[AdvicedTagsKey] count];
+    if (indexPath.row < tagCount) {
+        cell.textLabel.text=[(Tag *)[self.searchAdvice[AdvicedTagsKey] objectAtIndex:indexPath.row] tagName];
+        cell.detailTextLabel.text=@"标签";
+    }else{
+        cell.textLabel.text = [(Contact *)[self.searchAdvice[AdvicedContactsKey] objectAtIndex:indexPath.row-tagCount] contactName];
+        cell.detailTextLabel.text=@"联系人";
+    }
 
     return cell;
 
@@ -82,6 +87,14 @@
     
     self.contentMode=UIViewContentModeScaleToFill;
     self.opaque=YES;
+
+    // configure table header view
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25)];
+    label.text=@"搜索建议";
+    label.textColor=[UIColor lightGrayColor];
+    label.textAlignment=NSTextAlignmentCenter;
+    label.font=[UIFont systemFontOfSize:14 weight:UIFontWeightLight];
+    self.searchAdviceTV.tableHeaderView=label;
 
 }
 -(instancetype)initWithFrame:(CGRect)frame{

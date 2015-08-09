@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CD11B60D877000B73BB /* Contact+Utility.m */; };
+		8D3A8B9C1B75005B00ECEABC /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8B9B1B75005B00ECEABC /* Tag.m */; };
+		8D3A8B9F1B75005C00ECEABC /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8B9E1B75005C00ECEABC /* Relation.m */; };
+		8D3A8BA21B75005C00ECEABC /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BA11B75005C00ECEABC /* Contact.m */; };
+		8D3A8BA51B75005E00ECEABC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BA41B75005E00ECEABC /* Event.m */; };
+		8D70E5081B6B672D00B11C24 /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E5071B6B672D00B11C24 /* EventViewController.m */; };
+		8D70E50D1B6CA58400B11C24 /* ChangeEventTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */; };
+		8D70E5101B6CF52A00B11C24 /* ChangeEventContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */; };
+		8D70E5131B6D06D400B11C24 /* ChangeEventPlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */; };
 		8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D71801F1B543EF000E372ED /* SearchAssistantView.xib */; };
 		8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180241B55102600E372ED /* SearchAssistantView.m */; };
 		8D7180451B5673E900E372ED /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180431B5673E900E372ED /* AddressBook.framework */; };
@@ -23,15 +31,29 @@
 		8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */; };
 		8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180AA1B5FD63800E372ED /* TagNavigationView.m */; };
 		8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180B01B5FDEC700E372ED /* Tag+Utility.m */; };
+		8D74D8951B6E5780008D5223 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8941B6E5780008D5223 /* UIImage+MDQRCode.m */; };
+		8D74D8A41B6E57AC008D5223 /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8961B6E57AC008D5223 /* bitstream.c */; };
+		8D74D8A51B6E57AC008D5223 /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8981B6E57AC008D5223 /* mask.c */; };
+		8D74D8A61B6E57AC008D5223 /* qrencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D89A1B6E57AC008D5223 /* qrencode.c */; };
+		8D74D8A71B6E57AC008D5223 /* qrinput.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D89C1B6E57AC008D5223 /* qrinput.c */; };
+		8D74D8A81B6E57AC008D5223 /* qrspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D89E1B6E57AC008D5223 /* qrspec.c */; };
+		8D74D8A91B6E57AC008D5223 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8A01B6E57AC008D5223 /* rscode.c */; };
+		8D74D8AA1B6E57AC008D5223 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8A21B6E57AC008D5223 /* split.c */; };
+		8D74D8B71B6E5FD6008D5223 /* QRCodeReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8B01B6E5FD6008D5223 /* QRCodeReaderViewController.m */; };
+		8D74D8B81B6E5FD6008D5223 /* QRCodeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8B21B6E5FD6008D5223 /* QRCodeReaderView.m */; };
+		8D74D8B91B6E5FD6008D5223 /* QRCodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8B41B6E5FD6008D5223 /* QRCodeReader.m */; };
+		8D74D8BE1B6F157B008D5223 /* QRScanResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D74D8BD1B6F157B008D5223 /* QRScanResultViewController.m */; };
 		8D841FAA1B62157F00801362 /* Event+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FA91B62157F00801362 /* Event+Utility.m */; };
-		8D841FB61B624B0E00801362 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FB51B624B0E00801362 /* Contact.m */; };
-		8D841FB91B624B0E00801362 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FB81B624B0E00801362 /* Event.m */; };
-		8D841FBC1B624B0E00801362 /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FBB1B624B0E00801362 /* Relation.m */; };
-		8D841FBF1B624B0E00801362 /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FBE1B624B0E00801362 /* Tag.m */; };
 		8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FC51B62910B00801362 /* SMSReceiversView.m */; };
 		8D841FC81B6292C200801362 /* SMSReceiversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC71B6292C200801362 /* SMSReceiversView.xib */; };
 		8D841FCA1B63331B00801362 /* EmailReceversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC91B63331B00801362 /* EmailReceversView.xib */; };
 		8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FCC1B63333B00801362 /* EmailReceiversView.m */; };
+		8D841FD01B636EB600801362 /* ContactDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */; };
+		8D841FD61B63A6DD00801362 /* RelationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FD51B63A6DD00801362 /* RelationsViewController.m */; };
+		8D841FDC1B63A72300801362 /* ContactInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FDB1B63A72300801362 /* ContactInfoViewController.m */; };
+		8D841FDF1B63A75900801362 /* TagsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FDE1B63A75900801362 /* TagsViewController.m */; };
+		8D841FE21B64830A00801362 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FE11B64830A00801362 /* CreateEventViewController.m */; };
+		8D841FE51B64831F00801362 /* AddTagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FE41B64831F00801362 /* AddTagViewController.m */; };
 		8D95A92A1B53ABDD009EB722 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9291B53ABDD009EB722 /* main.m */; };
 		8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92C1B53ABDD009EB722 /* AppDelegate.m */; };
 		8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92E1B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld */; };
@@ -55,6 +77,22 @@
 /* Begin PBXFileReference section */
 		8D074CD01B60D877000B73BB /* Contact+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Contact+Utility.h"; sourceTree = "<group>"; };
 		8D074CD11B60D877000B73BB /* Contact+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Contact+Utility.m"; sourceTree = "<group>"; };
+		8D3A8B9A1B75005B00ECEABC /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		8D3A8B9B1B75005B00ECEABC /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		8D3A8B9D1B75005C00ECEABC /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
+		8D3A8B9E1B75005C00ECEABC /* Relation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relation.m; sourceTree = "<group>"; };
+		8D3A8BA01B75005C00ECEABC /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		8D3A8BA11B75005C00ECEABC /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		8D3A8BA31B75005E00ECEABC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		8D3A8BA41B75005E00ECEABC /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		8D70E5061B6B672D00B11C24 /* EventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventViewController.h; sourceTree = "<group>"; };
+		8D70E5071B6B672D00B11C24 /* EventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventViewController.m; sourceTree = "<group>"; };
+		8D70E50B1B6CA58400B11C24 /* ChangeEventTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventTimeViewController.h; sourceTree = "<group>"; };
+		8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventTimeViewController.m; sourceTree = "<group>"; };
+		8D70E50E1B6CF52A00B11C24 /* ChangeEventContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventContactsViewController.h; sourceTree = "<group>"; };
+		8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventContactsViewController.m; sourceTree = "<group>"; };
+		8D70E5111B6D06D400B11C24 /* ChangeEventPlaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventPlaceViewController.h; sourceTree = "<group>"; };
+		8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventPlaceViewController.m; sourceTree = "<group>"; };
 		8D71801F1B543EF000E372ED /* SearchAssistantView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchAssistantView.xib; path = View/SearchAssistantView.xib; sourceTree = "<group>"; };
 		8D7180231B55102600E372ED /* SearchAssistantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchAssistantView.h; path = View/SearchAssistantView.h; sourceTree = "<group>"; };
 		8D7180241B55102600E372ED /* SearchAssistantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchAssistantView.m; path = View/SearchAssistantView.m; sourceTree = "<group>"; };
@@ -78,22 +116,51 @@
 		8D7180AA1B5FD63800E372ED /* TagNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagNavigationView.m; path = View/TagNavigationView.m; sourceTree = "<group>"; };
 		8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Tag+Utility.h"; sourceTree = "<group>"; };
 		8D7180B01B5FDEC700E372ED /* Tag+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Tag+Utility.m"; sourceTree = "<group>"; };
+		8D74D8931B6E5780008D5223 /* UIImage+MDQRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MDQRCode.h"; sourceTree = "<group>"; };
+		8D74D8941B6E5780008D5223 /* UIImage+MDQRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MDQRCode.m"; sourceTree = "<group>"; };
+		8D74D8961B6E57AC008D5223 /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitstream.c; sourceTree = "<group>"; };
+		8D74D8971B6E57AC008D5223 /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+		8D74D8981B6E57AC008D5223 /* mask.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mask.c; sourceTree = "<group>"; };
+		8D74D8991B6E57AC008D5223 /* mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mask.h; sourceTree = "<group>"; };
+		8D74D89A1B6E57AC008D5223 /* qrencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrencode.c; sourceTree = "<group>"; };
+		8D74D89B1B6E57AC008D5223 /* qrencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrencode.h; sourceTree = "<group>"; };
+		8D74D89C1B6E57AC008D5223 /* qrinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrinput.c; sourceTree = "<group>"; };
+		8D74D89D1B6E57AC008D5223 /* qrinput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrinput.h; sourceTree = "<group>"; };
+		8D74D89E1B6E57AC008D5223 /* qrspec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrspec.c; sourceTree = "<group>"; };
+		8D74D89F1B6E57AC008D5223 /* qrspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrspec.h; sourceTree = "<group>"; };
+		8D74D8A01B6E57AC008D5223 /* rscode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rscode.c; sourceTree = "<group>"; };
+		8D74D8A11B6E57AC008D5223 /* rscode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rscode.h; sourceTree = "<group>"; };
+		8D74D8A21B6E57AC008D5223 /* split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = split.c; sourceTree = "<group>"; };
+		8D74D8A31B6E57AC008D5223 /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = split.h; sourceTree = "<group>"; };
+		8D74D8AE1B6E5FD6008D5223 /* QRCodeReaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReaderDelegate.h; sourceTree = "<group>"; };
+		8D74D8AF1B6E5FD6008D5223 /* QRCodeReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReaderViewController.h; sourceTree = "<group>"; };
+		8D74D8B01B6E5FD6008D5223 /* QRCodeReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeReaderViewController.m; sourceTree = "<group>"; };
+		8D74D8B11B6E5FD6008D5223 /* QRCodeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReaderView.h; sourceTree = "<group>"; };
+		8D74D8B21B6E5FD6008D5223 /* QRCodeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeReaderView.m; sourceTree = "<group>"; };
+		8D74D8B31B6E5FD6008D5223 /* QRCodeReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeReader.h; sourceTree = "<group>"; };
+		8D74D8B41B6E5FD6008D5223 /* QRCodeReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeReader.m; sourceTree = "<group>"; };
+		8D74D8BC1B6F157B008D5223 /* QRScanResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanResultViewController.h; sourceTree = "<group>"; };
+		8D74D8BD1B6F157B008D5223 /* QRScanResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanResultViewController.m; sourceTree = "<group>"; };
 		8D841FA81B62157F00801362 /* Event+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Event+Utility.h"; sourceTree = "<group>"; };
 		8D841FA91B62157F00801362 /* Event+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Event+Utility.m"; sourceTree = "<group>"; };
-		8D841FB41B624B0E00801362 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
-		8D841FB51B624B0E00801362 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
-		8D841FB71B624B0E00801362 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		8D841FB81B624B0E00801362 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
-		8D841FBA1B624B0E00801362 /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
-		8D841FBB1B624B0E00801362 /* Relation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relation.m; sourceTree = "<group>"; };
-		8D841FBD1B624B0E00801362 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
-		8D841FBE1B624B0E00801362 /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		8D841FC41B62910B00801362 /* SMSReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSReceiversView.h; sourceTree = "<group>"; };
 		8D841FC51B62910B00801362 /* SMSReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSReceiversView.m; sourceTree = "<group>"; };
 		8D841FC71B6292C200801362 /* SMSReceiversView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SMSReceiversView.xib; path = View/SMSReceiversView.xib; sourceTree = "<group>"; };
 		8D841FC91B63331B00801362 /* EmailReceversView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmailReceversView.xib; sourceTree = "<group>"; };
 		8D841FCB1B63333B00801362 /* EmailReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailReceiversView.h; sourceTree = "<group>"; };
 		8D841FCC1B63333B00801362 /* EmailReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailReceiversView.m; sourceTree = "<group>"; };
+		8D841FCE1B636EB600801362 /* ContactDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailsViewController.h; path = viewController/ContactDetailsViewController.h; sourceTree = "<group>"; };
+		8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailsViewController.m; path = viewController/ContactDetailsViewController.m; sourceTree = "<group>"; };
+		8D841FD41B63A6DD00801362 /* RelationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelationsViewController.h; sourceTree = "<group>"; };
+		8D841FD51B63A6DD00801362 /* RelationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelationsViewController.m; sourceTree = "<group>"; };
+		8D841FDA1B63A72300801362 /* ContactInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInfoViewController.h; sourceTree = "<group>"; };
+		8D841FDB1B63A72300801362 /* ContactInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInfoViewController.m; sourceTree = "<group>"; };
+		8D841FDD1B63A75900801362 /* TagsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsViewController.h; sourceTree = "<group>"; };
+		8D841FDE1B63A75900801362 /* TagsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsViewController.m; sourceTree = "<group>"; };
+		8D841FE01B64830A00801362 /* CreateEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEventViewController.h; sourceTree = "<group>"; };
+		8D841FE11B64830A00801362 /* CreateEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEventViewController.m; sourceTree = "<group>"; };
+		8D841FE31B64831F00801362 /* AddTagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTagViewController.h; sourceTree = "<group>"; };
+		8D841FE41B64831F00801362 /* AddTagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTagViewController.m; sourceTree = "<group>"; };
 		8D95A9241B53ABDD009EB722 /* Contacts Assistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contacts Assistant.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D95A9281B53ABDD009EB722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D95A9291B53ABDD009EB722 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -133,10 +200,32 @@
 		8D7180211B550FF100E372ED /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */,
-				8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */,
 				8D7180741B56B90800E372ED /* ContactsManager.h */,
 				8D7180751B56B90800E372ED /* ContactsManager.m */,
+				8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */,
+				8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */,
+				8D74D8BC1B6F157B008D5223 /* QRScanResultViewController.h */,
+				8D74D8BD1B6F157B008D5223 /* QRScanResultViewController.m */,
+				8D841FCE1B636EB600801362 /* ContactDetailsViewController.h */,
+				8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */,
+				8D841FE31B64831F00801362 /* AddTagViewController.h */,
+				8D841FE41B64831F00801362 /* AddTagViewController.m */,
+				8D70E5061B6B672D00B11C24 /* EventViewController.h */,
+				8D70E5071B6B672D00B11C24 /* EventViewController.m */,
+				8D70E50B1B6CA58400B11C24 /* ChangeEventTimeViewController.h */,
+				8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */,
+				8D70E50E1B6CF52A00B11C24 /* ChangeEventContactsViewController.h */,
+				8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */,
+				8D70E5111B6D06D400B11C24 /* ChangeEventPlaceViewController.h */,
+				8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */,
+				8D841FD41B63A6DD00801362 /* RelationsViewController.h */,
+				8D841FD51B63A6DD00801362 /* RelationsViewController.m */,
+				8D841FE01B64830A00801362 /* CreateEventViewController.h */,
+				8D841FE11B64830A00801362 /* CreateEventViewController.m */,
+				8D841FDA1B63A72300801362 /* ContactInfoViewController.h */,
+				8D841FDB1B63A72300801362 /* ContactInfoViewController.m */,
+				8D841FDD1B63A75900801362 /* TagsViewController.h */,
+				8D841FDE1B63A75900801362 /* TagsViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -174,14 +263,14 @@
 		8D7180391B5667D600E372ED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8D841FBD1B624B0E00801362 /* Tag.h */,
-				8D841FBE1B624B0E00801362 /* Tag.m */,
-				8D841FBA1B624B0E00801362 /* Relation.h */,
-				8D841FBB1B624B0E00801362 /* Relation.m */,
-				8D841FB71B624B0E00801362 /* Event.h */,
-				8D841FB81B624B0E00801362 /* Event.m */,
-				8D841FB41B624B0E00801362 /* Contact.h */,
-				8D841FB51B624B0E00801362 /* Contact.m */,
+				8D3A8BA31B75005E00ECEABC /* Event.h */,
+				8D3A8BA41B75005E00ECEABC /* Event.m */,
+				8D3A8BA01B75005C00ECEABC /* Contact.h */,
+				8D3A8BA11B75005C00ECEABC /* Contact.m */,
+				8D3A8B9D1B75005C00ECEABC /* Relation.h */,
+				8D3A8B9E1B75005C00ECEABC /* Relation.m */,
+				8D3A8B9A1B75005B00ECEABC /* Tag.h */,
+				8D3A8B9B1B75005B00ECEABC /* Tag.m */,
 				8D841FA81B62157F00801362 /* Event+Utility.h */,
 				8D841FA91B62157F00801362 /* Event+Utility.m */,
 				8D7180AF1B5FDEC700E372ED /* Tag+Utility.h */,
@@ -191,6 +280,60 @@
 				8D95A92E1B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		8D74D8AB1B6E57B5008D5223 /* libqrencode */ = {
+			isa = PBXGroup;
+			children = (
+				8D74D8961B6E57AC008D5223 /* bitstream.c */,
+				8D74D8971B6E57AC008D5223 /* bitstream.h */,
+				8D74D8981B6E57AC008D5223 /* mask.c */,
+				8D74D8991B6E57AC008D5223 /* mask.h */,
+				8D74D89A1B6E57AC008D5223 /* qrencode.c */,
+				8D74D89B1B6E57AC008D5223 /* qrencode.h */,
+				8D74D89C1B6E57AC008D5223 /* qrinput.c */,
+				8D74D89D1B6E57AC008D5223 /* qrinput.h */,
+				8D74D89E1B6E57AC008D5223 /* qrspec.c */,
+				8D74D89F1B6E57AC008D5223 /* qrspec.h */,
+				8D74D8A01B6E57AC008D5223 /* rscode.c */,
+				8D74D8A11B6E57AC008D5223 /* rscode.h */,
+				8D74D8A21B6E57AC008D5223 /* split.c */,
+				8D74D8A31B6E57AC008D5223 /* split.h */,
+			);
+			name = libqrencode;
+			sourceTree = "<group>";
+		};
+		8D74D8AC1B6E57D1008D5223 /* QR */ = {
+			isa = PBXGroup;
+			children = (
+				8D74D8AD1B6E5FB2008D5223 /* encoder */,
+				8D74D8BB1B6E5FE0008D5223 /* reader */,
+			);
+			name = QR;
+			sourceTree = "<group>";
+		};
+		8D74D8AD1B6E5FB2008D5223 /* encoder */ = {
+			isa = PBXGroup;
+			children = (
+				8D74D8931B6E5780008D5223 /* UIImage+MDQRCode.h */,
+				8D74D8941B6E5780008D5223 /* UIImage+MDQRCode.m */,
+				8D74D8AB1B6E57B5008D5223 /* libqrencode */,
+			);
+			name = encoder;
+			sourceTree = "<group>";
+		};
+		8D74D8BB1B6E5FE0008D5223 /* reader */ = {
+			isa = PBXGroup;
+			children = (
+				8D74D8AE1B6E5FD6008D5223 /* QRCodeReaderDelegate.h */,
+				8D74D8AF1B6E5FD6008D5223 /* QRCodeReaderViewController.h */,
+				8D74D8B01B6E5FD6008D5223 /* QRCodeReaderViewController.m */,
+				8D74D8B11B6E5FD6008D5223 /* QRCodeReaderView.h */,
+				8D74D8B21B6E5FD6008D5223 /* QRCodeReaderView.m */,
+				8D74D8B31B6E5FD6008D5223 /* QRCodeReader.h */,
+				8D74D8B41B6E5FD6008D5223 /* QRCodeReader.m */,
+			);
+			name = reader;
 			sourceTree = "<group>";
 		};
 		8D95A91B1B53ABDD009EB722 = {
@@ -219,6 +362,7 @@
 				8D95A92B1B53ABDD009EB722 /* AppDelegate.h */,
 				8D95A92C1B53ABDD009EB722 /* AppDelegate.m */,
 				8D95A9341B53ABDD009EB722 /* Main.storyboard */,
+				8D74D8AC1B6E57D1008D5223 /* QR */,
 				8D7180211B550FF100E372ED /* ViewControllers */,
 				8D7180221B55100200E372ED /* Views */,
 				8D95A9371B53ABDD009EB722 /* Images.xcassets */,
@@ -362,26 +506,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D841FBF1B624B0E00801362 /* Tag.m in Sources */,
+				8D74D8A61B6E57AC008D5223 /* qrencode.c in Sources */,
+				8D74D8A91B6E57AC008D5223 /* rscode.c in Sources */,
 				8D7180971B5DE97400E372ED /* TagCell.m in Sources */,
 				8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */,
 				8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */,
-				8D841FBC1B624B0E00801362 /* Relation.m in Sources */,
+				8D3A8BA21B75005C00ECEABC /* Contact.m in Sources */,
+				8D841FD61B63A6DD00801362 /* RelationsViewController.m in Sources */,
+				8D70E50D1B6CA58400B11C24 /* ChangeEventTimeViewController.m in Sources */,
 				8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */,
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
-				8D841FB91B624B0E00801362 /* Event.m in Sources */,
+				8D841FD01B636EB600801362 /* ContactDetailsViewController.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
 				8D841FAA1B62157F00801362 /* Event+Utility.m in Sources */,
+				8D74D8B81B6E5FD6008D5223 /* QRCodeReaderView.m in Sources */,
 				8D7180911B5D427A00E372ED /* HeaderView.m in Sources */,
-				8D841FB61B624B0E00801362 /* Contact.m in Sources */,
+				8D74D8B71B6E5FD6008D5223 /* QRCodeReaderViewController.m in Sources */,
+				8D74D8A71B6E57AC008D5223 /* qrinput.c in Sources */,
+				8D70E5131B6D06D400B11C24 /* ChangeEventPlaceViewController.m in Sources */,
 				8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */,
+				8D841FE51B64831F00801362 /* AddTagViewController.m in Sources */,
 				8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */,
+				8D70E5101B6CF52A00B11C24 /* ChangeEventContactsViewController.m in Sources */,
+				8D841FE21B64830A00801362 /* CreateEventViewController.m in Sources */,
+				8D841FDF1B63A75900801362 /* TagsViewController.m in Sources */,
+				8D74D8BE1B6F157B008D5223 /* QRScanResultViewController.m in Sources */,
+				8D3A8B9F1B75005C00ECEABC /* Relation.m in Sources */,
+				8D74D8951B6E5780008D5223 /* UIImage+MDQRCode.m in Sources */,
+				8D74D8AA1B6E57AC008D5223 /* split.c in Sources */,
+				8D74D8A51B6E57AC008D5223 /* mask.c in Sources */,
+				8D3A8BA51B75005E00ECEABC /* Event.m in Sources */,
+				8D74D8A41B6E57AC008D5223 /* bitstream.c in Sources */,
 				8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */,
 				8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */,
 				8D95A92A1B53ABDD009EB722 /* main.m in Sources */,
+				8D74D8B91B6E5FD6008D5223 /* QRCodeReader.m in Sources */,
+				8D841FDC1B63A72300801362 /* ContactInfoViewController.m in Sources */,
 				8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */,
 				8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */,
+				8D74D8A81B6E57AC008D5223 /* qrspec.c in Sources */,
+				8D70E5081B6B672D00B11C24 /* EventViewController.m in Sources */,
 				8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */,
+				8D3A8B9C1B75005B00ECEABC /* Tag.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,15 +14,13 @@ typedef enum : NSUInteger {
 } ActionViewType;
 
 typedef enum : NSUInteger {
-//    ActionViewButtonEditDelete =181,
-//    ActionViewButtonEditMove,
-//
+
     ActionViewButtonMoreFunctionSMS =281,
     ActionViewButtonMoreFunctionEmail,
-    ActionViewButtonMoreFunctionManuallyAdd,
     ActionViewButtonMoreFunctionScanQR,
-    ActionViewButtonMoreFunctionExchangeCard,
+    ActionViewButtonMoreFunctionManuallyAdd,
     ActionViewButtonMoreFunctionShareContacts,
+    
 } ActionViewButton;
 @class ActionsView;
 @protocol ActionsViewDelegate <NSObject>

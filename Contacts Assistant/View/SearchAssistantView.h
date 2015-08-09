@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class Contact,Tag;
 @interface SearchAssistantView : UIView <UITableViewDataSource,UITableViewDelegate>
 
-@property(strong,nonatomic)NSOrderedSet *searchAdvice;
+@property(strong,nonatomic)NSDictionary *searchAdvice;
 
-@property(copy) void(^keyWordSelectedHandler)(NSDictionary *keyWord);
+@property(copy) void(^advicedContactSelectedHandler)(Contact *selectedContact);
+@property(copy) void(^advicedTagSelectedHandler)(Tag *selectedTag);
 
 @end

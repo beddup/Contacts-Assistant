@@ -2,7 +2,7 @@
 //  Contact.m
 //  Contacts Assistant
 //
-//  Created by Amay on 7/24/15.
+//  Created by Amay on 8/7/15.
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
@@ -15,11 +15,12 @@
 @implementation Contact
 
 @dynamic contactID;
-@dynamic contactName;
 @dynamic contactIsDeleted;
+@dynamic contactName;
+@dynamic contactOrderWeight;
 @dynamic attendWhichEvents;
 @dynamic belongWhichRelations;
-@dynamic directUnderWhichTags;
+@dynamic underWhichTags;
 @dynamic relationsWithOtherPeople;
 
 @end

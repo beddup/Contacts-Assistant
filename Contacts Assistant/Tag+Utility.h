@@ -10,11 +10,18 @@
 extern NSString * const RootTagName ;
 
 @interface Tag (Utility)
+
 -(BOOL)isRootTag;
+
 -(NSArray *)allOwnedContacts;
-+(Tag *)tagWithName:(NSString *)name;
-+(Tag *)createTagWithTagName:(NSString *)name;
+-(NSInteger)numberOfAllOwnedContacts;
+
 +(Tag *)rootTag;
 +(NSArray *)tagsWhoseNameContains:(NSString *)keyword;
++(NSArray *)allTags;
++(void)deleteTag:(Tag *)tag;
+
++(BOOL)tagExists:(NSString *)tagName;
++(Tag *)getTagWithTagName:(NSString *)name; // if tag exists , return the existing tag, if not, create it
 
 @end

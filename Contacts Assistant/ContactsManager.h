@@ -8,14 +8,25 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-@class Contact,Tag;
-extern NSString *const FetchResultContactsKey;
-extern NSString *const FetchResultTagsKey;
-extern NSString *const ContactManagerDidFinishUpdatingCoreData;
-@protocol ContactsManagerDelegate <NSObject>
 
-////-(void)addNewContactUnderTag:(Tag *)tag;
-//-(void)selectionChanged;
+@class Contact,Tag;
+extern NSString *const AdvicedContactsKey;
+extern NSString *const AdvicedTagsKey;
+extern NSString *const SearchResultContactsKey;
+
+extern NSString *const ContactManagerDidFinishUpdatingCoreData;
+
+extern NSString *const PhoneLabel;
+extern NSString *const PhoneNumber;
+
+extern NSString *const EmailLabel;
+extern NSString *const EmailValue;
+
+extern NSString * const CommunicationPhones;  //nsarray
+extern NSString * const CommunicationEmails;  // nsarray
+
+
+@protocol ContactsManagerDelegate <NSObject>
 
 @end
 
@@ -28,7 +39,7 @@ extern NSString *const ContactManagerDidFinishUpdatingCoreData;
 
 -(void)updateCoreDataBasedOnContacts;
 
--(NSDictionary *)searchResultByKeyword:(NSString *)string;
+-(NSDictionary *)searchContacts:(NSArray *)contacts keywords:(NSArray *)keywords ;
 
 -(NSString *)companyAndDepartmentOfContact:(Contact *)contact;
 -(NSArray *)phoneNumbersOfContact:(Contact *)contact;
@@ -36,5 +47,13 @@ extern NSString *const ContactManagerDidFinishUpdatingCoreData;
 
 -(NSArray *)filterContactsWithoutPhoneNumbers:(NSArray *)contacts;
 -(NSArray *)filterContactsWithoutemail:(NSArray *)contacts;
+
+-(void)addContactLabel:(NSString *)label value:(NSString *)phoneOrEmail isPhoneNumber:(BOOL)isPhoneNumber;
+
+-(NSComparisonResult)compareResult:(Contact *)contact1 contact2:(Contact *)contact2;
+-(NSString *)firstLetter:(Contact *)contact;
+
++(NSArray *)localizedSystemContactLabels;
++(NSArray *)localizedSystemRelationLabel;
 
 @end

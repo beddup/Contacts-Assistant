@@ -9,18 +9,20 @@
 #import "Contact.h"
 #import <UIKit/UIKit.h>
 
-extern NSString * const CommunicationPhones;  //nsarray
-extern NSString * const CommunicationEmails;  // nsarray
 
 @interface Contact (Utility)
 
 +(NSArray *)allContacts;
-+(NSArray *)contactsWhoseNameContains:(NSString *)keyword;
+//+(NSArray *)contactsWhoseNameContains:(NSString *)keyword;
 +(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs;
 +(Contact *)contactOfContactID:(int)contactID;
+
+
 -(NSDictionary *)avaibleCommunications;
 
 -(NSString *)companyAndDepartment;
 
-
++(NSString *)QRStringOfContact:(Contact *)contact; //including name  + contactinfo
++(NSDictionary *)infoFromQRString:(NSString *)qrstring;
+-(Event *)recentEvent;
 @end
