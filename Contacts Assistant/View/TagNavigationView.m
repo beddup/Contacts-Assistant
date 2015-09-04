@@ -70,7 +70,7 @@
     headerLabel.textAlignment=NSTextAlignmentCenter;
 
     self.tags = [[Tag allTags] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
-        return [obj1.tagName compare:obj2.tagName];
+        return obj1.ownedContacts.count <= obj2.ownedContacts.count;
     }];
 
 

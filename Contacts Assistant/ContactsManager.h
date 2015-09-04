@@ -10,50 +10,70 @@
 #import <UIKit/UIKit.h>
 
 @class Contact,Tag;
+//notification
+extern NSString *const ContactManagerDidFinishUpdatingCoreData;
+//search
 extern NSString *const AdvicedContactsKey;
 extern NSString *const AdvicedTagsKey;
 extern NSString *const SearchResultContactsKey;
+//contact info key
+extern NSString *const ContactInfoIndexKey;
+extern NSString *const ContactInfoLabelKey;
+extern NSString *const ContactInfoValueKey;
+extern NSString *const ContactInfoTypeKey;
 
-extern NSString *const ContactManagerDidFinishUpdatingCoreData;
-
-extern NSString *const PhoneLabel;
-extern NSString *const PhoneNumber;
-
-extern NSString *const EmailLabel;
-extern NSString *const EmailValue;
-
-extern NSString * const CommunicationPhones;  //nsarray
-extern NSString * const CommunicationEmails;  // nsarray
-
+typedef enum : NSUInteger {
+    ContactInfoTypePhone=1,
+    ContactInfoTypeEmail,
+} ContactInfoType;
 
 @protocol ContactsManagerDelegate <NSObject>
 
 @end
 
-
+@class Relation;
 @interface ContactsManager : NSObject
 
 @property(weak,nonatomic)id<ContactsManagerDelegate>delegate;
+@property(strong,nonatomic)NSMutableArray *arrangedAllContacts;
 
 +(instancetype)sharedContactManager;
 
--(void)updateCoreDataBasedOnContacts;
+-(void)loadContacts;
 
 -(NSDictionary *)searchContacts:(NSArray *)contacts keywords:(NSArray *)keywords ;
 
 -(NSString *)companyAndDepartmentOfContact:(Contact *)contact;
 -(NSArray *)phoneNumbersOfContact:(Contact *)contact;
 -(NSArray *)emailsOfContact:(Contact *)contact;
+-(UIImage *)thumbnailOfContact:(Contact *)contact;
 
 -(NSArray *)filterContactsWithoutPhoneNumbers:(NSArray *)contacts;
 -(NSArray *)filterContactsWithoutemail:(NSArray *)contacts;
-
--(void)addContactLabel:(NSString *)label value:(NSString *)phoneOrEmail isPhoneNumber:(BOOL)isPhoneNumber;
 
 -(NSComparisonResult)compareResult:(Contact *)contact1 contact2:(Contact *)contact2;
 -(NSString *)firstLetter:(Contact *)contact;
 
 +(NSArray *)localizedSystemContactLabels;
 +(NSArray *)localizedSystemRelationLabel;
+
+
+-(NSMutableArray *)arrangedContactsunderTag:(Tag *)tag;
+-(NSMutableArray *)indexTitleOfContact:(NSMutableArray *)contacts;
+
+
+//edit
+-(BOOL)modifyContactInfo:(NSDictionary *)contactInfo contact:(Contact *)contact;
+-(BOOL)addContactInfo:(NSDictionary *)contactInfo contact:(Contact *)contact;
+-(BOOL)deleteContactInfo:(NSDictionary *)contactInfo contact:(Contact *)contact;
+
+-(Contact *)createPerson:(NSDictionary *)personInfo;
+-(void)removePerson:(Contact *)contact;
+
+-(void)addRelation:(NSString *)relationName forContact:(Contact *)contact otherContacts:(NSArray *)contacts;
+-(void)removeRelation:(Relation *)relation;
+
+
+
 
 @end

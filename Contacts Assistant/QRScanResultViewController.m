@@ -8,10 +8,13 @@
 
 #import "QRScanResultViewController.h"
 #import "ContactsManager.h"
+#import "Contact+Utility.h"
 
 @interface QRScanResultViewController ()
 
-@property(strong,nonatomic)NSMutableArray *contactInfo;
+@property(strong,nonatomic)NSDictionary *resultInfo;
+@property(strong,nonatomic)NSArray *contactInfo;
+
 @property(weak,nonatomic)UIButton *addToAdressBook;
 @end
 
@@ -50,23 +53,23 @@
 -(void)addToAB:(UIButton *)button{
     NSLog(@"添加到通讯录中");
 }
--(NSMutableArray *)contactInfo{
-    if (!_contactInfo) {
-        _contactInfo=[@[] mutableCopy];
-    }
-    return _contactInfo;
-}
--(void)setResultInfo:(NSDictionary *)resultInfo{
-    _resultInfo=resultInfo;
-    [self.contactInfo addObjectsFromArray:self.resultInfo[@"C"][CommunicationPhones]];
-    [self.contactInfo addObjectsFromArray:self.resultInfo[@"C"][CommunicationEmails]];
+
+-(void)setResultString:(NSString *)resultString{
+
+    _resultString=resultString;
+    self.resultInfo=[Contact infoFromQRString:resultString];
+    NSArray *phonesInfo=self.resultInfo[@"P"];
+    NSArray *emailsInfo=self.resultInfo[@"E"];
+    self.contactInfo=[phonesInfo arrayByAddingObjectsFromArray:emailsInfo];
 
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - tableview
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 2;
 }
@@ -86,8 +89,8 @@
         cell.detailTextLabel.text=nil;
     }else{
         NSDictionary *contactInfo =self.contactInfo[indexPath.row];
-        cell.textLabel.text=contactInfo[PhoneLabel] ?  contactInfo[PhoneLabel] : contactInfo[EmailLabel];
-        cell.detailTextLabel.text=contactInfo[PhoneNumber] ? contactInfo[PhoneNumber] : contactInfo[EmailValue];
+        cell.textLabel.text=contactInfo[ContactInfoLabelKey];
+        cell.detailTextLabel.text=contactInfo[ContactInfoValueKey];
     }
     return cell;
 

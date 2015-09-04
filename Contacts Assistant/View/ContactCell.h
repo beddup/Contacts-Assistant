@@ -10,18 +10,15 @@
 #import "Tag.h"
 
 typedef enum : NSUInteger {
-    ContactCellModeNormal,
+    ContactCellModeNormal=0,
     ContactCellModeSMS,
     ContactCellModeEmail,
 } ContactCellMode;
 @protocol ContactCellDelegate <NSObject>
 
--(void)phone:(Contact *)contact availableNumbers:(NSArray *)numbers;
--(void)sms:(Contact *)contact availableNumbers:(NSArray *)numbers ;
--(void)email:(Contact *)contact availableEmails:(NSArray *)emails ;
-
--(void)putToTop:(UITableViewCell *)cell;
-
+-(void)phone:(Contact *)contact phonesInfo:(NSArray *)numbers;
+-(void)sms:(Contact *)contact phonesInfo:(NSArray *)numbers ;
+-(void)email:(Contact *)contact emailsInfo:(NSArray *)emails ;
 @end
 
 

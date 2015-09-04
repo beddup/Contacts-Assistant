@@ -7,13 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ReceiversView.h"
 
-@interface EmailReceiversView : UIView
-
-@property(copy)void (^cancelEmailHandler)();
-
--(void)addContactAtIndex:(NSInteger)index withName:(NSString *)name andEmails:(NSArray *)numbers;
--(void)removeContactAtIndex:(NSInteger)index;
-
+@class Contact;
+@interface EmailReceiversView : ReceiversView
 
 @end

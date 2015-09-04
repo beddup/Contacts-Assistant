@@ -9,11 +9,6 @@
 #import <UIKit/UIKit.h>
 
 typedef enum : NSUInteger {
-    ActionViewBatchEditingView,
-    ActionViewMoreFunctionsView,
-} ActionViewType;
-
-typedef enum : NSUInteger {
 
     ActionViewButtonMoreFunctionSMS =281,
     ActionViewButtonMoreFunctionEmail,
@@ -30,7 +25,6 @@ typedef enum : NSUInteger {
 @end
 @interface ActionsView : UIView
 
-@property(nonatomic)ActionViewType type;
 @property(weak,nonatomic)id <ActionsViewDelegate>delegate;
 
 @end

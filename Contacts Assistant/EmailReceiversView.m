@@ -7,7 +7,8 @@
 //
 
 #import "EmailReceiversView.h"
-
+#import "Contact.h"
+#import "ContactsManager.h"
 NSString * const ContentContactIndex=@"ContentContactIndex";
 NSString * const ContentNameKey=@"ContentNameKey";
 NSString * const ContentEmailsKey=@"ContentEmailsKey";
@@ -22,7 +23,7 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *indicateView;
 
-@property(strong,nonatomic) NSDictionary *receivers;
+@property(strong,nonatomic) NSDictionary *allThreeKindReceivers;
 
 @property(nonatomic)NSString *currentField;
 
@@ -41,67 +42,94 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
     }];
 
 }
--(NSString *)contentOfReceiversArray:(NSMutableArray *)array{
-
-    NSString *content=@"";
-    for (NSDictionary *contactDic in array) {
-        NSString *contentString=[NSString stringWithFormat:@"%@: %@\n",contactDic[ContentNameKey],[contactDic[ContentEmailsKey] componentsJoinedByString:@","]];
-        content =[content stringByAppendingString:contentString];
-    }
-
-    return content;
-
-}
 
 -(void)updateTitle{
-    NSArray *currentFieldReceivers=self.receivers[self.currentField];
+    NSArray *currentFieldReceivers=self.allThreeKindReceivers[self.currentField];
     if (!currentFieldReceivers.count) {
         self.titleLabel.text=self.defaultTitle[self.currentField];
         return;
     }
-    self.titleLabel.text=[NSString stringWithFormat:@"%@个收件人，%@抄送，%@密送",@([(NSArray *)self.receivers[ReceiversToKey] count]),@([(NSArray *)self.receivers[ReceiversCCKey] count]),@([(NSArray*)self.receivers[ReceiversBCCKey] count])];
+    self.titleLabel.text=[NSString stringWithFormat:@"%@个收件人，%@抄送，%@密送",@([(NSArray *)self.allThreeKindReceivers[ReceiversToKey] count]),@([(NSArray *)self.allThreeKindReceivers[ReceiversCCKey] count]),@([(NSArray*)self.allThreeKindReceivers[ReceiversBCCKey] count])];
 }
 
 -(void)updateTextView{
-    self.textView.text=[self contentOfReceiversArray:self.receivers[self.currentField]];
-    if ([self.textView.text isEqualToString:@""]) {
+
+    if (![self.allThreeKindReceivers[self.currentField] count]) {
         self.textView.text=self.defaultContent[self.currentField];
+        return;
     }
-    [self updateTitle];
-}
--(void)addContactAtIndex:(NSInteger)index withName:(NSString *)name andEmails:(NSArray *)numbers{
+    self.textView.text=[self contactInfosStringOfReceivers:self.allThreeKindReceivers[self.currentField]];
 
-    NSArray *currentFieldReceivers=self.receivers[self.currentField];
-    if (!currentFieldReceivers.count) {
-        self.textView.text=@"";
-    }
-    [self.receivers[self.currentField] insertObject:@{ContentNameKey:name,
-                                                      ContentContactIndex:@(index),
-                                                      ContentEmailsKey:numbers}
-                                            atIndex:0 ];
+}
+-(void)addContactInfosToReceivers:(NSArray *)contactInfos contact:(Contact *)contact{
+
+    [self.allThreeKindReceivers[self.currentField] insertObject:@{ReceiversContactKey:contact,
+                                                       ReceiversContactInfosKey:[contactInfos mutableCopy]}
+                         atIndex:0];
+
     [self updateTextView];
+    [self updateTitle];
 
 }
--(void)removeContactAtIndex:(NSInteger)index{
 
-    for (NSString *key in self.receivers.allKeys) {
-        NSArray *indexes=[self.receivers[key] valueForKey:ContentContactIndex];
-        NSInteger i =[indexes indexOfObject:@(index)];
-        if (i!=NSNotFound) {
-            [self.receivers[key] removeObjectAtIndex:i];
-            break;
+-(void)removeContactInfosOfContact:(Contact *)contact{
+    for (NSString *key in self.allThreeKindReceivers.allKeys) {
+
+         NSMutableArray* receivers=self.allThreeKindReceivers[key];
+        for (int index=0; index<receivers.count; index++) {
+            NSDictionary *receiver=receivers[index];
+            Contact *possibleContact=receiver[ReceiversContactKey];
+            if (possibleContact.contactID.integerValue == contact.contactID.integerValue) {
+                [receivers removeObjectAtIndex:index];
+            }
         }
     }
+
     [self updateTextView];
+    [self updateTitle];
 
 }
+-(void)removeAllContactInfos{
+    self.textView.text=self.textView.text=self.defaultContent[self.currentField];
+    self.allThreeKindReceivers=nil;
+}
+-(BOOL)hasContactInfo{
+    for (NSString *key in self.allThreeKindReceivers.allKeys) {
+        NSMutableArray* receivers=self.allThreeKindReceivers[key];
+        if (receivers.count) {
+            return YES;
+        }
+    }
+    return NO;
+}
+-(NSArray *)selectedContactInfosOfContact:(Contact *)contact{
+
+    NSMutableArray *marray=[@[] mutableCopy];
+    for (NSString *key in self.allThreeKindReceivers.allKeys) {
+        NSMutableArray* receivers=self.allThreeKindReceivers[key];
+        for (NSDictionary *receiver in receivers) {
+            Contact *possibleContact=receiver[ReceiversContactKey];
+            if (possibleContact.contactID.integerValue == contact.contactID.integerValue) {
+                [marray addObjectsFromArray:receiver[ReceiversContactInfosKey]];
+            }
+        }
+    }
+        return nil;
+
+}
+
 
 - (IBAction)receversDetermined:(UIButton *)sender {
 
+    NSArray *ToEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversToKey]];
+    NSArray *CCEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversCCKey]];
+    NSArray *BCCEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversBCCKey]];
+
+    self.sendHandler(@[ToEmail,CCEmail,BCCEmail]);
 }
 
 - (IBAction)cancelSelection:(UIButton *)sender {
-    self.cancelEmailHandler();
+    self.cancelHandler();
 }
 
 
@@ -112,6 +140,8 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
     self.currentField=ReceiversToKey;
 
     [self updateTextView];
+    [self updateTitle];
+
 
 }
 
@@ -122,6 +152,8 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
     self.currentField=ReceiversCCKey;
 
     [self updateTextView];
+    [self updateTitle];
+
 
 
 }
@@ -131,23 +163,24 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
     [self indicatorMoveToButton:sender];
     self.currentField=ReceiversBCCKey;
     [self updateTextView];
+    [self updateTitle];
 
 
 }
 #pragma  mark - setup
--(void)awakeFromNib{
-    [self setup];
+-(NSDictionary *)allThreeKindReceivers{
+    if (!_allThreeKindReceivers) {
+        _allThreeKindReceivers=@{ReceiversToKey:[@[] mutableCopy],
+                                     ReceiversCCKey:[@[] mutableCopy],
+                                     ReceiversBCCKey:[@[] mutableCopy]};
+    }
+    return _allThreeKindReceivers;
 }
-
 -(void)setup{
 
-    self.receivers=@{ReceiversToKey:[@[] mutableCopy],
-                     ReceiversCCKey:[@[] mutableCopy],
-                     ReceiversBCCKey:[@[] mutableCopy]};
-
-    self.defaultContent=@{ReceiversToKey:@"暂未添加收件人",
-                          ReceiversCCKey:@"暂未添加抄送人",
-                          ReceiversBCCKey:@"暂未添加密送人"};
+    self.defaultContent=@{ReceiversToKey:@"未添加收件人",
+                          ReceiversCCKey:@"未添加抄送人",
+                          ReceiversBCCKey:@"未添加密送人"};
 
     self.defaultTitle=@{ReceiversToKey:@"请选择收件人",
                         ReceiversCCKey:@"请选择抄送人",
@@ -155,23 +188,15 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
 
     self.currentField=ReceiversToKey;
 
+    self.layer.cornerRadius=3.0;
+    self.textView.font=[UIFont systemFontOfSize:14];
+    [self updateTextView];
+    [self updateTitle];
+
 
 
 }
--(instancetype)initWithFrame:(CGRect)frame{
-    self=[super initWithFrame:frame];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+
 
 @end

@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "Contact.h"
 #import "Event.h"
+#import "ChooseContactsViewController.h"
 
-@interface ChangeEventContactsViewController : UIViewController
+@interface ChangeEventContactsViewController : ChooseContactsViewController
+
 @property(strong,nonatomic)Event *event;
+
 @end

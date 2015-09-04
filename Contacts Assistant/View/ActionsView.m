@@ -26,6 +26,7 @@
     [self setup];
 }
 -(void)setup{
+    self.layer.cornerRadius=3.0;
 
 }
 -(instancetype)initWithFrame:(CGRect)frame{

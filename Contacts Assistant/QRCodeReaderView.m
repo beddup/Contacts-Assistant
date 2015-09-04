@@ -58,8 +58,35 @@
 
   CGRect offsetRect = CGRectOffset(innerRect, 0, 15);
 
+    UIBezierPath *path=    [UIBezierPath bezierPath];
+    //left up corner
+    [path moveToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMinY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMinX(offsetRect)+CGRectGetWidth(offsetRect)/6, CGRectGetMinY(offsetRect))];
+    [path moveToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMinY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMinY(offsetRect)+CGRectGetHeight(offsetRect)/6)];
 
-  _overlay.path = [UIBezierPath bezierPathWithRoundedRect:offsetRect cornerRadius:5].CGPath;
+    //right up corner
+    [path moveToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMinY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMaxX(offsetRect)-CGRectGetWidth(offsetRect)/6, CGRectGetMinY(offsetRect))];
+    [path moveToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMinY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMinY(offsetRect)+CGRectGetHeight(offsetRect)/6)];
+
+    //right down corner
+    [path moveToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMaxY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMaxX(offsetRect)-CGRectGetWidth(offsetRect)/6, CGRectGetMaxY(offsetRect))];
+    [path moveToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMaxY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMaxX(offsetRect), CGRectGetMaxY(offsetRect)-CGRectGetHeight(offsetRect)/6)];
+
+    //down left
+    [path moveToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMaxY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMinX(offsetRect)+CGRectGetWidth(offsetRect)/6, CGRectGetMaxY(offsetRect))];
+    [path moveToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMaxY(offsetRect))];
+    [path addLineToPoint:CGPointMake(CGRectGetMinX(offsetRect), CGRectGetMaxY(offsetRect)-CGRectGetHeight(offsetRect)/6)];
+    [path closePath];
+    _overlay.path=path.CGPath;
+
+
+
 }
 
 #pragma mark - Private Methods
@@ -69,11 +96,8 @@
   _overlay = [[CAShapeLayer alloc] init];
   _overlay.backgroundColor = [UIColor clearColor].CGColor;
   _overlay.fillColor       = [UIColor clearColor].CGColor;
-  _overlay.strokeColor     = [UIColor whiteColor].CGColor;
-  _overlay.lineWidth       = 1.5;
-  _overlay.lineDashPattern = @[@7.0, @7.0];
-  _overlay.lineDashPhase   = 0;
-
+  _overlay.strokeColor     = [UIColor colorWithRed:81.0/255 green:167.0/255 blue:249.0/255 alpha:1].CGColor;
+  _overlay.lineWidth       = 2.5;
   [self.layer addSublayer:_overlay];
 }
 

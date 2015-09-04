@@ -7,16 +7,15 @@
 //
 
 #import "SMSReceiversView.h"
-NSString * const ReceiversContactIndex=@"ReceiversContactIndex";
-NSString * const ReceiversNameKey=@"ReceiversNameKey";
-NSString * const ReceiversNumbersKey=@"ReceiversNumbersKey";
+#import "ContactsManager.h"
+#import "Contact.h"
 
 @interface SMSReceiversView()
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
-@property(strong,nonatomic)NSMutableArray *receivers; // of contact and numbers
+@property(strong,nonatomic)NSMutableArray *receivers; // of contact and contactInfo
 
 @end
 
@@ -26,88 +25,94 @@ NSString * const ReceiversNumbersKey=@"ReceiversNumbersKey";
 
 - (IBAction)receiversDetermined:(id)sender {
 
+    self.sendHandler([self phoneNumbersOrEmailOfReceivers:self.receivers]);
 }
 
 - (IBAction)cancelSeletion:(id)sender {
 
-    self.cancelSMSHandler();
+    self.cancelHandler();
 
 }
 
 -(void)updateTextView{
-    if (!self.receivers.count) {
-        self.textView.text=@"暂未选择联系人";
+
+    if (!self.hasContactInfo) {
+        self.textView.text=@"未选择联系人";
         return;
     }
 
-    NSString *contentString=@"";
-    for (NSDictionary *contactDic in self.receivers) {
-        NSString *contactInfo=[NSString stringWithFormat:@"%@: %@\n",contactDic[ReceiversNameKey],[contactDic[ReceiversNumbersKey] componentsJoinedByString:@","]];
-        contentString =[contentString stringByAppendingString:contactInfo];
-    }
-    self.textView.text=contentString;
-
-    [self updateTitle];
-
+    self.textView.text=[self contactInfosStringOfReceivers:self.receivers];
 
 }
 -(void)updateTitle{
-    if (!self.receivers.count) {
-    self.title.text=@"请选择联系人";
+    if (!self.hasContactInfo) {
+        self.title.text=@"请选择联系人";
         return;
     }
     NSInteger phoneCount=0;
     for (NSDictionary *dic in self.receivers) {
-        NSArray *numbersArray=dic[ReceiversNumbersKey];
+        NSArray *numbersArray=dic[ReceiversContactInfosKey];
         phoneCount+=numbersArray.count;
     }
-    self.title.text=[NSString stringWithFormat:@"%@个联系人，%@个电话",@(self.receivers.count),@(phoneCount)];
-
-}
--(void)removeContactAtIndex:(NSInteger)index{
-
-    NSArray *indexes=[self.receivers valueForKey:ReceiversContactIndex];
-    NSInteger i= [indexes indexOfObject:@(index)];
-    [self.receivers removeObjectAtIndex:i];
-
-    [self updateTextView];
+    self.title.text=[NSString stringWithFormat:@"%@个联系人",@(self.receivers.count)];
 
 }
 
+-(void)removeContactInfosOfContact:(Contact *)contact{
 
--(void)addContactAtIndex:(NSInteger)index withName:(NSString *)name andPhoneNumbers:(NSArray *)numbers{
-    if (!self.receivers.count) {
-        self.textView.text=@"";
+    for (int index=0; index<self.receivers.count; index++) {
+
+        NSDictionary *receiver=self.receivers[index];
+        Contact *possibleContact=receiver[ReceiversContactKey];
+        if (possibleContact.contactID.integerValue == contact.contactID.integerValue) {
+            [self.receivers removeObjectAtIndex:index];
+            break;
+        }
     }
-
-    [self.receivers insertObject:@{ReceiversContactIndex:@(index),
-                                   ReceiversNameKey:name,
-                                   ReceiversNumbersKey:numbers} atIndex:0];
-
     [self updateTextView];
-
-
-
+    [self updateTitle];
 
 }
+-(void)addContactInfosToReceivers:(NSArray *)contactInfos contact:(Contact *)contact{
+    [self.receivers insertObject:@{ReceiversContactKey:contact,
+                                   ReceiversContactInfosKey:[contactInfos mutableCopy]}
+                         atIndex:0];
+    [self updateTextView];
+    [self updateTitle];
+
+}
+-(BOOL)hasContactInfo{
+    return self.receivers.count;
+}
+-(void)removeAllContactInfos{
+    self.textView.text=@"未选择联系人";
+    self.receivers=nil;
+}
+-(NSMutableArray *)receivers{
+    if (!_receivers) {
+        _receivers=[@[] mutableCopy];
+    }
+    return _receivers;
+}
+//
+//-(NSArray *)selectedContactInfosOfContact:(Contact *)contact{
+//
+//    for (NSDictionary *receiver in self.receivers) {
+//        Contact *possibleContact=receiver[ReceiversContactKey];
+//        if (possibleContact.contactID.integerValue == contact.contactID.integerValue) {
+//            return receiver[ReceiversContactInfosKey];
+//        }
+//    }
+//    return nil;
+//}
 
 #pragma  mark - setup
--(void)awakeFromNib{
-    [self setup];
-}
-
 -(void)setup{
-
     self.receivers= [@[] mutableCopy];
-
+    self.layer.cornerRadius=3.0;
+    self.textView.font=[UIFont systemFontOfSize:14];
+    [self updateTextView];
+    [self updateTitle];
 }
--(instancetype)initWithFrame:(CGRect)frame{
-    self=[super initWithFrame:frame];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
-
 
 @end

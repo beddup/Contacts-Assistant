@@ -7,13 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface SMSReceiversView : UIView
-
-@property(copy)void (^cancelSMSHandler)();
-
--(void)addContactAtIndex:(NSInteger)index withName:(NSString *)name andPhoneNumbers:(NSArray *)numbers;
--(void)removeContactAtIndex:(NSInteger)index;
-
-
+#import "ReceiversView.h"
+@interface SMSReceiversView : ReceiversView
 @end

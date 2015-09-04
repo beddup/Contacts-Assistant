@@ -14,23 +14,15 @@
 
 @interface ContactCell()
 
-@property(strong,nonatomic)NSDictionary *availabelSNS;
+@property(strong,nonatomic)NSArray *phonesInfo;
+@property(strong,nonatomic)NSArray *emailsInfo;
 
-@property(strong,nonatomic)NSDictionary *availabelCommuniations;
-
-
-@property(weak,nonatomic)UIButton *putTopButton;
 @property(weak,nonatomic)UIButton *phoneButton;
-
 @property(weak,nonatomic)UIButton *smsButton;
-
 @property(weak,nonatomic)UIButton *emailButton;
 
-//@property(weak,nonatomic)UIButton *addEventButton;
-//
-//@property(weak,nonatomic)UIButton *eventDetailButton;
-
-@property(strong,nonatomic)NSArray *events; //of Events
+@property(strong,nonatomic)Event *displayedEvent; //of Events
+@property(strong,nonatomic)UIColor *contentBKGColor;
 
 @end
 
@@ -41,76 +33,71 @@
 -(void)setContact:(Contact *)contact{
     _contact=contact;
 
+    self.phonesInfo=[[ContactsManager sharedContactManager]phoneNumbersOfContact:contact];
+    self.emailsInfo=[[ContactsManager sharedContactManager]emailsOfContact:contact];
+    [self checkPhoneSMSEmailButtonsState];
 
-    self.events = [[_contact.attendWhichEvents allObjects] sortedArrayUsingComparator:^NSComparisonResult(Event * obj1, Event * obj2) {
-        return [obj1.date compare:obj2.date];
-    }];
-
-    [self checkAvailableCommunications];
-
-    [self checkAvailableSNS];
-
+    self.displayedEvent=[contact mostRecentEvent];
     [self setNeedsDisplay];
 
 }
 -(void)setMode:(ContactCellMode )mode{
     _mode=mode;
-
-    self.phoneButton.hidden=mode || ![self.availabelCommuniations.allKeys containsObject:CommunicationPhones];
-    self.smsButton.hidden=self.phoneButton.hidden;
-    self.emailButton.hidden= mode || ![self.availabelCommuniations.allKeys containsObject:CommunicationEmails];
-//    self.addEventButton.hidden=mode;
-//    self.eventDetailButton.hidden=mode;
-
+    [self checkPhoneSMSEmailButtonsState];
     [self setNeedsDisplay];
 }
--(void)checkAvailableCommunications{
-
-    NSDictionary *availabelCommuniations=[self.contact avaibleCommunications];
-    self.availabelCommuniations=availabelCommuniations;
-
-    [self setNeedsDisplay];
-
+-(void)checkPhoneSMSEmailButtonsState{
+    self.phoneButton.hidden = self.mode || !self.phonesInfo.count;
+    self.smsButton.hidden   = self.phoneButton.hidden;
+    self.emailButton.hidden = self.mode || !self.emailsInfo.count;
 }
--(void)checkAvailableSNS{
-  // check sns
-}
+#pragma mark - delegate
 -(void)phone:(UIButton *)button{
 
-    [self.delegate phone:self.contact availableNumbers:self.availabelCommuniations[CommunicationPhones]];
+    [self.delegate phone:self.contact phonesInfo:self.phonesInfo];
 
 }
 
 -(void)SMS:(UIButton *)button{
 
-    [self.delegate sms:self.contact availableNumbers:self.availabelCommuniations[CommunicationPhones]];
+    [self.delegate sms:self.contact phonesInfo:self.phonesInfo];
 
 }
 
 -(void)email:(UIButton *)button{
 
-    [self.delegate email:self.contact availableEmails:self.availabelCommuniations[CommunicationEmails]];
+    [self.delegate email:self.contact emailsInfo:self.emailsInfo];
     
 }
--(void)top:(UIButton *)button{
 
-    self.contact.contactOrderWeight=@([[NSDate date]timeIntervalSince1970]);
-    [self.delegate putToTop:self];
-}
-
--(void)displayEvent:(UIButton *)button{
-    if (!self.events.count) {
-        return;
-    }
-    //
-}
 -(void)setEditing:(BOOL)editing animated:(BOOL)animated{
     [super setEditing:editing animated:animated];
+    [self setNeedsDisplay];
+}
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated{
+    if (selected) {
+        self.contentBKGColor=[UIColor colorWithRed:81.0/255.0 green:167.0/255.0 blue:249.0/255.0 alpha:0.2];
+    }else{
+        self.contentBKGColor=[UIColor colorWithWhite:0.85 alpha:1];
+    }
+    [super setSelected:selected animated:animated];
     [self setNeedsDisplay];
 }
 
 static CGFloat const ContentInsetX=4;
 static CGFloat const ContentInsetY=4;
+static CGFloat const ContactNameOffsetX=12;
+static CGFloat const ContactNameOffsetY=8;
+static CGFloat const VerticalSpace=4;
+static CGFloat const HorizontalSpace=8;
+static CGFloat const ButtonHeigh=44;
+static CGFloat const EventHeight=16;
+static CGFloat const EventIndicatorHeight=8; // also width
+
+
+
+//4+8+20+4+44+8+4=92
+//4+8+20+4+44+16+8+4=108
 
 
 -(void)drawRect:(CGRect)rect{
@@ -120,104 +107,102 @@ static CGFloat const ContentInsetY=4;
 
     // draw content area
     UIBezierPath *roundedRectPath=[UIBezierPath bezierPathWithRoundedRect:contentRect cornerRadius:3];
-    [[UIColor lightGrayColor]setFill];
+    [self.contentBKGColor setFill];
+//    [[UIColor colorWithWhite:0.85 alpha:1]setFill];
     [roundedRectPath fill];
     [roundedRectPath addClip];
-
 
     // draw Name
     NSAttributedString *contactName=[[NSAttributedString alloc]initWithString:self.contact.contactName attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]}];
     CGRect contactNameRect;
-    contactNameRect.origin=CGPointMake(CGRectGetMinX(contentRect)+12, CGRectGetMinY(contentRect)+8);
+    contactNameRect.origin=CGPointMake(CGRectGetMinX(contentRect)+ContactNameOffsetX, CGRectGetMinY(contentRect)+ContactNameOffsetY);
     contactNameRect.size=contactName.size;
     [contactName drawInRect:contactNameRect];
 
-    // put top button
-    self.putTopButton.frame=CGRectMake(CGRectGetWidth(contentRect)-55, CGRectGetMidY(contactNameRect)-15, 44, 30);
-
     //draw department
-    NSString *companyString=[self.contact companyAndDepartment];
-    if (companyString) {
-        NSAttributedString *companyAndDepartment=[[NSAttributedString alloc]initWithString:companyString
-                                                                                attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight],
-                                                                                             NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
+    CGRect compantAndDepartmentRect=CGRectMake(CGRectGetMaxX(contactNameRect)+8, CGRectGetMinY(contactNameRect), CGRectGetWidth(contentRect)-ContactNameOffsetX-CGRectGetWidth(contactNameRect)-HorizontalSpace, CGRectGetHeight(contactNameRect));
+    [self drawCompantAndDepartmentInfoInRect:compantAndDepartmentRect];
 
-        CGRect companyAndDepartmentRect;
-        companyAndDepartmentRect.origin=CGPointMake(CGRectGetMaxX(contactNameRect)+8,CGRectGetMidY(contactNameRect)-companyAndDepartment.size.height/2);
-        companyAndDepartmentRect.size=CGSizeMake(CGRectGetMinX(self.putTopButton.frame)-CGRectGetMaxX(contactNameRect)-8, companyAndDepartment.size.height);
-        [companyAndDepartment drawInRect:companyAndDepartmentRect];
-    }
-    self.putTopButton.hidden = self.mode != ContactCellModeNormal;
+    // draw contact info or layout buttons
+    CGPoint startPoint=CGPointMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contactNameRect)+VerticalSpace);
     if (self.mode == ContactCellModeSMS) {
-        CGRect phoneNumberRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contactNameRect), CGRectGetWidth(contentRect), 13);
-        for (NSDictionary *phoneNumber in self.availabelCommuniations[CommunicationPhones]) {
-            NSAttributedString *ASphonernNumber=[[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: %@",phoneNumber[PhoneLabel],phoneNumber[PhoneNumber]]
-                                                                              attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13 weight:UIFontWeightLight],
-                                                                                           NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
-            [ASphonernNumber drawInRect:phoneNumberRect];
-            phoneNumberRect=CGRectOffset(phoneNumberRect, 0, 15);
-        }
-        return ;
-    }
-    if (self.mode == ContactCellModeEmail) {
-        CGRect emailRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contactNameRect), CGRectGetWidth(contentRect), 13);
-        for (NSDictionary *email in self.availabelCommuniations[CommunicationEmails]) {
-            NSAttributedString *ASEmail=[[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: %@",email[EmailLabel],email[EmailValue]]
-
-                                                                               attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13 weight:UIFontWeightLight],
-                                                                                            NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
-            [ASEmail drawInRect:emailRect];
-            emailRect=CGRectOffset(emailRect, 0, 15);
-        }
-        return ;
-
-    }
-
-    //  buttons frame
-    CGRect buttonRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contactNameRect)+8, 44, 44);
-
-    if (!self.phoneButton.hidden) {
-        self.phoneButton.frame=buttonRect;
-        buttonRect=CGRectOffset(buttonRect, 44, 0);
-    }
-    if (!self.smsButton.hidden) {
-        self.smsButton.frame=buttonRect;
-        buttonRect=CGRectOffset(buttonRect, 44, 0);
-    }
-    if (!self.emailButton.hidden) {
-        NSLog(@"email:%@",self.availabelCommuniations[CommunicationEmails]);
-        self.emailButton.frame=buttonRect;
-    }
-
-    if (self.phoneButton.hidden && self.emailButton.hidden && self.smsButton.hidden) {
-        NSAttributedString *noWayToContact=[[NSAttributedString alloc]initWithString:@"无联系方式"
-                                                                                attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight],
-                                                                                             NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
-        [noWayToContact drawAtPoint:buttonRect.origin];
+        [self drawContactInfos:self.phonesInfo AtPoint:startPoint];
+    }else if (self.mode == ContactCellModeEmail){
+        [self drawContactInfos:self.emailsInfo AtPoint:startPoint];
+    }else if (self.mode == ContactCellModeNormal){
+        //layout button
+        [self layoutPhoneSMSEmailButtonsAtPoint:startPoint];
     }
 
     // draw event
-    Event *recentEvent=[self.contact recentEvent];
-    if (!recentEvent) {
+    CGRect eventRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contentRect)-ContactNameOffsetY-EventHeight, CGRectGetWidth(contentRect)-ContactNameOffsetX, EventHeight);
+    [self drawDisplayedEventInRect:eventRect];
+
+}
+-(NSParagraphStyle *)paragraphStyle{
+    NSMutableParagraphStyle *ps=[[NSMutableParagraphStyle alloc]init];
+    ps.lineBreakMode=NSLineBreakByTruncatingTail;
+    return ps;
+}
+-(void)drawCompantAndDepartmentInfoInRect:(CGRect)rect{
+    NSString *companyString=[self.contact companyAndDepartment];
+    if (companyString) {
+        NSAttributedString *companyAndDepartment=[[NSAttributedString alloc]initWithString:companyString attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight], NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
+        [companyAndDepartment drawInRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMidY(rect)-companyAndDepartment.size.height/2, CGRectGetWidth(rect), CGRectGetHeight(rect))];
+    }
+
+}
+-(void)drawContactInfos:(NSArray *)contactInfos AtPoint:(CGPoint)point{
+
+    CGPoint startPoint=point;
+    for (NSDictionary *contactInfo in contactInfos) {
+
+        NSString *string=[NSString stringWithFormat:@"%@: %@",contactInfo[ContactInfoLabelKey],contactInfo[ContactInfoValueKey]];
+
+        NSAttributedString *ASphonernNumber=[[NSAttributedString alloc]initWithString:string attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
+
+        [ASphonernNumber drawAtPoint:startPoint];
+        startPoint=CGPointMake(startPoint.x, startPoint.y+16);
+    }
+}
+-(void)layoutPhoneSMSEmailButtonsAtPoint:(CGPoint)point{
+    //  buttons frame
+    CGRect buttonRect=CGRectMake(point.x,point.y, ButtonHeigh, ButtonHeigh);
+    if (!self.phoneButton.hidden) {
+        self.phoneButton.frame=buttonRect;
+        buttonRect=CGRectOffset(buttonRect,ButtonHeigh+HorizontalSpace, 0);
+    }
+    if (!self.smsButton.hidden) {
+        self.smsButton.frame=buttonRect;
+        buttonRect=CGRectOffset(buttonRect, ButtonHeigh+HorizontalSpace, 0);
+    }
+    if (!self.emailButton.hidden) {
+        self.emailButton.frame=buttonRect;
         return;
     }
-    CGRect indicatorCirleRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(buttonRect)+8, 8, 8);
+
+    if (self.phoneButton.hidden && self.emailButton.hidden && self.smsButton.hidden) {
+
+        NSAttributedString *noWayToContact=[[NSAttributedString alloc]initWithString:@"无联系方式" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
+        [noWayToContact drawAtPoint:point];
+    }
+}
+-(void)drawDisplayedEventInRect:(CGRect)rect{
+
+    if (!self.displayedEvent ) {
+        return;
+    }
+    CGRect indicatorCirleRect=CGRectMake(CGRectGetMinX(rect), CGRectGetMidY(rect), EventIndicatorHeight, EventIndicatorHeight);
     UIBezierPath *cirle=[UIBezierPath bezierPathWithOvalInRect:indicatorCirleRect];
 
-    if ([recentEvent passed]) {
+    if ([self.displayedEvent passed]) {
         [[UIColor darkGrayColor]setFill];
     }else{
         [[UIColor orangeColor]setFill];
     }
     [cirle fill];
-
-    NSAttributedString *eventAS=[[NSAttributedString alloc]initWithString:recentEvent.event
-                                                                          attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14 weight:UIFontWeightLight],
-                                                                                       NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
-    CGRect eventASRect;
-    eventASRect.size=CGSizeMake(CGRectGetWidth(contentRect)-60, 36);
-    eventASRect.origin=CGPointMake(CGRectGetMaxX(indicatorCirleRect)+8, CGRectGetMidY(indicatorCirleRect)-eventAS.size.height/2);
-    [eventAS drawInRect:eventASRect];
+    NSAttributedString *eventAS=[[NSAttributedString alloc]initWithString:self.displayedEvent.event attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
+    [eventAS drawInRect:CGRectMake(CGRectGetMaxX(indicatorCirleRect)+HorizontalSpace, CGRectGetMinY(rect), CGRectGetWidth(rect)-ContactNameOffsetX-EventIndicatorHeight-HorizontalSpace, CGRectGetHeight(rect))];
 
 }
 #pragma  mark - setup
@@ -226,55 +211,34 @@ static CGFloat const ContentInsetY=4;
 }
 
 -(void)setup{
-
+    self.contentBKGColor=[UIColor colorWithWhite:0.85 alpha:1];
     self.backgroundColor=[UIColor clearColor];
-    self.selectionStyle=UITableViewCellSelectionStyleNone;
-    self.highlighted=NO;
+//    self.selectionStyle=UITableViewCellSelectionStyleBlue;
     UIView *view=[[UIView alloc]init];
     view.backgroundColor=[UIColor clearColor];
     self.multipleSelectionBackgroundView=view;
-
-    UIButton *putTop=[[UIButton alloc]init];
-    [self addSubview:putTop];
-    self.putTopButton=putTop;
-    [putTop setTitle:@"Top" forState:UIControlStateNormal];
-    [putTop addTarget:self action:@selector(top:) forControlEvents:UIControlEventTouchUpInside];
-
+    self.selectedBackgroundView=view;
 
     UIButton *phoneButton=[[UIButton alloc]init];
     [self addSubview:phoneButton];
     self.phoneButton=phoneButton;
     self.phoneButton.hidden=YES;
-    [phoneButton setBackgroundImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
+    [phoneButton setBackgroundImage:[UIImage imageNamed:@"PhoneIcon"] forState:UIControlStateNormal];
     [phoneButton addTarget:self action:@selector(phone:) forControlEvents:UIControlEventTouchUpInside];
 
     UIButton *smsButton=[[UIButton alloc]init];
     [self addSubview:smsButton];
     self.smsButton=smsButton;
     self.smsButton.hidden=YES;
-    [smsButton setBackgroundImage:[UIImage imageNamed:@"text"] forState:UIControlStateNormal];
+    [smsButton setBackgroundImage:[UIImage imageNamed:@"SMSIcon"] forState:UIControlStateNormal];
     [smsButton addTarget:self action:@selector(SMS:) forControlEvents:UIControlEventTouchUpInside];
-
 
     UIButton *emailButton=[[UIButton alloc]init];
     [self addSubview:emailButton];
     self.emailButton=emailButton;
     self.emailButton.hidden=YES;
-    [emailButton setBackgroundImage:[UIImage imageNamed:@"email"] forState:UIControlStateNormal];
+    [emailButton setBackgroundImage:[UIImage imageNamed:@"EmailIcon"] forState:UIControlStateNormal];
     [emailButton addTarget:self action:@selector(email:) forControlEvents:UIControlEventTouchUpInside];
-
-//    UIButton *addEventButton=[[UIButton alloc]init];
-//    [self addSubview:addEventButton];
-//    addEventButton.titleLabel.font=[UIFont systemFontOfSize:14 weight:UIFontWeightLight];
-//    self.addEventButton=addEventButton;
-//    [self.addEventButton setTitle:@"新增事项" forState:UIControlStateNormal];
-//    [addEventButton addTarget:self action:@selector(addEvent:) forControlEvents:UIControlEventTouchUpInside];
-//
-//    UIButton *eventDetailButton=[[UIButton alloc]init];
-//    [self addSubview:eventDetailButton];
-//    self.eventDetailButton=eventDetailButton;
-//    [eventDetailButton addTarget:self action:@selector(displayEvent:) forControlEvents:UIControlEventTouchUpInside];
-//
 
 
 }

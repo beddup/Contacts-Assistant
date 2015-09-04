@@ -44,18 +44,22 @@
 -(void)configureTableHeaderView{
 
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 180)];
-    UIDatePicker *datePicker=[[UIDatePicker alloc]init];
-    [view addSubview:datePicker];
-    self.datePicker=datePicker;
-    if (self.event.date) {
-        self.datePicker.date=self.event.date;
-    }
     self.tableView.tableHeaderView=view;
 
-}
+    dispatch_queue_t createDP = dispatch_queue_create("createDP", NULL);
+    dispatch_async(createDP, ^{
+        UIDatePicker *datePicker=[[UIDatePicker alloc]init];
+        if (self.event.date) {
+            self.datePicker.date=self.event.date;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
 
-- (IBAction)dismiss:(id)sender {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+            self.datePicker=datePicker;
+            [view addSubview:datePicker];
+        });
+    });
+
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -117,17 +121,14 @@
 
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue.identifier isEqualToString:@"timesettingdone"]) {
-
-        self.event.date=self.datePicker.date;
-        if (self.repeatedDays.count) {
-            self.event.repeatedDays=[[self.repeatedDays valueForKey:@"stringValue"] componentsJoinedByString:@","];
-        }else{
-            self.event.repeatedDays=nil;
-        }
-
+- (IBAction)timeSettingDone:(id)sender {
+    self.event.date=self.datePicker.date;
+    if (self.repeatedDays.count) {
+        self.event.repeatedDays=[[self.repeatedDays valueForKey:@"stringValue"] componentsJoinedByString:@","];
+    }else{
+        self.event.repeatedDays=nil;
     }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /*

@@ -9,7 +9,7 @@
 #import "Tag+Utility.h"
 #import "AppDelegate.h"
 
-NSString * const RootTagName =@"All Contacts";
+NSString * const RootTagName =@"所有联系人";
 
 @implementation Tag (Utility)
 -(BOOL)isRootTag{

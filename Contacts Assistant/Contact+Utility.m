@@ -9,13 +9,15 @@
 #import "Contact+Utility.h"
 #import "ContactsManager.h"
 #import "AppDelegate.h"
-#import "Event.h"
+#import "Event+Utility.h"
+#import "Tag+Utility.h"
 
 @implementation Contact (Utility)
 +(NSManagedObjectContext *)context{
     return ((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
 
 }
+
 +(NSArray *)allContacts{
     // prepare core data
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
@@ -25,56 +27,36 @@
     
     NSError *error = nil;
     NSArray *fetchedObjects = [[Contact context] executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@"fetchedObjects nil");
-    }
-    NSLog(@"fetchedObjects:%@",fetchedObjects);
     return fetchedObjects;
 }
 
-//+(NSArray*)contactsWhoseNameContains:(NSString *)keyword{
-//
-//    NSFetchRequest *contactFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
-//    contactFectchRequest.predicate=[NSPredicate predicateWithFormat:@"contactName CONTAINS %@",keyword];
-//    NSArray * advicedContacts=[[Contact context] executeFetchRequest:contactFectchRequest error:NULL];
-//    return advicedContacts;
-//}
-//
-
-+(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs{
-
-    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
-    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"contactID IN %@",contactIDs];
-    NSArray *contacts=[[Contact context] executeFetchRequest:fetchRequest error:NULL];
-    
-    return  [contacts firstObject];
-    
++(Contact *)createContactWithName:(NSString *)name contactID:(u_int32_t)contactID{
+    Contact *contact=[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[Contact context]];
+    contact.contactID=@(contactID);
+    contact.contactName=name;
+    contact.contactIsDeleted=@(NO);
+    [[Tag rootTag] addOwnedContactsObject:contact];
+    return contact;
 }
+
+
++(void)deleteContactsWhoseIDNotIn:(NSSet *)contactIDs{
+    
+    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"NOT contactID IN %@",contactIDs];
+    NSArray *contacts=[[Contact context] executeFetchRequest:fetchRequest error:NULL];
+    for (Contact *contact in contacts) {
+        [[Contact context] deleteObject:contact];
+    }
+}
+
 +(Contact *)contactOfContactID:(int)contactID{
 
     NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Contact"];
-    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"contactID == %@",@(contactID)];
+    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"contactID.intValue == %d",contactID];
     NSArray *contacts=[[Contact context] executeFetchRequest:fetchRequest error:NULL];
     return  [contacts firstObject];
 
-}
-
-
--(NSDictionary *)avaibleCommunications{
-
-    NSMutableDictionary *dic=[@{} mutableCopy];
-    NSArray *phoneNumber=[[ContactsManager sharedContactManager] phoneNumbersOfContact:self];
-    NSArray *eMails=[[ContactsManager sharedContactManager] emailsOfContact:self];
-    if (phoneNumber.count) {
-        [dic setObject:phoneNumber forKey:CommunicationPhones];
-    }
-    if (eMails.count) {
-        [dic setObject:eMails forKey:CommunicationEmails];
-    }
-    
-    NSLog(@"self:%@,avaibleCommunications:%@",self.contactName, dic);
-
-    return dic;
 }
 
 -(NSString *)companyAndDepartment{
@@ -82,8 +64,9 @@
 }
 
 +(NSString *)QRStringOfContact:(Contact *)contact{
-    NSDictionary *info=@{@"N":contact.contactName,
-                         @"C":[contact avaibleCommunications]};
+    NSDictionary *info=@{@"N":contact.contactName, // name
+                         @"P":[[ContactsManager sharedContactManager]phoneNumbersOfContact:contact], // phones
+                         @"E":[[ContactsManager sharedContactManager]emailsOfContact:contact]};
     NSData *data= [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:NULL];
     NSString *string=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     return string;
@@ -94,15 +77,15 @@
     return info;
 }
 
--(Event *)recentEvent{
-    Event *lastEvent=[[self.attendWhichEvents allObjects] firstObject];
-    if (lastEvent) {
-        if ([lastEvent.date timeIntervalSinceNow] > -60 *60 || !lastEvent.date) {
-            // if event has not pass or pass less than 1 h, or no date
-            return lastEvent;
+-(Event *)mostRecentEvent{
+
+    Event *mostRecentEvent=[self.attendWhichEvents anyObject];
+    for (Event *event in self.attendWhichEvents) {
+        if ([[event nextdate] compare:[mostRecentEvent nextdate]] == NSOrderedDescending) {
+            mostRecentEvent=event;
         }
     }
-    return nil;
+    return mostRecentEvent;
 }
 
 

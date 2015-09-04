@@ -15,13 +15,16 @@
 #import "Event.h"
 #import "Event+Utility.h"
 #import "Tag.h"
+#import "Tag+Utility.h"
 #import "UIImage+MDQRCode.h"
 #import "Contact+Utility.h"
-
+#import "PhotoCircleImageView.h"
+#import "RelationsViewController.h"
 
 @interface ContactDetailsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property(weak,nonatomic)UIImageView *qrImageView;
+@property(weak,nonatomic)PhotoCircleImageView *photoImageView;
 
 @property(strong,nonatomic)NSArray *contactInfos;
 
@@ -29,14 +32,14 @@
 @property(strong,nonatomic)NSArray *events;
 @property(strong,nonatomic)NSArray *relations;
 
-@property(strong,nonatomic)NSArray *sectionTitles;
+@property(strong,nonatomic)NSArray *sectionHeaderTitles;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 // view of add new contact
 @property(weak,nonatomic)UITextField *addContactValueField;
 @property(weak,nonatomic)UITextField *addContactLabelField;
 
-@property(nonatomic)NSString * addingContactType;
+@property(nonatomic)ContactInfoType addingContactInfoType;
 
 
 @end
@@ -45,22 +48,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.sectionTitles=@[@"联系信息",@"事项",@"标签",@"关系"];
+    self.sectionHeaderTitles=@[@"联系信息",@"事项",@"标签",@"关系"];
     [self configureTableHV];
-    [self.tableView reloadData];
-
     // Do any additional setup after loading the view.
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.toolbarHidden=YES;
 
+    self.contactInfos=nil;
+    [self.tableView reloadData];
+
+    [self.tableView setContentOffset:CGPointMake(0, 150) animated:NO];
+
 }
+
 -(void)viewDidLayoutSubviews{
 
     self.qrImageView.bounds=CGRectMake(0, 0, 200, 200);
     self.qrImageView.center=CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.tableHeaderView.bounds));
+
+    self.photoImageView.bounds=CGRectMake(0, 0, 40, 40);
+    self.photoImageView.center=CGPointMake(CGRectGetMidX(self.qrImageView.bounds), CGRectGetMidY(self.qrImageView.bounds));
 
 }
 -(void)configureTableHV{
@@ -74,10 +84,18 @@
     [view addSubview:imageView];
     self.qrImageView=imageView;
 
+    PhotoCircleImageView *photoImageView=[[PhotoCircleImageView alloc]init];
+    photoImageView.photo=[[ContactsManager sharedContactManager] thumbnailOfContact:self.contact];
+    [imageView addSubview:photoImageView];
+    self.photoImageView=photoImageView;
+
 }
 
 -(NSArray *)tags{
-    return [self.contact.underWhichTags allObjects];
+    NSMutableArray *array= [[self.contact.underWhichTags allObjects] mutableCopy];
+    [array removeObject:[Tag rootTag]];
+    return array;
+
 }
 
 -(NSArray *)events{
@@ -85,19 +103,22 @@
 }
 
 -(NSArray *)relations{
-    return  [self.contact.belongWhichRelations allObjects];
+    return  [self.contact.relationsWithOtherPeople allObjects];
 }
 
 -(void)setContact:(Contact *)contact{
     _contact=contact;
     self.title=contact.contactName;
-
-    NSArray *phones=[[ContactsManager sharedContactManager]phoneNumbersOfContact:contact];
-    NSArray *emails=[[ContactsManager sharedContactManager]emailsOfContact:contact];
-    self.contactInfos=[[@[] arrayByAddingObjectsFromArray:phones] arrayByAddingObjectsFromArray:emails];
-
     [self.tableView reloadData];
+}
 
+-(NSArray *)contactInfos{
+    if (!_contactInfos) {
+        NSArray *phones=[[ContactsManager sharedContactManager]phoneNumbersOfContact:self.contact];
+        NSArray *emails=[[ContactsManager sharedContactManager]emailsOfContact:self.contact];
+        _contactInfos=[phones arrayByAddingObjectsFromArray:emails];
+    }
+    return _contactInfos;
 }
 #pragma mark - table
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -106,28 +127,23 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     switch (section) {
         case 0:{
-         // contact info
+            // contact info
             return self.contactInfos.count;
-            break;
         }
         case 1:{
             //  events
             return self.events.count;
-            break;
         }
         case 2:{
             //  tags
             return self.tags.count;
-            break;
         }
         case 3:{
             //  relations
             return 1;
-            break;
         }
         default:{
             return 0;
-            break;
         }
     }
 }
@@ -137,8 +153,8 @@
     if (indexPath.section == 0) {
         //contact info
         cell=[tableView dequeueReusableCellWithIdentifier:@"phone and email cell"];
-        cell.textLabel.text = self.contactInfos[indexPath.row][PhoneLabel] ? self.contactInfos[indexPath.row][PhoneLabel] :self.contactInfos[indexPath.row][EmailLabel];
-        cell.detailTextLabel.text =self.contactInfos[indexPath.row][PhoneNumber] ? self.contactInfos[indexPath.row][PhoneNumber] :self.contactInfos[indexPath.row][EmailValue];
+        cell.textLabel.text = self.contactInfos[indexPath.row][ContactInfoLabelKey];
+        cell.detailTextLabel.text =self.contactInfos[indexPath.row][ContactInfoValueKey];
     }else if (indexPath.section ==1 ){
         //event;
         cell=[tableView dequeueReusableCellWithIdentifier:@"event"];
@@ -147,6 +163,8 @@
         cell.textLabel.text=event.event;
         if (event.date) {
             cell.detailTextLabel.text=[NSDateFormatter localizedStringFromDate:[event nextdate] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle];
+        }else{
+            cell.detailTextLabel.text=nil;
         }
 
     }else if(indexPath.section ==2){
@@ -174,7 +192,7 @@
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return self.sectionTitles[section];
+    return self.sectionHeaderTitles[section];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
@@ -199,16 +217,16 @@
 
         switch ( section) {
             case 0:{
-                if (self.addingContactType) {
+                if (self.addingContactInfoType) {
 
-                    UIView *addNewContactView=[self addNewContactView:self.addingContactType];
+                    UIView *addNewContactView=[self viewForAddingNewContactInfo:self.addingContactInfoType];
                     addNewContactView.frame=CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), 44);
                     [view addSubview:addNewContactView];
                     button=nil;
                     break;
 
                 }
-                title=@"新建联系方式";
+                title=@"新增联系方式";
                 selector=@selector(createContactInfo:);
                 break;
             }
@@ -236,10 +254,7 @@
 }
 
 #pragma mark - add contact tf delegate
--(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self.addContactLabelField resignFirstResponder];
-    [self.addContactValueField resignFirstResponder];
-}
+
 -(void)textFieldDidEndEditing:(UITextField *)textField{
 
 }
@@ -247,29 +262,42 @@
     if (textField == self.addContactLabelField) {
         [self.addContactValueField becomeFirstResponder];
     }else if (textField == self.addContactValueField){
+        BOOL isPhone=[self.addContactLabelField.placeholder isEqualToString:@"电话"];
+
         if (!textField.text.length) {
             return NO;
-        }else{
+        }else if (!isPhone && ![textField.text containsString:@"@"]){
+            return NO;
+        }
+        else{
             NSString *label = self.addContactLabelField.text.length ? self.addContactLabelField.text : self.addContactLabelField.placeholder;
             NSString *value= textField.text;
-
-            BOOL isPhone=![textField.text containsString:@"@"];
-            [[ContactsManager sharedContactManager] addContactLabel:label value:value isPhoneNumber:isPhone];
+            NSInteger type= isPhone ? ContactInfoTypePhone:ContactInfoTypeEmail;
+            NSDictionary *newContact=@{ContactInfoTypeKey:@(type),
+                                       ContactInfoLabelKey:label,
+                                       ContactInfoValueKey:value};
+            [[ContactsManager sharedContactManager] addContactInfo:newContact contact:self.contact];
             self.navigationItem.rightBarButtonItem=nil;
-            self.addingContactType=nil;
+            self.addingContactInfoType=0;
+            self.contactInfos=nil; // reset contact infos
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-
             [textField resignFirstResponder];
         }
     }
+
     return YES;
 }
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
 
--(UIView *)addNewContactView:(NSString *)addingContactType{
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.contactInfos.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 
-    BOOL isPhone=[addingContactType isEqualToString:PhoneLabel] ;
+}
+
+-(UIView *)viewForAddingNewContactInfo:(ContactInfoType)contactInfoType{
+    BOOL isPhone= (contactInfoType == ContactInfoTypePhone);
     UIView *addNewContactView=[[UIView alloc]init];
     addNewContactView.backgroundColor=[UIColor orangeColor];
+
 
     UITextField *labelField=[[UITextField alloc]initWithFrame:CGRectMake(15, 0, 60, 44)];
     labelField.placeholder= isPhone ?  @"电话" : @"邮箱";
@@ -304,9 +332,8 @@
     [chooseWhichKindofContact addAction:[UIAlertAction actionWithTitle:@"新增电话" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 
         button.enabled=NO;
-        self.addingContactType=PhoneLabel;
+        self.addingContactInfoType=ContactInfoTypePhone;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-
         UIBarButtonItem *cancelButton=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAddingContact:)];
         self.navigationItem.rightBarButtonItem=cancelButton;
 
@@ -314,7 +341,7 @@
 
     [chooseWhichKindofContact addAction:[UIAlertAction actionWithTitle:@"新增邮箱" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         button.enabled=NO;
-        self.addingContactType=EmailLabel;
+        self.addingContactInfoType=ContactInfoTypeEmail;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 
         UIBarButtonItem *cancelButton=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAddingContact:)];
@@ -333,7 +360,7 @@
 
 -(void)cancelAddingContact:(UIBarButtonItem *)barbutton{
 
-    self.addingContactType=nil;
+    self.addingContactInfoType=0;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     self.navigationItem.rightBarButtonItem=nil;
 
@@ -350,15 +377,6 @@
 -(void)addTag:(UIButton *)button{
     [self performSegueWithIdentifier:@"add tag" sender:nil];
 }
-//unwind from add tag view
--(IBAction)tagsAdded:(UIStoryboardSegue *)segue{
-
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"slection");
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -369,15 +387,15 @@
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+
     if ([segue.identifier isEqualToString:@"contactInfo"]) {
         ContactInfoViewController *dstVC=(ContactInfoViewController *)segue.destinationViewController;
         dstVC.contact=self.contact;
         NSIndexPath *indexPath=[self.tableView indexPathForSelectedRow];
         dstVC.contactInfo=self.contactInfos[indexPath.row];
-    }
-    else if ([segue.identifier isEqualToString:@"add tag"]){
-
-        AddTagViewController *dstVC=(AddTagViewController*)segue.destinationViewController;
+    }else if ([segue.identifier isEqualToString:@"add tag"]){
+        UINavigationController *nav=(UINavigationController *)segue.destinationViewController;
+        AddTagViewController *dstVC=(AddTagViewController*)nav.viewControllers[0];
         dstVC.contact=self.contact;
 
     }else if ([segue.identifier isEqualToString:@"showevent"]){
@@ -393,6 +411,9 @@
         dstVC.event=[NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.contact.managedObjectContext];
         [dstVC.event addContactsWhichAttendObject:self.contact];
         dstVC.forDisplay=NO;
+    }else if ([segue.identifier isEqualToString:@"relations"]){
+        RelationsViewController *dstv=(RelationsViewController *)segue.destinationViewController;
+        dstv.contact=self.contact;
     }
 }
 

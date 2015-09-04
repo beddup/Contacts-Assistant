@@ -13,14 +13,14 @@
                 <tableView clipsSubviews="YES" tag="925" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="lyX-nF-Vve">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="315"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <inset key="separatorInset" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
+                    <inset key="separatorInset" minX="30" minY="0.0" maxX="8" maxY="0.0"/>
                     <connections>
                         <outlet property="dataSource" destination="iN0-l3-epB" id="MSt-CM-TQL"/>
                         <outlet property="delegate" destination="iN0-l3-epB" id="Xfu-II-QN3"/>
                     </connections>
                 </tableView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="lyX-nF-Vve" secondAttribute="bottom" id="KeW-gu-GcL"/>
                 <constraint firstItem="lyX-nF-Vve" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Zkt-3p-UcL"/>

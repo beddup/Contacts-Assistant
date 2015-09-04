@@ -14,17 +14,27 @@
 @interface SearchAssistantView()
 
 @property (weak, nonatomic) IBOutlet UITableView *searchAdviceTV;
+@property(strong,nonatomic)UILabel *noResultLabel;
+@property(strong,nonatomic)UILabel *searchAdviceLabel;
 
 @end
 
 @implementation SearchAssistantView
-@synthesize searchAdvice=_searchAdvice;
-
 
 -(void)setSearchAdvice:(NSDictionary *)searchAdvice{
 
     _searchAdvice=searchAdvice;
+
+    NSInteger resultCount=[self.searchAdvice[AdvicedTagsKey] count] + [self.searchAdvice[AdvicedContactsKey] count];
+    if (resultCount == 0 ) {
+        self.searchAdviceTV.tableHeaderView=self.noResultLabel;
+        self.searchAdviceTV.separatorStyle=UITableViewCellSeparatorStyleNone;
+    }else{
+        self.searchAdviceTV.tableHeaderView=self.searchAdviceLabel;
+        self.searchAdviceTV.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    }
     [self.searchAdviceTV reloadData];
+
 }
 
 #pragma mark - TVDelegate
@@ -62,7 +72,7 @@
             cell.textLabel.textAlignment=NSTextAlignmentLeft;
 
             cell.detailTextLabel.textColor=[UIColor lightGrayColor];
-            cell.detailTextLabel.font=[UIFont systemFontOfSize:10.0 weight:UIFontWeightLight];
+            cell.detailTextLabel.font=[UIFont systemFontOfSize:12.0 weight:UIFontWeightLight];
             cell.detailTextLabel.textAlignment=NSTextAlignmentRight;
     }
     NSInteger tagCount = [self.searchAdvice[AdvicedTagsKey] count];
@@ -79,7 +89,6 @@
 }
 
 #pragma  mark - setup
-
 -(void)awakeFromNib{
     [self setup];
 }
@@ -88,13 +97,19 @@
     self.contentMode=UIViewContentModeScaleToFill;
     self.opaque=YES;
 
-    // configure table header view
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25)];
-    label.text=@"搜索建议";
-    label.textColor=[UIColor lightGrayColor];
-    label.textAlignment=NSTextAlignmentCenter;
-    label.font=[UIFont systemFontOfSize:14 weight:UIFontWeightLight];
-    self.searchAdviceTV.tableHeaderView=label;
+    UILabel *footerLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 120)];
+    footerLabel.text=@"无结果";
+    footerLabel.textAlignment=NSTextAlignmentCenter;
+    footerLabel.textColor=[UIColor lightGrayColor];
+    footerLabel.font=[UIFont systemFontOfSize:18 weight:UIFontWeightLight];
+    self.noResultLabel=footerLabel;
+
+    UILabel *searchAdviceLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 30)];
+    searchAdviceLabel.text=@"搜索建议";
+    searchAdviceLabel.textAlignment=NSTextAlignmentCenter;
+    searchAdviceLabel.textColor=[UIColor lightGrayColor];
+    searchAdviceLabel.font=[UIFont systemFontOfSize:15 weight:UIFontWeightLight];
+    self.searchAdviceLabel=searchAdviceLabel;
 
 }
 -(instancetype)initWithFrame:(CGRect)frame{

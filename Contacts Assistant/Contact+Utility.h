@@ -14,15 +14,12 @@
 
 +(NSArray *)allContacts;
 //+(NSArray *)contactsWhoseNameContains:(NSString *)keyword;
-+(NSArray *)contactsOfContactIDs:(NSArray *)contactIDs;
 +(Contact *)contactOfContactID:(int)contactID;
-
-
--(NSDictionary *)avaibleCommunications;
-
++(void)deleteContactsWhoseIDNotIn:(NSSet *)contactIDs;
++(Contact *)createContactWithName:(NSString *)name contactID:(u_int32_t)contactID;
 -(NSString *)companyAndDepartment;
 
 +(NSString *)QRStringOfContact:(Contact *)contact; //including name  + contactinfo
 +(NSDictionary *)infoFromQRString:(NSString *)qrstring;
--(Event *)recentEvent;
+-(Event *)mostRecentEvent;
 @end
