@@ -13,4 +13,7 @@
 
 -(void)removeContactAtIndexPath:(NSIndexPath *)indexPath;
 //-(NSMutableArray *)indexTitlesInTableView;
+-(NSMutableArray *)contactsWhichHasPhones;
+-(NSMutableArray *)contactsWhichHasEmail;
+
 @end

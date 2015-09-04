@@ -88,7 +88,33 @@
     return mostRecentEvent;
 }
 
+#pragma mark - contactInfo string
+-(NSString *)phoneInfoString{
+    NSArray *phones=[[ContactsManager sharedContactManager] phoneNumbersOfContact:self];
+    return  [self stringOfContactInfos:phones];
+}
+-(NSString *)emailInfoString{
+    NSArray *emails=[[ContactsManager sharedContactManager] emailsOfContact:self];
+    return  [self stringOfContactInfos:emails];
+}
+-(NSString *)stringOfContactInfos:(NSArray *)contactInfos{
+    NSString *contactInfosString=@"";
+    for (NSDictionary *contactInfo in contactInfos) {
+        contactInfosString=[contactInfosString stringByAppendingString:[NSString stringWithFormat:@"%@:%@,",contactInfo[ContactInfoLabelKey],contactInfo[ContactInfoValueKey]]];
+    }
+    if (contactInfosString.length) {
+        contactInfosString=[contactInfosString substringToIndex:contactInfosString.length-1];
+        contactInfosString=[contactInfosString stringByAppendingString:@";"];
+    }
+    return contactInfosString;
+}
 
+-(BOOL)hasPhone{
+ return    [[ContactsManager sharedContactManager] hasPhone:self];
+}
+-(BOOL)hasEmail{
+  return   [[ContactsManager sharedContactManager] hasEmail:self];
+}
 
 
 

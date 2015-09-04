@@ -46,10 +46,10 @@ typedef enum : NSUInteger {
 -(NSString *)companyAndDepartmentOfContact:(Contact *)contact;
 -(NSArray *)phoneNumbersOfContact:(Contact *)contact;
 -(NSArray *)emailsOfContact:(Contact *)contact;
--(UIImage *)thumbnailOfContact:(Contact *)contact;
+-(BOOL)hasPhone:(Contact *)contact;
+-(BOOL)hasEmail:(Contact *)contact;
 
--(NSArray *)filterContactsWithoutPhoneNumbers:(NSArray *)contacts;
--(NSArray *)filterContactsWithoutemail:(NSArray *)contacts;
+-(UIImage *)thumbnailOfContact:(Contact *)contact;
 
 -(NSComparisonResult)compareResult:(Contact *)contact1 contact2:(Contact *)contact2;
 -(NSString *)firstLetter:(Contact *)contact;

@@ -26,11 +26,10 @@
 @property(weak,nonatomic)UIImageView *qrImageView;
 @property(weak,nonatomic)PhotoCircleImageView *photoImageView;
 
-@property(strong,nonatomic)NSArray *contactInfos;
-
-@property(strong,nonatomic)NSArray *tags;
-@property(strong,nonatomic)NSArray *events;
-@property(strong,nonatomic)NSArray *relations;
+@property(strong,nonatomic)NSMutableArray *contactInfos;
+@property(strong,nonatomic)NSMutableArray *tags;
+@property(strong,nonatomic)NSMutableArray *events;
+@property(strong,nonatomic)NSMutableArray *relations;
 
 @property(strong,nonatomic)NSArray *sectionHeaderTitles;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -49,7 +48,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.sectionHeaderTitles=@[@"联系信息",@"事项",@"标签",@"关系"];
-    [self configureTableHV];
+    [self configureTableHeaderView];
     // Do any additional setup after loading the view.
 }
 
@@ -73,7 +72,7 @@
     self.photoImageView.center=CGPointMake(CGRectGetMidX(self.qrImageView.bounds), CGRectGetMidY(self.qrImageView.bounds));
 
 }
--(void)configureTableHV{
+-(void)configureTableHeaderView{
 
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 250)];
     self.tableView.tableHeaderView=view;
@@ -91,61 +90,50 @@
 
 }
 
--(NSArray *)tags{
-    NSMutableArray *array= [[self.contact.underWhichTags allObjects] mutableCopy];
-    [array removeObject:[Tag rootTag]];
-    return array;
-
-}
-
--(NSArray *)events{
-    return  [self.contact.attendWhichEvents allObjects];
-}
-
--(NSArray *)relations{
-    return  [self.contact.relationsWithOtherPeople allObjects];
-}
-
 -(void)setContact:(Contact *)contact{
     _contact=contact;
     self.title=contact.contactName;
+    // tags
+    self.tags=[self.contact.underWhichTags mutableCopy];
+     //events
+     self.events=[[self.contact.attendWhichEvents allObjects] mutableCopy];
+     // relations
+      self.relations = [[self.contact.relationsWithOtherPeople allObjects] mutableCopy];
+     self.contactInfos = [[[ContactsManager sharedContactManager]phoneNumbersOfContact:self.contact] mutableCopy];
+    NSArray *emails=[[ContactsManager sharedContactManager]emailsOfContact:self.contact];
+    [self.contactInfos addObjectsFromArray:emails] ;
+
     [self.tableView reloadData];
+
 }
 
--(NSArray *)contactInfos{
-    if (!_contactInfos) {
-        NSArray *phones=[[ContactsManager sharedContactManager]phoneNumbersOfContact:self.contact];
-        NSArray *emails=[[ContactsManager sharedContactManager]emailsOfContact:self.contact];
-        _contactInfos=[phones arrayByAddingObjectsFromArray:emails];
-    }
-    return _contactInfos;
-}
 #pragma mark - table
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 4;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    switch (section) {
-        case 0:{
-            // contact info
-            return self.contactInfos.count;
-        }
-        case 1:{
-            //  events
-            return self.events.count;
-        }
-        case 2:{
-            //  tags
-            return self.tags.count;
-        }
-        case 3:{
-            //  relations
-            return 1;
-        }
-        default:{
-            return 0;
-        }
-    }
+//    switch (section) {
+//        case 0:{
+//            // contact info
+//            return self.contactInfos.count;
+//        }
+//        case 1:{
+//            //  events
+//            return self.events.count;
+//        }
+//        case 2:{
+//            //  tags
+//            return self.tags.count;
+//        }
+//        case 3:{
+//            //  relations
+//            return 1;
+//        }
+//        default:{
+//            return 0;
+//        }
+//    }
+    return 0;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -380,6 +368,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    NSLog(@"memory warning");
     // Dispose of any resources that can be recreated.
 }
 

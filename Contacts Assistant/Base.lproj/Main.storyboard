@@ -271,7 +271,7 @@
                         <nil key="title"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="IRI-Dn-SwU" id="uLr-zv-CQy"/>
+                        <outlet property="tableView" destination="IRI-Dn-SwU" id="dbG-fr-JnM"/>
                         <segue destination="IKU-Mx-Ubx" kind="show" identifier="contactDetail" id="1Ad-iF-ysr"/>
                     </connections>
                 </viewController>

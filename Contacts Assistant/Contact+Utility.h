@@ -22,4 +22,11 @@
 +(NSString *)QRStringOfContact:(Contact *)contact; //including name  + contactinfo
 +(NSDictionary *)infoFromQRString:(NSString *)qrstring;
 -(Event *)mostRecentEvent;
+
+-(NSString *)phoneInfoString;
+-(NSString *)emailInfoString;
+
+-(BOOL)hasPhone;
+-(BOOL)hasEmail;
+
 @end

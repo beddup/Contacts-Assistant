@@ -6,19 +6,27 @@
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
-#import "ActionsView.h"
+#import "MoreFunctionsView.h"
 
-@interface ActionsView()
+@interface MoreFunctionsView()
 
 
 
 @end
 
-@implementation ActionsView
+@implementation MoreFunctionsView
 
-- (IBAction)actionButtonTapped:(UIButton *)sender {
-
-    [self.delegate actionView:self actionButtonTapped:sender.tag];
+- (IBAction)groupSMS:(id)sender {
+    [self.delegate groupSMS];
+}
+- (IBAction)groupEmail:(id)sender {
+    [self.delegate groupEmail];
+}
+- (IBAction)scanContactQR:(id)sender {
+    [self.delegate scanContactQR];
+}
+- (IBAction)addContactManually:(id)sender {
+    [self.delegate addContactManually];
 }
 
 #pragma  mark - setup

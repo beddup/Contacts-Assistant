@@ -30,7 +30,7 @@
 		8D7180971B5DE97400E372ED /* TagCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180961B5DE97400E372ED /* TagCell.m */; };
 		8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */; };
 		8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A01B5F5FB300E372ED /* AddTagView.xib */; };
-		8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180A31B5FACE300E372ED /* ActionsView.m */; };
+		8D7180A41B5FACE300E372ED /* MoreFunctionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */; };
 		8D7180A61B5FD07100E372ED /* BatchEditOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */; };
 		8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */; };
 		8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180AA1B5FD63800E372ED /* TagNavigationView.m */; };
@@ -131,8 +131,8 @@
 		8D7180961B5DE97400E372ED /* TagCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagCell.m; path = View/TagCell.m; sourceTree = "<group>"; };
 		8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreFuctionsView.xib; path = View/MoreFuctionsView.xib; sourceTree = "<group>"; };
 		8D7180A01B5F5FB300E372ED /* AddTagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddTagView.xib; path = View/AddTagView.xib; sourceTree = "<group>"; };
-		8D7180A21B5FACE300E372ED /* ActionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionsView.h; path = View/ActionsView.h; sourceTree = "<group>"; };
-		8D7180A31B5FACE300E372ED /* ActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActionsView.m; path = View/ActionsView.m; sourceTree = "<group>"; };
+		8D7180A21B5FACE300E372ED /* MoreFunctionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoreFunctionsView.h; path = View/MoreFunctionsView.h; sourceTree = "<group>"; };
+		8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoreFunctionsView.m; path = View/MoreFunctionsView.m; sourceTree = "<group>"; };
 		8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BatchEditOptionsView.xib; sourceTree = "<group>"; };
 		8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagNavigationView.xib; sourceTree = "<group>"; };
 		8D7180A91B5FD63800E372ED /* TagNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagNavigationView.h; path = View/TagNavigationView.h; sourceTree = "<group>"; };
@@ -303,8 +303,8 @@
 				8D7180931B5DE96A00E372ED /* ContactCell.m */,
 				8D71808F1B5D427A00E372ED /* HeaderView.h */,
 				8D7180901B5D427A00E372ED /* HeaderView.m */,
-				8D7180A21B5FACE300E372ED /* ActionsView.h */,
-				8D7180A31B5FACE300E372ED /* ActionsView.m */,
+				8D7180A21B5FACE300E372ED /* MoreFunctionsView.h */,
+				8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */,
 				8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */,
 				8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */,
 				8D7180A01B5F5FB300E372ED /* AddTagView.xib */,
@@ -629,7 +629,7 @@
 				8D3A8BA51B75005E00ECEABC /* Event.m in Sources */,
 				8D74D8A41B6E57AC008D5223 /* bitstream.c in Sources */,
 				8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */,
-				8D7180A41B5FACE300E372ED /* ActionsView.m in Sources */,
+				8D7180A41B5FACE300E372ED /* MoreFunctionsView.m in Sources */,
 				8D95A92A1B53ABDD009EB722 /* main.m in Sources */,
 				8D74D8B91B6E5FD6008D5223 /* QRCodeReader.m in Sources */,
 				8D841FDC1B63A72300801362 /* ContactInfoViewController.m in Sources */,

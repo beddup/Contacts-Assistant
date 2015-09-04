@@ -25,5 +25,8 @@
     return firstLetter;
 
 }
-
+-(NSString *)trimmedString{
+    // trim the white space front and behind
+    return nil;
+}
 @end

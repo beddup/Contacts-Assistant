@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="top" id="iN0-l3-epB" customClass="ActionsView">
+        <view contentMode="top" id="iN0-l3-epB" customClass="MoreFunctionsView">
             <rect key="frame" x="0.0" y="0.0" width="317" height="123"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -39,7 +39,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="actionButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="TAf-dt-RWh"/>
+                        <action selector="groupSMS:" destination="iN0-l3-epB" eventType="touchUpInside" id="ey1-Im-4pX"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="283" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m47-da-as3">
@@ -48,7 +48,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="actionButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="D4Q-Rh-2Nj"/>
+                        <action selector="scanContactQR:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ihd-Xh-GSV"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="282" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bRI-G8-vBH">
@@ -57,7 +57,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="actionButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="1Gw-jm-Noy"/>
+                        <action selector="groupEmail:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ge9-aC-4aw"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="扫描联系人" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XVk-52-Uku">
@@ -84,7 +84,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="actionButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="HQN-Oa-B3p"/>
+                        <action selector="addContactManually:" destination="iN0-l3-epB" eventType="touchUpInside" id="Yyk-Lr-se3"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="录入联系人" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdi-8q-JPx">
@@ -94,7 +94,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="bd2-e8-flc" firstAttribute="trailing" secondItem="Xmg-us-ikO" secondAttribute="trailing" id="0eu-RY-C6I"/>
                 <constraint firstItem="m47-da-as3" firstAttribute="leading" secondItem="XVk-52-Uku" secondAttribute="leading" id="0v4-H3-Ou2"/>

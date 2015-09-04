@@ -86,7 +86,7 @@ static dispatch_queue_t abQueue;
     return shareManager;
 }
 
--(void)executeBlockOnABQueue:(void(^)())block  {
+-(void)synExecuteBlockOnABQueue:(void(^)())block  {
     dispatch_sync(abQueue, block);
 }
 
@@ -256,10 +256,10 @@ static dispatch_queue_t abQueue;
 
 -(ABRecordRef)personOfContact:(Contact *)contact{
 
-//    __block ABRecordRef person;
-//    [self executeBlockOnABQueue:^{
-    ABRecordRef    person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
-//    }];
+    __block ABRecordRef person;
+    [self synExecuteBlockOnABQueue:^{
+        person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
+    }];
     return person;
 }
 -(NSString *)contactNameForOrdering:(Contact *)contact{
@@ -406,6 +406,24 @@ static dispatch_queue_t abQueue;
 
     return emailsMA.count ? emailsMA : nil;
 }
+-(BOOL)hasPhone:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return NO;
+    }
+    ABMultiValueRef phones=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonPhoneProperty);
+    return ABMultiValueGetCount(phones);
+}
+-(BOOL)hasEmail:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return NO;
+    }
+    ABMultiValueRef emails=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonPhoneProperty);
+    return ABMultiValueGetCount(emails);
+
+}
+
 -(NSString *)phoneNumberAtIndex:(NSInteger )index contact:(Contact *)contact{
 
     ABRecordRef person=[self personOfContact:contact];
@@ -418,7 +436,6 @@ static dispatch_queue_t abQueue;
     if (phonesCount>index) {
         name= (__bridge NSString *)ABMultiValueCopyValueAtIndex(phones, index);
     }
-
     return name;
 }
 
@@ -436,51 +453,6 @@ static dispatch_queue_t abQueue;
     return email;
 }
 
-
--(NSArray *)filterContactsWithoutPhoneNumbers:(NSArray *)contacts{
-
-    NSMutableArray *array=[@[] mutableCopy];
-
-    for (int section = 0; section < contacts.count; section++) {
-
-        NSMutableArray *subArray=[@[] mutableCopy];
-        NSMutableArray *sectionArray=contacts[section];
-        for (int row=0 ; row < sectionArray.count; row++) {
-            Contact *contact = sectionArray[row];
-            if ([self phoneNumbersOfContact:contact] ) {
-                [subArray addObject:contact];
-            }
-        }
-        if (subArray.count > 0) {
-            [array addObject:subArray];
-        }
-    }
-    NSLog(@"contacts:%@",@(array.count));
-
-    return array;
-}
-
--(NSArray *)filterContactsWithoutemail:(NSArray *)contacts{
-
-    NSMutableArray *array=[@[] mutableCopy];
-
-    for (int section = 0; section < contacts.count; section++) {
-        NSMutableArray *subArray=[@[] mutableCopy];
-        NSMutableArray *sectionArray=contacts[section];
-        for (int row=0 ; row < sectionArray.count; row++) {
-            Contact *contact = sectionArray[row];
-            if ([self emailsOfContact:contact] ) {
-                [subArray addObject:contact];
-            }
-        }
-        if (subArray.count > 0) {
-            [array addObject:subArray];
-        }
-    }
-    NSLog(@"contacts:%@",@(array.count));
-    return array;
-
-}
 
 #pragma mark - tag
 #pragma mark -search tag and contact
@@ -602,11 +574,10 @@ static dispatch_queue_t abQueue;
     }
 
     // if keep syn with ab
-//    __block
-    NSArray *peopleInAddressBook;
-//    [self executeBlockOnABQueue:^{
+    __block NSArray *peopleInAddressBook;
+    [self synExecuteBlockOnABQueue:^{
         peopleInAddressBook =(__bridge NSArray *) ABAddressBookCopyArrayOfAllPeople(self.addressBook);
-//    }];
+    }];
     NSMutableSet *peopleRecordIDs=[[NSMutableSet alloc]init];
     for (signed long i= 0; i< peopleInAddressBook.count; i++) {
         ABRecordRef recordRef=(__bridge ABRecordRef)peopleInAddressBook[i];
@@ -704,10 +675,10 @@ static dispatch_queue_t abQueue;
 
     ABRecordSetValue(person,property,mutableMultiContactInfo,NULL);
 
-//    __block bool success;
-//    [self executeBlockOnABQueue:^{
-      bool  success =  ABAddressBookSave(self.addressBook, NULL);
-//    }];
+    __block bool success;
+    [self synExecuteBlockOnABQueue:^{
+        success =  ABAddressBookSave(self.addressBook, NULL);
+    }];
     return success;
 }
 
@@ -749,7 +720,7 @@ static dispatch_queue_t abQueue;
 
     __block bool flag1;
     __block bool flag2;
-    [self executeBlockOnABQueue:^{
+    [self synExecuteBlockOnABQueue:^{
         flag1= ABAddressBookAddRecord(self.addressBook,person,NULL);
         flag2= ABAddressBookSave(self.addressBook, NULL);
     }];
@@ -798,7 +769,7 @@ static dispatch_queue_t abQueue;
 
     ABRecordRef person=[self personOfContact:contact];
 
-    [self executeBlockOnABQueue:^{
+    [self synExecuteBlockOnABQueue:^{
         ABAddressBookRemoveRecord(self.addressBook, person, NULL);
         ABAddressBookSave(self.addressBook, NULL);
     }];
@@ -833,7 +804,7 @@ static dispatch_queue_t abQueue;
         ABMultiValueAddValueAndLabel(multiValue, (__bridge CFStringRef)relation.otherContact.contactName, (__bridge CFStringRef)relation.relationName, NULL);
     }
     ABRecordSetValue(person, kABPersonRelatedNamesProperty,multiValue,NULL);
-    [self executeBlockOnABQueue:^{
+    [self synExecuteBlockOnABQueue:^{
         ABAddressBookSave(self.addressBook, NULL);
     }];
 }

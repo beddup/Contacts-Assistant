@@ -7,6 +7,7 @@
 //
 
 #import "NSMutableArray+ArrangedContacts.h"
+#import "Contact+Utility.h"
 #import <UIKit/UITableView.h>
 
 @implementation NSMutableArray (ArrangedContacts)
@@ -21,23 +22,34 @@
         [self removeObjectAtIndex:indexPath.section];
     }
 }
-//-(NSMutableArray *)indexTitlesInTableView{
-//
-//    NSMutableArray *indexTitles=[@[] mutableCopy];
-//    for (int section=0; section<self.count; section++) {
-//        NSArray *contactsInSection=self[section];
-//        Contact *contact=[contactsInSection firstObject];
-//        if (contact.contactOrderWeight.doubleValue != 0.0) {
-//            [indexTitles addObject:@"☆"];
-//        }else{
-//            NSString *firstLetter=[self firstLetter:contact];
-//            if (firstLetter) {
-//                [indexTitles addObject:firstLetter];
-//            }
-//        }
-//    }
-//    return indexTitles;
-//
-//}
+
+-(NSMutableArray *)contactsWhichHasPhones{
+    return [self contactsWhichHasContactInfo:YES];
+}
+-(NSMutableArray *)contactsWhichHasEmail{
+    return [self contactsWhichHasContactInfo:NO];
+}
+
+-(NSMutableArray *)contactsWhichHasContactInfo:(BOOL)hasPhone{
+    NSMutableArray *array=[@[] mutableCopy];
+
+    for (int section = 0; section < self.count; section++) {
+        NSMutableArray *subArray=[@[] mutableCopy];
+        NSMutableArray *sectionArray=self[section];
+        for (int row=0 ; row < sectionArray.count; row++) {
+            Contact *contact = sectionArray[row];
+            BOOL hasContactInfo=hasPhone ?  [contact hasPhone] : [contact hasEmail];
+            if (hasContactInfo) {
+                [subArray addObject:contact];
+            }
+        }
+        if (subArray.count > 0) {
+            [array addObject:subArray];
+        }
+    }
+    return array;
+
+
+}
 
 @end
