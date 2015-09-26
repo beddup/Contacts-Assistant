@@ -10,7 +10,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qvb-Fp-j1X">
+                <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qvb-Fp-j1X">
                     <rect key="frame" x="4" y="4" width="312" height="30"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qmg-Rs-zyW">
@@ -58,15 +58,8 @@
                         <constraint firstItem="L8t-OE-D9U" firstAttribute="centerY" secondItem="Qmg-Rs-zyW" secondAttribute="centerY" id="xBG-C9-P2W"/>
                     </constraints>
                 </view>
-                <imageView userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5tc-oO-P20">
-                    <rect key="frame" x="4" y="135" width="312" height="15"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="15" id="9zz-DD-4ls"/>
-                    </constraints>
-                </imageView>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RMc-Ix-ktW">
-                    <rect key="frame" x="4" y="34" width="312" height="101"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000000000000004" contentMode="scaleToFill" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RMc-Ix-ktW">
+                    <rect key="frame" x="4" y="34" width="312" height="114"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -76,19 +69,14 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Qvb-Fp-j1X" secondAttribute="trailing" constant="4" id="5UP-D0-5CA"/>
-                <constraint firstAttribute="bottom" secondItem="5tc-oO-P20" secondAttribute="bottom" id="9k3-x7-0ve"/>
                 <constraint firstAttribute="trailing" secondItem="RMc-Ix-ktW" secondAttribute="trailing" id="H2P-5Q-Gr2"/>
                 <constraint firstItem="Qvb-Fp-j1X" firstAttribute="leading" secondItem="eGH-u7-Ggd" secondAttribute="leading" constant="4" id="KEI-po-D5T"/>
-                <constraint firstItem="5tc-oO-P20" firstAttribute="leading" secondItem="eGH-u7-Ggd" secondAttribute="leading" id="RoE-Lz-3NC"/>
-                <constraint firstItem="5tc-oO-P20" firstAttribute="trailing" secondItem="Qvb-Fp-j1X" secondAttribute="trailing" id="Zhs-7S-6Me"/>
                 <constraint firstItem="Qvb-Fp-j1X" firstAttribute="leading" secondItem="RMc-Ix-ktW" secondAttribute="leading" id="a48-FQ-dOL"/>
-                <constraint firstItem="5tc-oO-P20" firstAttribute="top" secondItem="RMc-Ix-ktW" secondAttribute="bottom" id="cE7-xa-Fmi"/>
-                <constraint firstAttribute="trailing" secondItem="5tc-oO-P20" secondAttribute="trailing" id="fDz-QV-7n8"/>
+                <constraint firstAttribute="bottom" secondItem="RMc-Ix-ktW" secondAttribute="bottom" constant="2" id="f2d-nQ-F9m"/>
                 <constraint firstItem="RMc-Ix-ktW" firstAttribute="top" secondItem="Qvb-Fp-j1X" secondAttribute="bottom" id="gdS-Op-3nb"/>
                 <constraint firstItem="Qvb-Fp-j1X" firstAttribute="top" secondItem="eGH-u7-Ggd" secondAttribute="top" constant="4" id="h6x-Ul-r2J"/>
                 <constraint firstItem="Qvb-Fp-j1X" firstAttribute="trailing" secondItem="RMc-Ix-ktW" secondAttribute="trailing" id="iEA-WI-gH7"/>
                 <constraint firstItem="RMc-Ix-ktW" firstAttribute="leading" secondItem="eGH-u7-Ggd" secondAttribute="leading" id="kaH-m0-Bi7"/>
-                <constraint firstItem="5tc-oO-P20" firstAttribute="leading" secondItem="Qvb-Fp-j1X" secondAttribute="leading" id="rKL-MF-iUx"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -96,8 +84,6 @@
                 <mask key="constraints">
                     <exclude reference="H2P-5Q-Gr2"/>
                     <exclude reference="kaH-m0-Bi7"/>
-                    <exclude reference="RoE-Lz-3NC"/>
-                    <exclude reference="fDz-QV-7n8"/>
                 </mask>
             </variation>
             <connections>

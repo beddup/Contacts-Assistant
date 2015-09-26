@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ChooseContactsViewController.h"
 #import "Contact.h"
-@interface RelationContactsViewController : ChooseContactsViewController
+@interface AddContactsToRelationViewController : ChooseContactsViewController
 
 @end

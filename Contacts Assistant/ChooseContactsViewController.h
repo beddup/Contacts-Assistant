@@ -14,7 +14,7 @@ extern NSString *const CellIdentifier;
 
 @property(strong,nonatomic)NSMutableArray *contactsSelected;
 
-@property(strong,nonatomic)NSMutableArray *contacts;
-@property(strong,nonatomic)NSMutableArray *indexTitles;
+@property(strong,nonatomic)NSArray *contacts;
+@property(strong,nonatomic)NSArray *indexTitles;
 
 @end

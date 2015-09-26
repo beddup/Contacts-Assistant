@@ -10,6 +10,7 @@
 #import <AddressBook/AddressBook.h>
 #import "ContactsManager.h"
 #import "MBProgressHUD.h"
+#import "NSString+ContactsAssistant.h"
 
 @interface CreatePersonViewController ()<UITextFieldDelegate,MBProgressHUDDelegate>
 
@@ -30,7 +31,7 @@
 @end
 
 @implementation CreatePersonViewController
-
+#pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.baiscInfoPlaceHodlers=@[@"公司",@"部门",@"职称"];
@@ -45,49 +46,17 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
--(void)TFChanged:(NSNotification *)notification{
-
-    self.navigationItem.rightBarButtonItem.enabled=[self canCreatePerson];
-
-}
-
--(BOOL)canCreatePerson{
-
-    if (self.nameTF.text.length || self.contactsInfo.count) {
-        return YES;
-    }
-    if (self.companyTF.text.length ||
-        self.departmentTF.text.length ||
-        self.jobTitleTF.text.length ) {
-        return YES;
-    }
-    return NO;
-}
-
--(void)configureTableHV{
-    UITextField *textField=[[UITextField alloc]initWithFrame:CGRectMake(0, 0, 0, 50)];
-    textField.placeholder=@"输入联系人姓名";
-    textField.textAlignment=NSTextAlignmentCenter;
-    self.tableView.tableHeaderView=textField;
-    self.nameTF=textField;
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-- (IBAction)dismiss:(id)sender {
-
-    [self.nameTF becomeFirstResponder];
-    [self.nameTF resignFirstResponder];
-    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma  mark - MBProgressHUDDelegate
 - (void)hudWasHidden:(MBProgressHUD *)hud{
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
+#pragma  mark - property
 -(NSMutableArray *)contactsInfo{
     if (!_contactsInfo) {
         _contactsInfo=[@[]
@@ -97,6 +66,14 @@
 }
 
 #pragma mark - table view
+-(void)configureTableHV{
+    UITextField *textField=[[UITextField alloc]initWithFrame:CGRectMake(0, 0, 0, 50)];
+    textField.placeholder=@"输入联系人姓名";
+    textField.textAlignment=NSTextAlignmentCenter;
+    self.tableView.tableHeaderView=textField;
+    self.nameTF=textField;
+}
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 2; // name ， contacts， company
 }
@@ -130,23 +107,15 @@
         cell = [tableView dequeueReusableCellWithIdentifier:@"contact info"];
         UITextField *type=(UITextField *)[cell viewWithTag:925];
         UITextField *value=(UITextField *)[cell viewWithTag:105];
-        UIButton *deleteButton= (UIButton *)[cell viewWithTag:110];
-        [deleteButton addTarget:self action:@selector(deleteContact:) forControlEvents:UIControlEventTouchUpInside];
-        type.text=self.contactsInfo[indexPath.row][@"ContactLabel"];
-        value.text=self.contactsInfo[indexPath.row][@"ContactValue"];
+        type.text=self.contactsInfo[indexPath.row][ContactInfoLabelKey];
+        value.text=self.contactsInfo[indexPath.row][ContactInfoValueKey];
         type.enabled=NO;
         value.enabled=NO;
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
 }
--(void)deleteContact:(UIButton *)button{
-    UITableViewCell *cell= (UITableViewCell *)button.superview.superview;
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    [self.contactsInfo removeObjectAtIndex:indexPath.row];
-    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 
-}
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     if (section == 0) {
         return 88;
@@ -199,8 +168,27 @@
     return nil;
 }
 
+#pragma mark- UITextFieldTextDidChangeNotification
+-(void)TFChanged:(NSNotification *)notification{
 
-#pragma  mark - tf delegate
+    self.navigationItem.rightBarButtonItem.enabled=[self canCreatePerson];
+
+}
+
+-(BOOL)canCreatePerson{
+
+    if ([self.nameTF.text whiteSpaceTrimmedLength] || self.contactsInfo.count) {
+        return YES;
+    }
+    if ([self.companyTF.text whiteSpaceTrimmedLength] ||
+        [self.departmentTF.text whiteSpaceTrimmedLength] ||
+        [self.jobTitleTF.text whiteSpaceTrimmedLength] ) {
+        return YES;
+    }
+    return NO;
+}
+
+#pragma  mark - text field delegate
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     if (textField == self.emailValueTF && ![textField.text containsString:@"@"]) {
         return NO;
@@ -221,17 +209,20 @@
 }
 
 -(void)addContactInTF:(UITextField *)textField{
-    if (textField.text.length) {
+    if ([textField.text whiteSpaceTrimmedLength]) {
         ContactInfoType type;
         type =  textField == self.phoneValueTF ? ContactInfoTypePhone : ContactInfoTypeEmail;
         NSString *labelString;
         switch (type) {
             case ContactInfoTypePhone:{
-                labelString =  self.phoneLabelTF.text.length ? self.phoneLabelTF.text : self.phoneLabelTF.placeholder;
+                labelString =  [self.phoneLabelTF.text whiteSpaceTrimmedLength] ? self.phoneLabelTF.text : self.phoneLabelTF.placeholder;
                 break;
             }
             case ContactInfoTypeEmail:{
-                labelString = self.emailLabelTF.text.length ? self.emailLabelTF.text : self.emailLabelTF.placeholder;
+                labelString = [self.emailLabelTF.text whiteSpaceTrimmedLength] ? self.emailLabelTF.text : self.emailLabelTF.placeholder;
+                break;
+            }
+            default:{
                 break;
             }
         }
@@ -257,8 +248,8 @@
     }
 
 }
-#pragma  mark - navigation
 
+#pragma  mark - task finish or cancel
 - (IBAction)done:(id)sender {
 
     [self.nameTF becomeFirstResponder];
@@ -266,27 +257,27 @@
 
     NSMutableDictionary *personInfo=[@{} mutableCopy];
     // get name
-    if (self.nameTF.text.length) {
-        [personInfo setObject:self.nameTF.text forKey:@"name"];
+    if ([self.nameTF.text whiteSpaceTrimmedLength]) {
+        [personInfo setObject:[self.nameTF.text whiteSpaceAtEndsTrimmedString]  forKey:PersonInfoNameKey];
     }
 
     // get company
-    if (self.companyTF.text.length) {
-        [personInfo setObject:self.companyTF.text forKey:@"company"];
+    if ([self.companyTF.text whiteSpaceTrimmedLength]) {
+        [personInfo setObject:[self.companyTF.text whiteSpaceAtEndsTrimmedString]  forKey:PersonInfoCompanyKey];
     }
 
     // get department
-    if (self.departmentTF.text.length) {
-        [personInfo setObject:self.departmentTF.text forKey:@"department"];
+    if ([self.departmentTF.text whiteSpaceTrimmedLength]) {
+        [personInfo setObject:[self.departmentTF.text whiteSpaceAtEndsTrimmedString] forKey:PersonInfoDepartmentKey];
     }
 
     //get jobTitle
-    if (self.jobTitleTF.text.length) {
-        [personInfo setObject:self.jobTitleTF.text forKey:@"jobTitle"];
+    if ([self.jobTitleTF.text whiteSpaceTrimmedLength]) {
+        [personInfo setObject:[self.jobTitleTF.text whiteSpaceAtEndsTrimmedString] forKey:PersonInfoJobTitleKey];
     }
 
     //get contactsInfo
-    [personInfo setObject:self.contactsInfo forKey:@"contactsInfo"];
+    [personInfo setObject:self.contactsInfo forKey:PersonInfoContactInfoKey];
 
     Contact * newContact =[[ContactsManager sharedContactManager] createPerson:personInfo];
 
@@ -301,6 +292,12 @@
         [self performSegueWithIdentifier:@"didCreatePerson" sender:nil];
     }
     
+}
+
+- (IBAction)dismiss:(id)sender {
+
+    [self.nameTF resignFirstResponder];
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

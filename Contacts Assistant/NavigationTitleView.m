@@ -39,5 +39,20 @@
     self.navigationTitlePressed();
     
 }
+#pragma  mark - setup
+-(void)awakeFromNib{
+    [self setup];
+}
+
+-(void)setup{
+    self.enabled=YES;
+}
+-(instancetype)initWithFrame:(CGRect)frame{
+    self=[super initWithFrame:frame];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
 
 @end

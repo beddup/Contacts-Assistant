@@ -8,13 +8,20 @@
 
 #import <UIKit/UIKit.h>
 @class Contact,Relation;
+
+@protocol RelationsViewDelegate <NSObject>
+
+-(void)dismissRelationBetween:(Contact *)contact otherContact:(Contact *)otherContact;
+-(void)showAllContactsWhoHaveSameTagWithContact:(Contact *)contact;
+
+@end
 @interface RelationsView : UIView
 
 @property(strong,nonatomic)Contact *contact;
 
-@property(copy) void(^relationSelected)(Contact *contact, Contact *otherContact);
-@property(copy) void(^sameTagContactsSelected)(Contact *contact);
+@property(weak,nonatomic)id<RelationsViewDelegate>delegate;
 
 -(void)relationDeleted:(Relation *)relation;
--(void)updateRelationViews;
+
+-(void)update;
 @end

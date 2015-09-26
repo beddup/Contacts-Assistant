@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "Event+Utility.h"
 #import "Tag+Utility.h"
+#import "Relation.h"
 
 @implementation Contact (Utility)
 +(NSManagedObjectContext *)context{
@@ -48,6 +49,7 @@
     for (Contact *contact in contacts) {
         [[Contact context] deleteObject:contact];
     }
+    [((AppDelegate *)[UIApplication sharedApplication].delegate) saveContext];
 }
 
 +(Contact *)contactOfContactID:(int)contactID{
@@ -64,13 +66,17 @@
 }
 
 +(NSString *)QRStringOfContact:(Contact *)contact{
-    NSDictionary *info=@{@"N":contact.contactName, // name
-                         @"P":[[ContactsManager sharedContactManager]phoneNumbersOfContact:contact], // phones
-                         @"E":[[ContactsManager sharedContactManager]emailsOfContact:contact]};
+    
+    NSArray *phones=[[ContactsManager sharedContactManager]phoneNumbersOfContact:contact];// phones
+    NSArray *emails=[[ContactsManager sharedContactManager]emailsOfContact:contact];//emails
+    NSDictionary *info=@{PersonInfoNameKey:contact.contactName, // name
+                         PersonInfoContactInfoKey:[phones arrayByAddingObjectsFromArray:emails]};
+
     NSData *data= [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:NULL];
     NSString *string=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     return string;
 }
+
 +(NSDictionary *)infoFromQRString:(NSString *)qrstring{
     NSData *data=[qrstring dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *info=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
@@ -78,14 +84,89 @@
 }
 
 -(Event *)mostRecentEvent{
-
-    Event *mostRecentEvent=[self.attendWhichEvents anyObject];
-    for (Event *event in self.attendWhichEvents) {
-        if ([[event nextdate] compare:[mostRecentEvent nextdate]] == NSOrderedDescending) {
-            mostRecentEvent=event;
+    NSArray *unfinishedEvent=[self unfinishedOwnedEvents];
+    if (!unfinishedEvent.count) {
+        return nil;
+    }
+    NSTimeInterval theInterval=0;
+    Event *theEvent=nil;
+    for (Event *event in unfinishedEvent) {
+        NSDate *nextDate=[event nextEventDate];
+        NSTimeInterval nextDateInterval=[nextDate timeIntervalSinceNow];
+        BOOL flag=NO;
+        if (!nextDate) {
+            // no date;
+            return event;
+        }else if (theInterval == 0) {
+            theEvent=event;
+        }else if ( theInterval > 0 && nextDateInterval>0 && nextDateInterval<theInterval ) {
+            // both coming date
+            flag=YES;
+        }else if (theInterval <0 && nextDateInterval<0 && nextDateInterval>theInterval ) {
+            // both passed date
+            flag=YES;
+        }else if (theInterval<0 && nextDateInterval >0) {
+            // coming date vs passed date
+            flag=YES;
+        }
+        if (flag) {
+            theEvent=event;
+            theInterval=nextDateInterval;
         }
     }
-    return mostRecentEvent;
+
+    return theEvent;
+}
+
+-(NSArray *)unfinishedOwnedEvents{
+    return [[self.ownedEvents allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"finished.boolValue==%d",NO]];
+}
+-(NSArray *)finishedOwnedEvents{
+    return [[self.ownedEvents allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"finished.boolValue==%d",YES]];
+}
+-(BOOL)hasUnfinishedOwnedEvents{
+    for (Event *event in self.ownedEvents) {
+        if (event.finished.boolValue == NO) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(NSMutableArray *)sortedUnfinishedOwnedEvents{
+    // first no date event ,then coming event,then passed event
+    NSMutableArray *nodateEvent=[@[] mutableCopy];
+    NSMutableArray *comingAndNoDateEvent=[@[] mutableCopy];
+    NSMutableArray *passedEvent=[@[] mutableCopy];
+    for (Event *event in [self unfinishedOwnedEvents]) {
+        if (![event nextEventDate]) {
+            // no date event
+            [nodateEvent addObject:event];
+        }
+        if ([[event nextEventDate] timeIntervalSinceNow] > 0){
+            //coming event
+            [comingAndNoDateEvent addObject:event];
+        }else if ( [[event nextEventDate] timeIntervalSinceNow] < 0){
+            //passedEvent
+            [passedEvent addObject: event];
+        }
+    }
+
+    //sort
+    [nodateEvent sortUsingComparator:^NSComparisonResult(Event * obj1, Event * obj2) {
+        return [obj1.eventDescription compare:obj2.eventDescription];
+    }];
+    [comingAndNoDateEvent sortUsingComparator:^NSComparisonResult(Event * obj1, Event * obj2) {
+       return  [[obj1 nextEventDate] compare:[obj2 nextEventDate]];
+    }];
+    [passedEvent sortUsingComparator:^NSComparisonResult(Event * obj1, Event * obj2) {
+        return  [[obj2 nextEventDate] compare:[obj1 nextEventDate]];
+    }];
+
+    [nodateEvent addObjectsFromArray:comingAndNoDateEvent];
+    [nodateEvent addObjectsFromArray:passedEvent];
+    return nodateEvent;
+
 }
 
 #pragma mark - contactInfo string
@@ -104,7 +185,6 @@
     }
     if (contactInfosString.length) {
         contactInfosString=[contactInfosString substringToIndex:contactInfosString.length-1];
-        contactInfosString=[contactInfosString stringByAppendingString:@";"];
     }
     return contactInfosString;
 }
@@ -116,6 +196,17 @@
   return   [[ContactsManager sharedContactManager] hasEmail:self];
 }
 
+-(void)addRelation:(NSString *)relationName  WithContacts:(NSArray *)contacts{
+
+    for (Contact *otherContact in contacts) {
+        // update core data
+        Relation *relation=[NSEntityDescription insertNewObjectForEntityForName:@"Relation" inManagedObjectContext:self.managedObjectContext];
+        relation.relationName=relationName;
+        relation.whoseRelation=self;
+        relation.otherContact=otherContact;
+    }
+
+}
 
 
 

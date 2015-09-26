@@ -9,11 +9,12 @@
 #import "QRScanResultViewController.h"
 #import "ContactsManager.h"
 #import "Contact+Utility.h"
+#import "defines.h"
+#import "MBProgressHUD.h"
 
 @interface QRScanResultViewController ()
 
-@property(strong,nonatomic)NSDictionary *resultInfo;
-@property(strong,nonatomic)NSArray *contactInfo;
+@property(strong,nonatomic)NSArray *contactsInfo;
 
 @property(weak,nonatomic)UIButton *addToAdressBook;
 @end
@@ -43,7 +44,8 @@
     UIButton *addToAdressBook=[[UIButton alloc]init];
     self.addToAdressBook=addToAdressBook;
     [addToAdressBook setTitle:@"添加到通讯录" forState:UIControlStateNormal];
-    [addToAdressBook setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [addToAdressBook setTitleColor:IconColor
+                          forState:UIControlStateNormal];
     [addToAdressBook addTarget:self action:@selector(addToAB:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview: addToAdressBook];
 
@@ -51,21 +53,34 @@
 
 }
 -(void)addToAB:(UIButton *)button{
-    NSLog(@"添加到通讯录中");
+
+    MBProgressHUD *hud=[[MBProgressHUD alloc]initWithView:self.navigationController.view];
+    hud.removeFromSuperViewOnHide=YES;
+    [self.navigationController.view addSubview:hud];
+    hud.mode=MBProgressHUDModeText;
+    hud.labelText=@"正在添加...";
+    [hud show:YES];
+
+    [[ContactsManager sharedContactManager] createPerson:self.personInfo];
+    
+
+    hud.labelText=@"已添加";
+    [hud hide:YES afterDelay:0.8];
+
+    [button setTitle:@"已添加到通讯录中" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    button.enabled=NO;
 }
 
--(void)setResultString:(NSString *)resultString{
-
-    _resultString=resultString;
-    self.resultInfo=[Contact infoFromQRString:resultString];
-    NSArray *phonesInfo=self.resultInfo[@"P"];
-    NSArray *emailsInfo=self.resultInfo[@"E"];
-    self.contactInfo=[phonesInfo arrayByAddingObjectsFromArray:emailsInfo];
-
+-(void)setPersonInfo:(NSDictionary *)personInfo{
+    _personInfo=personInfo;
+    self.contactsInfo=self.personInfo[PersonInfoContactInfoKey];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+//    NSLog(@"qrvc memory warning");
     // Dispose of any resources that can be recreated.
 }
 
@@ -78,17 +93,17 @@
     if (section == 0) {
         return 1;
     }else{
-        return self.contactInfo.count;
+        return self.contactsInfo.count;
     }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (indexPath.section ==0 ) {
-        cell.textLabel.text=self.resultInfo[@"N"];
+        cell.textLabel.text=self.personInfo[PersonInfoNameKey];
         cell.detailTextLabel.text=nil;
     }else{
-        NSDictionary *contactInfo =self.contactInfo[indexPath.row];
+        NSDictionary *contactInfo =self.contactsInfo[indexPath.row];
         cell.textLabel.text=contactInfo[ContactInfoLabelKey];
         cell.detailTextLabel.text=contactInfo[ContactInfoValueKey];
     }
@@ -103,15 +118,5 @@
         return @"联系信息";
     }
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

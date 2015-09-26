@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "Event.h"
 
+@protocol EventContentUpdatingDelegate;
 
 @interface ChangeEventTimeViewController : UIViewController
 
+@property(strong,nonatomic)NSDate *date;
+@property(strong,nonatomic)NSMutableArray *repeatedDays;
 
-@property(strong,nonatomic)Event *event;
+@property(weak,nonatomic)id<EventContentUpdatingDelegate>delegate;
 
 @end

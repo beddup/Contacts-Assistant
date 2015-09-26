@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <AddressBook/AddressBook.h>
 #import "Contact.h"
-
+#import "defines.h"
 
 @interface AppDelegate ()
 
@@ -17,11 +17,50 @@
 
 @implementation AppDelegate
 
-
+#pragma mark
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    // first launch or not
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:APPLaunchedBefore]){
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:APPLaunchedBefore];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:FirstLaunch];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FirstLaunch];
+    }
+    
+    [self cycleTheGlobalMessageComposer];
+    [self cycleTheGlobalMailComposer];
+
+    UIUserNotificationSettings *settings=[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound|UIUserNotificationTypeBadge categories:nil];
+    [application registerUserNotificationSettings:settings];
 
     return YES;
+}
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    NSString *description=notification.userInfo[LocalNotificationUserInfoDescriptionKey];
+
+    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:description preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action=[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:action];
+    UINavigationController *rootVC=(UINavigationController *)application.keyWindow.rootViewController;
+    UIViewController *currentVisibleVC=rootVC.visibleViewController;
+    [currentVisibleVC presentViewController:alertController animated:YES completion:nil];
+    
+}
+
+-(void)cycleTheGlobalMailComposer
+{
+    self.globalMailComposer = nil;
+    if ([MFMailComposeViewController canSendMail]) {
+        self.globalMailComposer = [[MFMailComposeViewController alloc] init];
+    }
+}
+-(void)cycleTheGlobalMessageComposer
+{
+    self.globalMessageComposer = nil;
+    if ([MFMessageComposeViewController canSendText]) {
+        self.globalMessageComposer = [[MFMessageComposeViewController alloc] init];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -46,6 +85,8 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
 }
 
 
@@ -91,7 +132,7 @@
         error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
         // Replace this with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
     
@@ -123,7 +164,7 @@
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
     }

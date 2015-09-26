@@ -10,5 +10,10 @@
 
 @interface NSString (ContactsAssistant)
 -(NSString *)firstLetterOfString;  // first letter or pinyin
--(NSString *)trimmedString; // trim the white space front and behind
+-(NSString *)whiteSpaceAtEndsTrimmedString; // trim the white space front and behind
+-(NSString *)whiteSpaceAtEndsAndNewLinsTrimmedString; // trim the white space front and behind
+-(NSInteger)whiteSpaceTrimmedLength;
+
+//event
++(NSString *)repeatedDaySymbols:(NSArray *)repeatedDays;
 @end

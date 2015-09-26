@@ -11,15 +11,13 @@
 #import "Contact+Utility.h"
 #import "Relation.h"
 #import "Tag+Utility.h"
-#import "HeaderView.h"
 #import "TagCell.h"
 #import "ContactCell.h"
 #import "Event.h"
 #import "NSString+ContactsAssistant.h"
 #import <AddressBook/AddressBook.h>
+#import "defines.h"
 #import <CoreData/CoreData.h>
-
-NSString *const ContactManagerDidFinishUpdatingCoreData=@"ContactManagerDidFinishUpdatingCoreData";
 
 NSString *const AdvicedContactsKey=@"AdvicedContactsKey";
 NSString *const AdvicedTagsKey=@"AdvicedTagsKey";
@@ -30,37 +28,38 @@ NSString *const ContactInfoIndexKey=@"CII";
 NSString *const ContactInfoLabelKey=@"CIL";
 NSString *const ContactInfoValueKey=@"CIV";
 
+NSString *const PersonInfoNameKey=@"N_";
+NSString *const PersonInfoContactInfoKey=@"CI_";
+NSString *const PersonInfoCompanyKey=@"C_";
+NSString *const PersonInfoDepartmentKey=@"D_";
+NSString *const PersonInfoJobTitleKey=@"J_";
+
+
 typedef enum : NSUInteger {
     UpdateContactInfoModeAdd,
     UpdateContactInfoModeModify,
     UpdateContactInfoModeDelete,
 } UpdateContactInfoMode;
+
 @interface ContactsManager()
 
-@property(copy)dispatch_queue_t abQueue;
-//note: instance of ABAddressBookRef must be used by only one thread.
 
-
-@property(weak,nonatomic)NSManagedObjectContext *context;
 
 @property(nonatomic,assign)ABAddressBookRef addressBook;
 
-//for update tableview
-@property(strong,nonatomic)Tag *currentTag;
-@property(strong,nonatomic)NSMutableArray *contacts;
-@property(strong,nonatomic)NSArray *cellHeightArray;
+@property(strong,nonatomic)NSArray *allPossibleIndexTitles;
+@property(strong,nonatomic)NSMutableArray *arrangedAllContactsPlaceHolder; // same count with allPossibleIndexTitles,may has empty array
 
-@property(strong,nonatomic)NSMutableArray *indexTitlesOfAllContacts;
-
+@property(nonatomic) ABPersonSortOrdering preferedSortOrdering;
 
 @end
 
 @implementation ContactsManager
 
-@synthesize contacts=_contacts;
-
 #pragma mark - instanitiation
 static ContactsManager * shareManager;
+
+//note: instance of ABAddressBookRef must be used by only one thread.
 static dispatch_queue_t abQueue;
 
 +(instancetype)sharedContactManager{
@@ -72,6 +71,7 @@ static dispatch_queue_t abQueue;
     return shareManager;
 
 }
+
 +(instancetype)allocWithZone:(struct _NSZone *)zone{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -86,18 +86,91 @@ static dispatch_queue_t abQueue;
     return shareManager;
 }
 
+#pragma mark - properties
+-(NSMutableArray *)arrangedAllContactsPlaceHolder{
+    if (!_arrangedAllContactsPlaceHolder) {
+        _arrangedAllContactsPlaceHolder=[@[] mutableCopy];
+        for (NSInteger index = 0; index<self.allPossibleIndexTitles.count; index++) {
+            [_arrangedAllContactsPlaceHolder addObject:[@[] mutableCopy]];
+        }
+    }
+    // 28 empty mutable array;
+    return _arrangedAllContactsPlaceHolder;
+}
+
+-(NSArray *)allPossibleIndexTitles{
+    if (!_allPossibleIndexTitles) {
+        NSString *string=@"☆,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,#";
+        _allPossibleIndexTitles=[string componentsSeparatedByString:@","];
+    }
+    return _allPossibleIndexTitles;
+}
+
+#pragma mark -Execute AddressBook Related task In Same Queue
+// execute addressBook related task, use addressBook in the same queue
 -(void)synExecuteBlockOnABQueue:(void(^)())block  {
     dispatch_sync(abQueue, block);
 }
-
--(NSMutableArray *)indexTitlesOfAllContacts{
-    if (!_indexTitlesOfAllContacts) {
-        _indexTitlesOfAllContacts=[self indexTitleOfContact:[self arrangedAllContacts]];
-    }
-    return _indexTitlesOfAllContacts;
+-(void)asyncExecuteBlockOnABQueue:(void(^)())block  {
+    dispatch_async(abQueue, block);
 }
 
--(NSMutableArray *)indexTitleOfContact:(NSMutableArray *)contacts{
+#pragma mark - Rearrange Contacts
+-(void)putContactIntoArrangedAllContacts:(Contact *)contact{
+    if (contact.contactOrderWeight.doubleValue != 0.0) {
+        [[self.arrangedAllContactsPlaceHolder firstObject] addObject:contact];
+        return;
+    }
+    NSString *firstLetter= [self firstLetter:contact];
+    NSInteger possibleIndex=[self.allPossibleIndexTitles indexOfObject:firstLetter];
+    if (possibleIndex == NSNotFound) {
+        [[self.arrangedAllContactsPlaceHolder lastObject] addObject:contact];
+    }else{
+        [self.arrangedAllContactsPlaceHolder[possibleIndex] addObject:contact];
+
+    }
+}
+-(NSArray *)arrangedContactsunderTag:(Tag *)tag{
+    NSArray *arragnedAllContacts=[self arrangedAllContacts];
+    if ([tag isRootTag]) {
+        return arragnedAllContacts;
+    }
+    return [self filterArrangedContacts:arragnedAllContacts underTag:tag];
+}
+-(NSArray *)arrangedAllContacts{
+    NSMutableArray *arrangedContacts=[@[] mutableCopy];
+    for (NSInteger section=0; section<self.arrangedAllContactsPlaceHolder.count; section++) {
+        if ([self.arrangedAllContactsPlaceHolder[section] count]) {
+            [arrangedContacts addObject:self.arrangedAllContactsPlaceHolder[section]];
+        }
+    }
+    return [arrangedContacts copy];
+}
+-(void)arrangeContactToTop:(Contact *)contact indexTitle:(NSString *)title{
+    NSInteger section=[self.allPossibleIndexTitles indexOfObject:title];
+    [self.arrangedAllContactsPlaceHolder[section] removeObject:contact];
+    [[self.arrangedAllContactsPlaceHolder firstObject] insertObject:contact atIndex:0];
+}
+
+-(NSArray *)filterArrangedContacts:(NSArray *)arrangedContacts underTag:(Tag *)tag{
+
+    NSMutableArray *contacts = [@[] mutableCopy];
+    for (int section = 0 ; section < arrangedContacts.count; section++) {
+        NSMutableArray *originalSubContacts=arrangedContacts[section];
+        NSMutableArray *newSubContacts=[@[] mutableCopy];
+        for (int row = 0; row<originalSubContacts.count; row++) {
+            Contact * contact= originalSubContacts[row];
+            if ([contact.underWhichTags containsObject:tag] && !contact.contactIsDeleted.boolValue) {
+                [newSubContacts addObject:contact];
+            }
+        }
+        if (newSubContacts.count) {
+            [contacts addObject:newSubContacts];
+        }
+    }
+    return [contacts copy];
+}
+-(NSMutableArray *)indexTitleOfContacts:(NSArray *)contacts{
 
     NSMutableArray *indexTitles=[@[] mutableCopy];
 
@@ -117,122 +190,48 @@ static dispatch_queue_t abQueue;
     
 }
 
--(NSMutableArray *)arrangedAllContacts{
-    if (!_arrangedAllContacts) {
-        _arrangedAllContacts=[self rearrangeContacts:[Contact allContacts]];
-    }
-    return _arrangedAllContacts;
+#pragma mark - Contact
+-(ABRecordRef)personOfContact:(Contact *)contact{
+
+    __block ABRecordRef person;
+    [self synExecuteBlockOnABQueue:^{
+        person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
+    }];
+    return person;
 }
+-(NSComparisonResult)compareResult:(Contact *)contact1 contact2:(Contact *)contact2{
 
--(NSMutableArray *)arrangedContactsunderTag:(Tag *)tag{
-
-    NSMutableArray *arrangedAllContacts=self.arrangedAllContacts;
-    if ([tag isRootTag]) {
-        return arrangedAllContacts;
-    }
-    return [self filterArrangedContacts:arrangedAllContacts underTag:tag];
-}
-
--(NSMutableArray *)filterArrangedContacts:(NSMutableArray *)arrangedContacts underTag:(Tag *)tag{
-
-    NSMutableArray *contacts = [@[] mutableCopy];
-    for (int section = 0 ; section < arrangedContacts.count; section++) {
-        NSMutableArray *originalSubContacts=arrangedContacts[section];
-        NSMutableArray *newSubContacts=[@[] mutableCopy];
-        for (int row = 0; row<originalSubContacts.count; row++) {
-            Contact * contact= originalSubContacts[row];
-            if ([contact.underWhichTags containsObject:tag] && !contact.contactIsDeleted.boolValue) {
-                [newSubContacts addObject:contact];
-            }
-        }
-        if (newSubContacts.count) {
-            [contacts addObject:newSubContacts];
-        }
-    }
-    return contacts;
-}
-
--(NSMutableArray *)rearrangeContacts:(NSArray *)contacts{
-
-    NSMutableArray *sortedContacts=[[contacts sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
-        return [self compareResult:obj1 contact2:obj2];
-    }] mutableCopy];
-
-    NSMutableArray *rearrangedContacts=[@[] mutableCopy];
-
-    // get the top contacts
-    NSPredicate *topContactsPredicate=[NSPredicate predicateWithFormat:@"contactOrderWeight.doubleValue != %f",0.0];
-    NSArray *topContacts=[sortedContacts filteredArrayUsingPredicate:topContactsPredicate];
-    if (topContacts.count) {
-        [rearrangedContacts addObject:topContacts];
-        [sortedContacts removeObjectsInArray:topContacts];
+    NSComparisonResult result=[contact1.contactOrderWeight compare:contact2.contactOrderWeight];
+    if (result != NSOrderedSame) {
+        return  result;
     }
 
-    // arrange the left contacts
-    NSMutableArray *contactsInSameSection=[@[] mutableCopy];
-    for (int i =0 ; i<sortedContacts.count; i++) {
-        Contact *contactToBeArranged=sortedContacts[i];
-        if (contactToBeArranged.contactIsDeleted.boolValue) {
-            continue;
-        }
-        NSString *firstLetter=[self firstLetter:contactToBeArranged];
-        NSString *sectionLetter=[self firstLetter:[contactsInSameSection lastObject]];
-        if (![firstLetter isEqualToString:sectionLetter]) {
-            contactsInSameSection =[@[] mutableCopy];
-            [rearrangedContacts addObject:contactsInSameSection];
-        }
-        [contactsInSameSection addObject:contactToBeArranged];
+    ABRecordRef person1=[self personOfContact:contact1];
+    ABRecordRef person2=[self personOfContact:contact2];
+    CFComparisonResult compareresult=ABPersonComparePeopleByName(person1, person2, self.preferedSortOrdering);
+    if (compareresult == kCFCompareLessThan) {
+        return NSOrderedAscending;
+    }else if (compareresult == kCFCompareGreaterThan){
+        return NSOrderedDescending;
+    }else{
+        return NSOrderedSame;
     }
 
-    return rearrangedContacts;
 }
-
-
-+(NSString *)localizedLabel:(CFStringRef)label{
-    return (__bridge NSString *) ABAddressBookCopyLocalizedLabel(label);
+-(NSString *)firstLetter:(Contact *)contact{
+ // return contact first letter for table index title
+    if (!contact) {
+        return nil;
+    }
+    NSString *name=[self contactNameForOrdering:contact];
+    if (!name) {
+        return @"#";
+    }
+    return [name firstLetterOfString];
 }
-+(NSArray *)localizedSystemContactLabels{
-
-    return @[ [ContactsManager localizedLabel:kABWorkLabel],
-             [ContactsManager localizedLabel:kABHomeLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneMobileLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneIPhoneLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneMainLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneHomeFAXLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneWorkFAXLabel],
-             [ContactsManager localizedLabel:kABPersonPhoneOtherFAXLabel],
-             [ContactsManager localizedLabel:kABPersonPhonePagerLabel],
-             [ContactsManager localizedLabel:kABOtherLabel]
-             ];
-}
-
-+(NSArray *)localizedSystemRelationLabel{
-
-    return @[ [ContactsManager localizedLabel:kABPersonFatherLabel],
-              [ContactsManager localizedLabel:kABPersonMotherLabel],
-              [ContactsManager localizedLabel:kABPersonParentLabel],
-              [ContactsManager localizedLabel:kABPersonBrotherLabel],
-              [ContactsManager localizedLabel:kABPersonSisterLabel],
-              [ContactsManager localizedLabel:kABPersonChildLabel],
-              [ContactsManager localizedLabel:kABPersonFriendLabel],
-              [ContactsManager localizedLabel:kABPersonSpouseLabel],
-              [ContactsManager localizedLabel:kABPersonPartnerLabel],
-              [ContactsManager localizedLabel:kABPersonAssistantLabel],
-              [ContactsManager localizedLabel:kABPersonManagerLabel]
-              ];
-}
-
-#pragma mark - UITableViewRowAction
-
-#pragma mark - context
--(NSManagedObjectContext *)context{
-    return ((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
-}
-
-#pragma mark - properties of contact
 
 -(NSString *)contactNameForDisplay:(Contact *)contact{
-
+    //return displayed contact name in contact cell
     ABRecordRef person=[self personOfContact:contact];
     if (!person) {
         return nil;
@@ -254,24 +253,15 @@ static dispatch_queue_t abQueue;
     return  @"无名称";
 }
 
--(ABRecordRef)personOfContact:(Contact *)contact{
-
-    __block ABRecordRef person;
-    [self synExecuteBlockOnABQueue:^{
-        person= ABAddressBookGetPersonWithRecordID(self.addressBook,(int32_t)contact.contactID.intValue);
-    }];
-    return person;
-}
 -(NSString *)contactNameForOrdering:(Contact *)contact{
-
+    //return string for ordering
     ABRecordRef person=[self personOfContact:contact];
     if (!person) {
-        NSLog(@"person not ok");
         return nil;
     }
     NSString *name;
     // middle name ,suffix, prefix, are not involved in ordering
-    if (ABPersonGetSortOrdering() == kABPersonSortByLastName) {
+    if (self.preferedSortOrdering == kABPersonSortByLastName) {
         name = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
         if (name) {return name;}
         name =(__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
@@ -318,39 +308,6 @@ static dispatch_queue_t abQueue;
 
 }
 
--(NSComparisonResult)compareResult:(Contact *)contact1 contact2:(Contact *)contact2{
-
-    NSComparisonResult result=[contact1.contactOrderWeight compare:contact2.contactOrderWeight];
-    if (result != NSOrderedSame) {
-        return  result;
-    }
-
-    ABRecordRef person1=[self personOfContact:contact1];
-    ABRecordRef person2=[self personOfContact:contact2];
-    CFComparisonResult compareresult=ABPersonComparePeopleByName(person1, person2, ABPersonGetSortOrdering());
-    if (compareresult == kCFCompareLessThan) {
-        return NSOrderedAscending;
-    }else if (compareresult == kCFCompareGreaterThan){
-        return NSOrderedDescending;
-    }else{
-        return NSOrderedSame;
-    }
-
-}
-
-
--(NSString *)firstLetter:(Contact *)contact{
-
-    if (!contact) {
-        return nil;
-    }
-    NSString *name=[self contactNameForOrdering:contact];
-    if (!name) {
-        return @"#";
-    }
-    return [name firstLetterOfString];
-}
-
 -(NSString *)companyAndDepartmentOfContact:(Contact *)contact{
 
     ABRecordRef person=[self personOfContact:contact];
@@ -362,7 +319,42 @@ static dispatch_queue_t abQueue;
     NSString *combinedString= [companyName ? companyName : @"" stringByAppendingString:departmentName ? departmentName : @""];
     return combinedString;
 
+}
 
+//contact info
+-(BOOL)hasPhone:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return NO;
+    }
+    ABMultiValueRef phones=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonPhoneProperty);
+    return ABMultiValueGetCount(phones);
+}
+-(BOOL)hasEmail:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return NO;
+    }
+    ABMultiValueRef emails=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonEmailProperty);
+    return ABMultiValueGetCount(emails);
+
+}
+-(NSInteger)phoneCountOfContact:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return 0;
+    }
+    ABMultiValueRef phones=ABRecordCopyValue(person, kABPersonPhoneProperty);
+    return ABMultiValueGetCount(phones);
+
+}
+-(NSInteger)emailCountOfContact:(Contact *)contact{
+    ABRecordRef person=[self personOfContact:contact];
+    if (!person) {
+        return 0;
+    }
+    ABMultiValueRef emails=ABRecordCopyValue(person, kABPersonEmailProperty);
+    return ABMultiValueGetCount(emails);
 }
 
 -(NSArray *)phoneNumbersOfContact:(Contact *)contact{
@@ -382,7 +374,7 @@ static dispatch_queue_t abQueue;
                                   ContactInfoValueKey:(__bridge NSString *)ABMultiValueCopyValueAtIndex(phones, i)}];
         }
     }
-    return phonesMA.count ? phonesMA : nil;
+    return phonesMA.count ? phonesMA : @[];
 }
 
 -(NSArray *)emailsOfContact:(Contact *)contact{
@@ -404,26 +396,8 @@ static dispatch_queue_t abQueue;
         }
     }
 
-    return emailsMA.count ? emailsMA : nil;
+    return emailsMA.count ? emailsMA : @[];
 }
--(BOOL)hasPhone:(Contact *)contact{
-    ABRecordRef person=[self personOfContact:contact];
-    if (!person) {
-        return NO;
-    }
-    ABMultiValueRef phones=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonPhoneProperty);
-    return ABMultiValueGetCount(phones);
-}
--(BOOL)hasEmail:(Contact *)contact{
-    ABRecordRef person=[self personOfContact:contact];
-    if (!person) {
-        return NO;
-    }
-    ABMultiValueRef emails=(ABMultiValueRef)ABRecordCopyValue(person, kABPersonPhoneProperty);
-    return ABMultiValueGetCount(emails);
-
-}
-
 -(NSString *)phoneNumberAtIndex:(NSInteger )index contact:(Contact *)contact{
 
     ABRecordRef person=[self personOfContact:contact];
@@ -438,7 +412,6 @@ static dispatch_queue_t abQueue;
     }
     return name;
 }
-
 -(NSString *)emailAtIndex:(NSInteger )index contact:(Contact *)contact{
     ABRecordRef person=[self personOfContact:contact];
     if (!person) {
@@ -453,9 +426,58 @@ static dispatch_queue_t abQueue;
     return email;
 }
 
++(NSString *)localizedLabel:(CFStringRef)label{
+    return (__bridge NSString *) ABAddressBookCopyLocalizedLabel(label);
+}
 
-#pragma mark - tag
-#pragma mark -search tag and contact
+
+#pragma mark - search
+-(NSDictionary *)searchContacts:(NSArray *)contacts keywords:(NSArray *)keywords{
+
+    if (!keywords.count) {
+        return nil;
+    }
+
+    NSMutableArray *advicedContacts=[@[] mutableCopy];
+
+    NSMutableSet *relatedTags=[NSMutableSet set];
+    NSMutableArray *advicedTags=[@[] mutableCopy];
+
+    NSMutableArray *resultContacts=[@[] mutableCopy];
+
+    for (int section = 0 ; section < contacts.count; section++) {
+        // search the matched contacts
+        NSMutableArray *subContacts=contacts[section];
+        NSMutableArray *conformedSubContacts=[@[] mutableCopy];
+        for (int row= 0 ; row < subContacts.count; row++) {
+            Contact *contact= subContacts[row];
+            if (contact.contactIsDeleted.boolValue) {
+                continue;
+            }
+            if ([self doesContact:contact conformKeywords:keywords]) {
+                // if conform , it is one of the adviced contacts
+                [advicedContacts addObject:contact];
+                [conformedSubContacts addObject:contact];
+            }
+            [relatedTags addObjectsFromArray:[contact.underWhichTags allObjects]];
+        }
+        if (conformedSubContacts.count) {
+            [resultContacts addObject:conformedSubContacts];
+        }
+    }
+
+    for (Tag *tag in relatedTags) {
+        // search the matched tags
+        if ([self string:tag.tagName conformKeywords:keywords]) {
+            [advicedTags addObject:tag];
+        }
+    }
+    return @{AdvicedContactsKey:advicedContacts,
+             AdvicedTagsKey:advicedTags,
+             SearchResultContactsKey:resultContacts};
+    
+}
+
 -(BOOL)string:(NSString *)string conformKeywords:(NSArray *)keywords{
 
     BOOL flag = YES;
@@ -470,7 +492,6 @@ static dispatch_queue_t abQueue;
 
 -(BOOL)doesContact:(Contact *)contact conformKeywords:(NSArray *)keywords{
     // if composite name , departmentName, phone number or email contain  keywords, then return yes, otherwise return no
-
 
     // evalute name
     if ([self string:contact.contactName conformKeywords:keywords]) {
@@ -501,9 +522,9 @@ static dispatch_queue_t abQueue;
         }
     }
 
-    NSArray *events=[contact.attendWhichEvents allObjects];
+    NSArray *events=[[contact.attendWhichEvents allObjects] arrayByAddingObjectsFromArray:[contact.ownedEvents allObjects]];
     for (Event *event in events) {
-        if ([self string:event.event conformKeywords:keywords]) {
+        if ([self string:event.eventDescription conformKeywords:keywords]) {
             return YES;
         }
     }
@@ -511,85 +532,66 @@ static dispatch_queue_t abQueue;
     return NO;
 }
 
--(NSDictionary *)searchContacts:(NSArray *)contacts keywords:(NSArray *)keywords{
+#pragma mark load contacts
+-(void)loadContacts{
 
-    if (!keywords.count) {
-        return nil;
-    }
-
-    NSMutableArray *advicedContacts=[@[] mutableCopy];
-
-    NSMutableSet *relatedTags=[NSMutableSet set];
-    NSMutableArray *advicedTags=[@[] mutableCopy];
-    
-    NSMutableArray *resultContacts=[@[] mutableCopy];
-
-    for (int section = 0 ; section < contacts.count; section++) {
-        NSMutableArray *subContacts=contacts[section];
-        NSMutableArray *conformedSubContacts=[@[] mutableCopy];
-        for (int row= 0 ; row < subContacts.count; row++) {
-            Contact *contact= subContacts[row];
-            if (contact.contactIsDeleted.boolValue) {
-                continue;
-            }
-            if ([self doesContact:contact conformKeywords:keywords]) {
-                // if conform , it is one of the adviced contacts
-                [advicedContacts addObject:contact];
-                [conformedSubContacts addObject:contact];
-                NSLog(@"contact name:%@",contact.contactName);
-            }
-            [relatedTags addObjectsFromArray:[contact.underWhichTags allObjects]];
+    ABAddressBookRef addressBook= ABAddressBookCreateWithOptions(NULL, NULL);
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+        ABAuthorizationStatus authorizationStatus=ABAddressBookGetAuthorizationStatus();
+        if (authorizationStatus == kABAuthorizationStatusAuthorized) {
+            self.addressBookAuthorized=YES;
+            // load update CoreData
+            self.addressBook=addressBook;
+            self.preferedSortOrdering=ABPersonGetSortOrdering();
+            [self updateCoreData];
         }
-        if (conformedSubContacts.count) {
-            [resultContacts addObject:conformedSubContacts];
-        }
-    }
-    
-    for (Tag *tag in relatedTags) {
-        if ([self string:tag.tagName conformKeywords:keywords]) {
-            NSLog(@"tag name:%@",tag.tagName);
-            [advicedTags addObject:tag];
-        }
-    }
-    NSLog(@"%@,%@",advicedContacts,advicedTags);
-    return @{AdvicedContactsKey:advicedContacts,
-             AdvicedTagsKey:advicedTags,
-             SearchResultContactsKey:resultContacts};
-
-}
-
--(void)createDefaultTags{
-
-    [Tag getTagWithTagName:RootTagName];
-    [Tag getTagWithTagName:@"朋友"];
-    [Tag getTagWithTagName:@"家人"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate didFinishLoadContacts];
+        });
+    });
 }
 
 -(void)updateCoreData{
 
     // if first launch ,then create default tags
-    Tag *rootTag=[Tag rootTag];
-    if (!rootTag) {
+    BOOL firstLaunch=[[NSUserDefaults standardUserDefaults]boolForKey:FirstLaunch];
+    if (firstLaunch) {
         [self createDefaultTags];
     }
-
+    Tag *rootTag=[Tag rootTag];
     // if keep syn with ab
-    __block NSArray *peopleInAddressBook;
+    __block NSArray *sortedPeopleInAddressBook;
     [self synExecuteBlockOnABQueue:^{
-        peopleInAddressBook =(__bridge NSArray *) ABAddressBookCopyArrayOfAllPeople(self.addressBook);
+
+        ABRecordRef source= ABAddressBookCopyDefaultSource(self.addressBook);
+        sortedPeopleInAddressBook= (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(self. addressBook,source, self.preferedSortOrdering);
+
     }];
     NSMutableSet *peopleRecordIDs=[[NSMutableSet alloc]init];
-    for (signed long i= 0; i< peopleInAddressBook.count; i++) {
-        ABRecordRef recordRef=(__bridge ABRecordRef)peopleInAddressBook[i];
+    // 优化心得：使用set，用小set配合，枚举，及时删除已确认的对象
+    NSMutableOrderedSet *allContact=[[NSMutableOrderedSet alloc]initWithArray:[Contact allContacts]];
+    NSMutableOrderedSet *allContactID=[[allContact valueForKey:@"contactID"] mutableCopy];
+
+    for (signed long i= 0; i< sortedPeopleInAddressBook.count; i++) {
+        ABRecordRef recordRef=(__bridge ABRecordRef)sortedPeopleInAddressBook[i];
         ABRecordID recordID=ABRecordGetRecordID(recordRef);
         [peopleRecordIDs addObject:@(recordID)];
-        Contact *contact=[Contact contactOfContactID:recordID];
+        //Contact *contact=[Contact contactOfContactID:recordID]; //1071ms time consuming
+        // use NSMutableOrderedSet to search, more efficient
+        Contact *contact=nil;
+        if ([allContactID containsObject:@(recordID)]) {
+            NSInteger contactIndex=[allContactID indexOfObject:@(recordID)];
+            contact=[allContact objectAtIndex:contactIndex];
+            [allContact removeObjectAtIndex:contactIndex];
+            [allContactID removeObjectAtIndex:contactIndex];
+        }
+
         if (contact) {
             // update contact name in core data , because it may have been changed ( id wouldn't change ? )
             contact.contactName=[self contactNameForDisplay:contact];
         }else{
             // add contact that is not in core data but in ab
-            contact=[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:self.context];
+            contact=[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:APP.managedObjectContext];
             contact.contactID=@(recordID);
             contact.contactName=[self contactNameForDisplay:contact];
             contact.contactIsDeleted=@(NO);
@@ -597,35 +599,41 @@ static dispatch_queue_t abQueue;
             NSString *companyName=(__bridge NSString*)ABRecordCopyValue(recordRef, kABPersonOrganizationProperty);
             if (companyName.length) {
                 // if comanpy property exists, then create this company tag
-                Tag *tag=[Tag getTagWithTagName:companyName];
+                Tag *tag=[Tag createTagWithName:companyName];
                 [tag addOwnedContactsObject:contact];
             }
+
         }
-//        CFRelease(recordRef);
+        // put it into the arrangedAllContacts
+        if ([contact.contactIsDeleted boolValue] == NO) {
+            [self putContactIntoArrangedAllContacts:contact];
+        }
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.delegate loadingContact:i total:sortedPeopleInAddressBook.count];
+        });
     }
+
     // delete any contact in core data which is not included in ab
-//    [Contact deleteContactsWhoseIDNotIn:peopleRecordIDs];
-    [(AppDelegate *)[UIApplication sharedApplication].delegate saveContext];
-
+    [Contact deleteContactsWhoseIDNotIn:peopleRecordIDs];
+    [APP saveContext];
 }
--(void)loadContacts{
 
-    ABAddressBookRef addressBook= ABAddressBookCreateWithOptions(NULL, NULL);
-    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-        ABAuthorizationStatus authorizationStatus=ABAddressBookGetAuthorizationStatus();
-        if (authorizationStatus != kABAuthorizationStatusAuthorized) {
-            return ; // not authorizated
-        }
-        // load update CoreData
-        self.addressBook=addressBook;
-        [self updateCoreData];
-
-        // tell observers update finished
-        [[NSNotificationCenter defaultCenter] postNotificationName:ContactManagerDidFinishUpdatingCoreData object:nil];
-    });
+-(BOOL)addressBookAuthorized{
+    ABAuthorizationStatus authorizationStatus=ABAddressBookGetAuthorizationStatus();
+    if (authorizationStatus != kABAuthorizationStatusAuthorized){
+        return NO;
+    }
+    return YES;
 }
-#pragma  mark - edit
 
+-(void)createDefaultTags{
+
+    [Tag createTagWithName:RootTagName];
+    [Tag createTagWithName:@"朋友"];
+    [Tag createTagWithName:@"家人"];
+}
+
+#pragma  mark - edit contact info
 -(BOOL)addContactInfo:(NSDictionary *)contactInfo contact:(Contact *)contact{
     return [self updateContactInfo:contactInfo contact:contact mode:UpdateContactInfoModeAdd];
 }
@@ -638,7 +646,6 @@ static dispatch_queue_t abQueue;
     return [self updateContactInfo:contactInfo contact:contact mode:UpdateContactInfoModeDelete];
 
 }
-
 -(BOOL)updateContactInfo:(NSDictionary *)contactInfo contact:(Contact *)contact mode:(UpdateContactInfoMode)mode{
 
     NSString *label=contactInfo[ContactInfoLabelKey];
@@ -682,13 +689,14 @@ static dispatch_queue_t abQueue;
     return success;
 }
 
+#pragma  mark - create and remove person
 -(Contact *)createPerson:(NSDictionary *)personInfo{
 
-    NSString *name= personInfo[@"name"];
-    NSString *company=personInfo[@"company"];
-    NSString *department=personInfo[@"department"];
-    NSString *jobTitle=personInfo[@"jobTitle"];
-    NSArray *contactsInfo=personInfo[@"contactsInfo"];
+    NSString *name= personInfo[PersonInfoNameKey];
+    NSString *company=personInfo[PersonInfoCompanyKey];
+    NSString *department=personInfo[PersonInfoDepartmentKey];
+    NSString *jobTitle=personInfo[PersonInfoJobTitleKey];
+    NSArray *contactsInfo=personInfo[PersonInfoContactInfoKey];
 
     ABRecordRef person= ABPersonCreate();
     if (!person) {
@@ -703,13 +711,13 @@ static dispatch_queue_t abQueue;
     ABMutableMultiValueRef emails=ABMultiValueCreateMutable(kABMultiStringPropertyType);
 
     for (NSDictionary *contactInfo in contactsInfo) {
-        switch ([contactInfo[@"ContactInfoType"] integerValue]) {
+        switch ([contactInfo[ContactInfoTypeKey] integerValue]) {
             case ContactInfoTypePhone:{
-                ABMultiValueAddValueAndLabel(phones, (__bridge CFStringRef)contactInfo[@"ContactInfoValue"], (__bridge CFStringRef)contactInfo[@"ContactInfoLabel"], NULL);
+                ABMultiValueAddValueAndLabel(phones, (__bridge CFStringRef)contactInfo[ContactInfoValueKey], (__bridge CFStringRef)contactInfo[ContactInfoLabelKey], NULL);
                 break;
             }
             case ContactInfoTypeEmail:{
-                ABMultiValueAddValueAndLabel(emails, (__bridge CFStringRef)contactInfo[@"ContactInfoValue"], (__bridge CFStringRef)contactInfo[@"ContactInfoLabel"], NULL);
+                ABMultiValueAddValueAndLabel(emails, (__bridge CFStringRef)contactInfo[ContactInfoValueKey], (__bridge CFStringRef)contactInfo[ContactInfoValueKey], NULL);
                 break;
             }
         }
@@ -727,37 +735,24 @@ static dispatch_queue_t abQueue;
 
     if (flag1 && flag2) {
         // create person in core data
-        Contact * contact=[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:self.context];
+        Contact * contact=[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:APP.managedObjectContext];
         contact.contactID=@(ABRecordGetRecordID(person));
         contact.contactName=[self contactNameForDisplay:contact];
         contact.contactIsDeleted=@(NO);
         [[Tag rootTag] addOwnedContactsObject:contact];
 
         NSString *firstLetter= [self firstLetter:contact];
-        NSInteger possibleIndex=[self.indexTitlesOfAllContacts indexOfObject:firstLetter];
+        NSInteger possibleIndex=[self.allPossibleIndexTitles indexOfObject:firstLetter];
         if (possibleIndex == NSNotFound) {
-            // update indexTitlesOfAllContacts
-            [self.indexTitlesOfAllContacts addObject:firstLetter];
-            [self.indexTitlesOfAllContacts sortUsingComparator:^NSComparisonResult(NSString * obj1, NSString * obj2) {
-                return [obj1 localizedCaseInsensitiveCompare:obj2];
-            }];
-            if ([self.indexTitlesOfAllContacts containsObject:@"☆"]) {
-                [self.indexTitlesOfAllContacts removeObject:@"☆"];
-                [self.indexTitlesOfAllContacts insertObject:@"☆" atIndex:0];
-            }
-            possibleIndex=[self.indexTitlesOfAllContacts indexOfObject:firstLetter];
             //update arrangedContact
-            NSMutableArray *newSubContacts=[@[] mutableCopy];
-            [newSubContacts addObject:contact];
-            [self.arrangedAllContacts insertObject:newSubContacts atIndex:possibleIndex];
-
+            [[self.arrangedAllContactsPlaceHolder lastObject] addObject:contact];
         }else{
-            NSMutableArray *subcontacts = self.arrangedAllContacts[possibleIndex];
-            [subcontacts addObject:contact];
-            self.arrangedAllContacts[possibleIndex]=[[subcontacts sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
+            [self.arrangedAllContactsPlaceHolder[possibleIndex] addObject:contact];
+            self.arrangedAllContactsPlaceHolder[possibleIndex]=[[self.arrangedAllContactsPlaceHolder[possibleIndex] sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
                 return [self compareResult:obj1 contact2:obj2];
             }] mutableCopy];
         }
+        [APP saveContext];
         return contact;
     }
 
@@ -769,45 +764,12 @@ static dispatch_queue_t abQueue;
 
     ABRecordRef person=[self personOfContact:contact];
 
-    [self synExecuteBlockOnABQueue:^{
+    [self asyncExecuteBlockOnABQueue:^{
         ABAddressBookRemoveRecord(self.addressBook, person, NULL);
         ABAddressBookSave(self.addressBook, NULL);
     }];
 }
 
--(void)addRelation:(NSString *)relationName forContact:(Contact *)contact otherContacts:(NSArray *)contacts{
-
-    for (Contact *otherContact in contacts) {
-        // update core data
-        Relation *relation=[NSEntityDescription insertNewObjectForEntityForName:@"Relation" inManagedObjectContext:self.context];
-        relation.relationName=relationName;
-        relation.whoseRelation=contact;
-        relation.otherContact=otherContact;
-    }
-    [self updateABRelationForContact:contact];
-
-}
--(void)removeRelation:(Relation *)relation{
-
-    [relation.whoseRelation removeRelationsWithOtherPeopleObject:relation];
-    [self.context deleteObject:relation];
-    [self updateABRelationForContact:relation.whoseRelation];
-}
-
--(void)updateABRelationForContact:(Contact *)contact{
-    ABRecordRef person=[self personOfContact:contact];
-    if (!person) {
-        return;
-    }
-    ABMutableMultiValueRef multiValue=ABMultiValueCreateMutable(kABMultiStringPropertyType);
-    for (Relation *relation in contact.relationsWithOtherPeople) {
-        ABMultiValueAddValueAndLabel(multiValue, (__bridge CFStringRef)relation.otherContact.contactName, (__bridge CFStringRef)relation.relationName, NULL);
-    }
-    ABRecordSetValue(person, kABPersonRelatedNamesProperty,multiValue,NULL);
-    [self synExecuteBlockOnABQueue:^{
-        ABAddressBookSave(self.addressBook, NULL);
-    }];
-}
 
 
 

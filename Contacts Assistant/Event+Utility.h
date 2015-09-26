@@ -10,6 +10,10 @@
 
 @interface Event (Utility)
 
--(NSDate *)nextdate;
+-(NSDate *)nextEventDate;
 -(BOOL)passed;
+-(NSString *)displayedEventString;
+
+-(void)scheduleLocalNotification;
+-(void)cancelLocalNotification;
 @end

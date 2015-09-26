@@ -11,6 +11,9 @@
 #import "Event.h"
 #import "Event+Utility.h"
 #import "ContactsManager.h"
+#import "NSString+ContactsAssistant.h"
+#import "defines.h"
+#import <MessageUI/MessageUI.h>
 
 @interface ContactCell()
 
@@ -21,7 +24,7 @@
 @property(weak,nonatomic)UIButton *smsButton;
 @property(weak,nonatomic)UIButton *emailButton;
 
-@property(strong,nonatomic)Event *displayedEvent; //of Events
+@property(strong,nonatomic)Event *mostRecentEvent; //of Events
 @property(strong,nonatomic)UIColor *contentBKGColor;
 
 @end
@@ -37,7 +40,7 @@
     self.emailsInfo=[[ContactsManager sharedContactManager]emailsOfContact:contact];
     [self checkPhoneSMSEmailButtonsState];
 
-    self.displayedEvent=[contact mostRecentEvent];
+    self.mostRecentEvent=[contact mostRecentEvent];
     [self setNeedsDisplay];
 
 }
@@ -48,8 +51,8 @@
 }
 -(void)checkPhoneSMSEmailButtonsState{
     self.phoneButton.hidden = self.mode || !self.phonesInfo.count;
-    self.smsButton.hidden   = self.phoneButton.hidden;
-    self.emailButton.hidden = self.mode || !self.emailsInfo.count;
+    self.smsButton.hidden   = self.phoneButton.hidden || ![MFMessageComposeViewController canSendText];
+    self.emailButton.hidden = self.mode || !self.emailsInfo.count || ![MFMailComposeViewController canSendMail];
 }
 #pragma mark - delegate
 -(void)phone:(UIButton *)button{
@@ -83,22 +86,16 @@
     [super setSelected:selected animated:animated];
     [self setNeedsDisplay];
 }
-
+#pragma mark -draw
 static CGFloat const ContentInsetX=4;
 static CGFloat const ContentInsetY=4;
 static CGFloat const ContactNameOffsetX=12;
 static CGFloat const ContactNameOffsetY=8;
 static CGFloat const VerticalSpace=4;
 static CGFloat const HorizontalSpace=8;
-static CGFloat const ButtonHeigh=44;
+static CGFloat const ButtonHeight=44;
 static CGFloat const EventHeight=16;
 static CGFloat const EventIndicatorHeight=8; // also width
-
-
-
-//4+8+20+4+44+8+4=92
-//4+8+20+4+44+16+8+4=108
-
 
 -(void)drawRect:(CGRect)rect{
 
@@ -108,7 +105,7 @@ static CGFloat const EventIndicatorHeight=8; // also width
     // draw content area
     UIBezierPath *roundedRectPath=[UIBezierPath bezierPathWithRoundedRect:contentRect cornerRadius:3];
     [self.contentBKGColor setFill];
-//    [[UIColor colorWithWhite:0.85 alpha:1]setFill];
+
     [roundedRectPath fill];
     [roundedRectPath addClip];
 
@@ -117,7 +114,7 @@ static CGFloat const EventIndicatorHeight=8; // also width
     CGRect contactNameRect;
     contactNameRect.origin=CGPointMake(CGRectGetMinX(contentRect)+ContactNameOffsetX, CGRectGetMinY(contentRect)+ContactNameOffsetY);
     contactNameRect.size=contactName.size;
-    [contactName drawInRect:contactNameRect];
+    [contactName drawAtPoint:contactNameRect.origin];
 
     //draw department
     CGRect compantAndDepartmentRect=CGRectMake(CGRectGetMaxX(contactNameRect)+8, CGRectGetMinY(contactNameRect), CGRectGetWidth(contentRect)-ContactNameOffsetX-CGRectGetWidth(contactNameRect)-HorizontalSpace, CGRectGetHeight(contactNameRect));
@@ -129,14 +126,13 @@ static CGFloat const EventIndicatorHeight=8; // also width
         [self drawContactInfos:self.phonesInfo AtPoint:startPoint];
     }else if (self.mode == ContactCellModeEmail){
         [self drawContactInfos:self.emailsInfo AtPoint:startPoint];
+        return;
     }else if (self.mode == ContactCellModeNormal){
-        //layout button
         [self layoutPhoneSMSEmailButtonsAtPoint:startPoint];
+        // draw event
+        CGRect eventRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contentRect)-ContactNameOffsetY-EventHeight, CGRectGetWidth(contentRect)-ContactNameOffsetX, EventHeight);
+        [self drawDisplayedEventInRect:eventRect];
     }
-
-    // draw event
-    CGRect eventRect=CGRectMake(CGRectGetMinX(contactNameRect), CGRectGetMaxY(contentRect)-ContactNameOffsetY-EventHeight, CGRectGetWidth(contentRect)-ContactNameOffsetX, EventHeight);
-    [self drawDisplayedEventInRect:eventRect];
 
 }
 -(NSParagraphStyle *)paragraphStyle{
@@ -148,7 +144,7 @@ static CGFloat const EventIndicatorHeight=8; // also width
     NSString *companyString=[self.contact companyAndDepartment];
     if (companyString) {
         NSAttributedString *companyAndDepartment=[[NSAttributedString alloc]initWithString:companyString attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight], NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
-        [companyAndDepartment drawInRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMidY(rect)-companyAndDepartment.size.height/2, CGRectGetWidth(rect), CGRectGetHeight(rect))];
+        [companyAndDepartment drawAtPoint:CGPointMake(CGRectGetMinX(rect), CGRectGetMidY(rect)-companyAndDepartment.size.height/2)];
     }
 
 }
@@ -167,14 +163,14 @@ static CGFloat const EventIndicatorHeight=8; // also width
 }
 -(void)layoutPhoneSMSEmailButtonsAtPoint:(CGPoint)point{
     //  buttons frame
-    CGRect buttonRect=CGRectMake(point.x,point.y, ButtonHeigh, ButtonHeigh);
+    CGRect buttonRect=CGRectMake(point.x,point.y, ButtonHeight, ButtonHeight);
     if (!self.phoneButton.hidden) {
         self.phoneButton.frame=buttonRect;
-        buttonRect=CGRectOffset(buttonRect,ButtonHeigh+HorizontalSpace, 0);
+        buttonRect=CGRectOffset(buttonRect,ButtonHeight+HorizontalSpace, 0);
     }
     if (!self.smsButton.hidden) {
         self.smsButton.frame=buttonRect;
-        buttonRect=CGRectOffset(buttonRect, ButtonHeigh+HorizontalSpace, 0);
+        buttonRect=CGRectOffset(buttonRect, ButtonHeight+HorizontalSpace, 0);
     }
     if (!self.emailButton.hidden) {
         self.emailButton.frame=buttonRect;
@@ -184,26 +180,33 @@ static CGFloat const EventIndicatorHeight=8; // also width
     if (self.phoneButton.hidden && self.emailButton.hidden && self.smsButton.hidden) {
 
         NSAttributedString *noWayToContact=[[NSAttributedString alloc]initWithString:@"无联系方式" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor]}];
-        [noWayToContact drawAtPoint:point];
+        CGPoint startPoint=CGPointMake(point.x, point.y+ButtonHeight/2-noWayToContact.size.height/2);
+        [noWayToContact drawAtPoint:startPoint];
     }
 }
 -(void)drawDisplayedEventInRect:(CGRect)rect{
 
-    if (!self.displayedEvent ) {
+    if (!self.mostRecentEvent ) {
         return;
     }
-    CGRect indicatorCirleRect=CGRectMake(CGRectGetMinX(rect), CGRectGetMidY(rect), EventIndicatorHeight, EventIndicatorHeight);
+    CGRect indicatorCirleRect=CGRectMake(CGRectGetMinX(rect), CGRectGetMidY(rect)-EventIndicatorHeight/2, EventIndicatorHeight, EventIndicatorHeight);
     UIBezierPath *cirle=[UIBezierPath bezierPathWithOvalInRect:indicatorCirleRect];
 
-    if ([self.displayedEvent passed]) {
+    if ([self.mostRecentEvent passed]) {
         [[UIColor darkGrayColor]setFill];
     }else{
         [[UIColor orangeColor]setFill];
     }
     [cirle fill];
-    NSAttributedString *eventAS=[[NSAttributedString alloc]initWithString:self.displayedEvent.event attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
-    [eventAS drawInRect:CGRectMake(CGRectGetMaxX(indicatorCirleRect)+HorizontalSpace, CGRectGetMinY(rect), CGRectGetWidth(rect)-ContactNameOffsetX-EventIndicatorHeight-HorizontalSpace, CGRectGetHeight(rect))];
 
+    NSString *displayedEventString=[self.mostRecentEvent displayedEventString];
+    if ([[self.contact unfinishedOwnedEvents] count] > 1) {
+        displayedEventString=[NSString stringWithFormat:@"%lu个联系事项: %@; ...",(unsigned long)[[self.contact unfinishedOwnedEvents] count],displayedEventString];
+    }
+
+    NSAttributedString *eventAS=[[NSAttributedString alloc]initWithString:displayedEventString attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14 weight:UIFontWeightLight],NSForegroundColorAttributeName:[UIColor darkGrayColor],NSParagraphStyleAttributeName:[self paragraphStyle]}];
+
+    [eventAS drawInRect:CGRectMake(CGRectGetMaxX(indicatorCirleRect)+HorizontalSpace, CGRectGetMidY(rect)-eventAS.size.height/2, CGRectGetWidth(rect)-ContactNameOffsetX-EventIndicatorHeight-HorizontalSpace, CGRectGetHeight(rect))];
 }
 #pragma  mark - setup
 -(void)awakeFromNib{
@@ -211,9 +214,10 @@ static CGFloat const EventIndicatorHeight=8; // also width
 }
 
 -(void)setup{
+
+    self.contentMode=UIViewContentModeRedraw;
     self.contentBKGColor=[UIColor colorWithWhite:0.85 alpha:1];
     self.backgroundColor=[UIColor clearColor];
-//    self.selectionStyle=UITableViewCellSelectionStyleBlue;
     UIView *view=[[UIView alloc]init];
     view.backgroundColor=[UIColor clearColor];
     self.multipleSelectionBackgroundView=view;

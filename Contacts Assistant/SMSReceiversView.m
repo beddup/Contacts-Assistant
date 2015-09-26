@@ -94,17 +94,6 @@
     }
     return _receivers;
 }
-//
-//-(NSArray *)selectedContactInfosOfContact:(Contact *)contact{
-//
-//    for (NSDictionary *receiver in self.receivers) {
-//        Contact *possibleContact=receiver[ReceiversContactKey];
-//        if (possibleContact.contactID.integerValue == contact.contactID.integerValue) {
-//            return receiver[ReceiversContactInfosKey];
-//        }
-//    }
-//    return nil;
-//}
 
 #pragma  mark - setup
 -(void)setup{

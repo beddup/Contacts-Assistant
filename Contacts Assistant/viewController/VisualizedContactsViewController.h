@@ -8,13 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-extern NSString *const NSUserDefaultSearchHistory;
-extern NSString *const SearchHistoryString;
-extern NSString *const SearchHistoryDate;
-
-
 @interface VisualizedContactsViewController : UIViewController
-
 
 @end
 

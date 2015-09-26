@@ -10,7 +10,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nc5-KH-A3c">
+                <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nc5-KH-A3c">
                     <rect key="frame" x="4" y="4" width="312" height="30"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V9W-Bn-WL8">
@@ -94,7 +94,7 @@
                         <action selector="selectBCCs:" destination="WAW-VZ-lzB" eventType="touchUpInside" id="HxD-u8-mhN"/>
                     </connections>
                 </button>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzK-JD-s8G">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000000000000004" contentMode="scaleToFill" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzK-JD-s8G">
                     <rect key="frame" x="4" y="34" width="253" height="116"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -160,7 +160,7 @@
                 <outlet property="textView" destination="YzK-JD-s8G" id="18h-qP-1m3"/>
                 <outlet property="titleLabel" destination="fCr-xG-FND" id="c7X-p4-3PL"/>
             </connections>
-            <point key="canvasLocation" x="-286" y="90"/>
+            <point key="canvasLocation" x="-286" y="98"/>
         </view>
     </objects>
 </document>

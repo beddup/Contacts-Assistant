@@ -17,22 +17,18 @@ NSString * const RootTagName =@"所有联系人";
 }
 
 -(NSArray *)allOwnedContacts{
-    return [self.ownedContacts allObjects];
-}
--(NSInteger)numberOfAllOwnedContacts{
-    return self.ownedContacts.count;
+    return [[self.ownedContacts allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"contactIsDeleted.boolValue == %d",NO]];
 }
 
 +(Tag *)tagWithName:(NSString *)name{
     NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Tag"];
-# warning upper case and lower case
-    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"tagName == %@",name];
+    fetchRequest.predicate=[NSPredicate predicateWithFormat:@"tagName MATCHES[c] %@",name];
     NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
     NSArray *tags=[context executeFetchRequest:fetchRequest error:NULL];
     return  [tags firstObject];
 }
 
-+(Tag *)getTagWithTagName:(NSString *)name{
++(Tag *)createTagWithName:(NSString *)name{
     Tag *tag=[Tag tagWithName:name];
     if (!tag) {
         NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
@@ -43,20 +39,22 @@ NSString * const RootTagName =@"所有联系人";
 
 }
 +(Tag *)rootTag{
-    return [self tagWithName:RootTagName];
+    return [self createTagWithName:RootTagName];
 }
 
 +(BOOL)tagExists:(NSString *)tagName{
 
-    return [self tagWithName:tagName];
+    if ([self tagWithName:tagName]){
+        return YES;
+    }
+    return NO;
 }
 
 +(NSArray *)tagsWhoseNameContains:(NSString *)keyword{
     //get possible tags
     NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
     NSFetchRequest *tagFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Tag"];
-# warning upper case and lower case
-    tagFectchRequest.predicate=[NSPredicate predicateWithFormat:@"tagName CONTAINS %@",keyword];
+    tagFectchRequest.predicate=[NSPredicate predicateWithFormat:@"tagName CONTAINS[c] %@",keyword];
     NSArray *advicedtags=[context executeFetchRequest:tagFectchRequest error:NULL];
     return advicedtags;
 }
@@ -65,9 +63,20 @@ NSString * const RootTagName =@"所有联系人";
     NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;
 
     NSFetchRequest *tagFectchRequest=[NSFetchRequest fetchRequestWithEntityName:@"Tag"];
-    NSArray *advicedtags=[context executeFetchRequest:tagFectchRequest error:NULL];
+    NSMutableArray *advicedtags=[[context executeFetchRequest:tagFectchRequest error:NULL] mutableCopy];
+
     return advicedtags;
 
+}
++(NSArray *)allTagsSortedByOwnedContactsCountAndTagName{
+    return [[Tag allTags] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
+                NSInteger obj1Count=obj1.ownedContacts.count;
+                NSInteger obj2Count=obj2.ownedContacts.count;
+                if (obj1Count == obj2Count) {
+                    return [obj1.tagName compare:obj2.tagName];
+                }
+                return obj1Count < obj2Count;
+            }];
 }
 +(void)deleteTag:(Tag *)tag{
     NSManagedObjectContext *context=((AppDelegate *)[UIApplication sharedApplication].delegate).managedObjectContext;

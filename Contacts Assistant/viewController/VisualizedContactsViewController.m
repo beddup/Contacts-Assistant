@@ -5,7 +5,8 @@
 //  Created by Amay on 7/13/15.
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
-
+#import "defines.h"
+#import "AppDelegate.h"
 #import "VisualizedContactsViewController.h"
 #import "SearchAssistantView.h"
 #import "ContactsManager.h"
@@ -26,7 +27,9 @@
 #import "CreatePersonViewController.h"
 
 #import "NSMutableArray+ArrangedContacts.h"
-#import "MBProgressHUD.h"
+#import "MBProgressHUD+ContactsAssistant.h"
+#import "NSString+ContactsAssistant.h"
+#import "ManageTagsTableViewController.h"
 #import <MessageUI/MessageUI.h>
 
 CGFloat const SearchAssistantViewHeight=150.0;
@@ -38,127 +41,247 @@ typedef enum : NSUInteger {
 } TVSelectionMode;
 
 @interface VisualizedContactsViewController ()
-<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,ActionsViewDelegate,ContactsManagerDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate,ContactCellDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
+<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,ActionsViewDelegate,LoadContactsDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate,ContactCellDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
 //table view
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property(strong,nonatomic)UITableViewRowAction *deleteAction;
-@property(strong,nonatomic)UITableViewRowAction *topAction;
-@property(strong,nonatomic)UITableViewRowAction *shareAction;
+@property(strong,nonatomic) ContactsManager * contactManager;
+//data
+@property(strong,nonatomic)NSMutableArray *arrangedContactsUnderCurrentTag;
+@property(strong,nonatomic) NSMutableArray *contacts;
+@property(strong,nonatomic)NSMutableArray *indexTitles;
+@property(strong,nonatomic) Tag *currentTag;
+
+@property(nonatomic) TVSelectionMode selectionMode;
 
 //search
 @property(strong,nonatomic)UISearchController *searchController;
 @property(weak,nonatomic)SearchAssistantView *searchAssistant;
-@property(strong,nonatomic)NSMutableArray *baseContactsForSearch;
-
-@property(strong,nonatomic)NavigationTitleView *navigationTitleView;
-
-// button button
-@property (weak, nonatomic) UIButton *moreFunctionsButton;
-@property(weak,nonatomic)ReceiversView *receiverView;
 
 @property(weak,nonatomic)UIView *customDimmingView;
-@property(weak,nonatomic)UIView *moreFunctionsView;
+
+@property(strong,nonatomic)NavigationTitleView *navigationTitleView;
 @property(weak,nonatomic)TagNavigationView *tagNavigationView;
 
+@property (weak, nonatomic) UIButton *moreFunctionsButton;
+@property(weak,nonatomic)UIView *moreFunctionsView;
 
-@property(strong,nonatomic) ContactsManager * contactManager;
-@property(nonatomic) TVSelectionMode selectionMode;
+@property(weak,nonatomic)ReceiversView *receiverView;
 
-@property(strong,nonatomic)NSMutableArray *arrangedContactsUnderCurrentTag;
-@property(strong,nonatomic) NSMutableArray *contacts;
-@property(strong,nonatomic)NSMutableArray *indexTitles;
-
-@property(strong,nonatomic) Tag *currentTag;
-
+//row action
+@property(strong,nonatomic)UITableViewRowAction *deleteAction;
+@property(strong,nonatomic)UITableViewRowAction *topAction;
+@property(strong,nonatomic)UITableViewRowAction *shareAction;
 @end
 
 @implementation VisualizedContactsViewController
 
+#pragma mark - vc life cycle
 - (void)viewDidLoad {
 
     [super viewDidLoad];
     self.tableView.sectionIndexBackgroundColor=[UIColor clearColor];
     [self configureTableFooterView];
-    [self configureTableHeaderView];
-    [self prepareSearchController];
     [self configureMoreFunctionButton];
     [self configureNavigationBar];
-
-//    [self.contactManager loadContacts]; //asy
-
+    [self disableControls];
+    [self.contactManager loadContacts]; //asy
 }
 
 -(void)enableControls{
 
     self.navigationItem.rightBarButtonItem.enabled=YES;
-    UIView *titleView=self.navigationItem.titleView;
-    if ([titleView isKindOfClass:[NavigationTitleView class]]) {
-        ((NavigationTitleView *)titleView).enabled=YES;
-    }
+    self.navigationTitleView.enabled=YES;
     self.moreFunctionsButton.enabled=YES;
+}
+- (void)didReceiveMemoryWarning {
 
+    [super didReceiveMemoryWarning];
+    self.searchController=nil;
+    self.deleteAction=nil;
+    self.topAction=nil;
+    self.shareAction=nil;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(coreDataUpdatingFinished:) name:ContactManagerDidFinishUpdatingCoreData object:nil];
-}
+-(void)viewDidAppear:(BOOL)animated{
 
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ContactManagerDidFinishUpdatingCoreData object:nil];
+    [super viewDidAppear:animated];
+    if (self.selectionMode == TVSelectionModeNormal) {
+        //ContactDetailsViewController.h may change contact detail
+        NSIndexPath *indexPath=[self.tableView indexPathForSelectedRow];
+        if (indexPath) {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            // the height may changed , so reload 
+            [self.tableView reloadData];
+        }
+    }
 }
 
 -(void)viewDidLayoutSubviews{
+
     self.moreFunctionsButton.frame=CGRectMake(CGRectGetWidth(self.view.bounds)/2-70/2, CGRectGetHeight(self.view.bounds)-44-12, 70, 44);
 }
 
--(void)coreDataUpdatingFinished:(NSNotification *)notification{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self enableControls];
-        self.currentTag=[Tag rootTag];
-    });
-}
+
+#pragma mark - properties
 -(ContactsManager *)contactManager{
 
     if (!_contactManager) {
         _contactManager=[ContactsManager sharedContactManager];
+        _contactManager.delegate=self;
     }
     return _contactManager;
 }
+-(UISearchController *)searchController{
+    if (!_searchController) {
+        //configure Search Controller
+        UISearchController *searchController=[[UISearchController alloc]initWithSearchResultsController:nil];
+        searchController.searchResultsUpdater=self;
+        searchController.delegate=self;
+        searchController.dimsBackgroundDuringPresentation=NO;
+        searchController.hidesNavigationBarDuringPresentation=NO;
+
+        //configure searchBar
+        UISearchBar *searchBar=searchController.searchBar;
+        searchBar.placeholder=@"联系人信息或者标签";
+        searchBar.delegate=self;
+        searchBar.showsCancelButton=YES;
+        _searchController=searchController;
+
+    }
+    return _searchController;
+}
+
+//table view related
+-(void)setSelectionMode:(TVSelectionMode)selectionMode{
+
+    _selectionMode=selectionMode;
+    switch (selectionMode) {
+        case TVSelectionModeBatchSMS:{
+            self.contacts=[self.contacts contactsWhichHasPhones];
+            break;
+        }
+        case TVSelectionModeBatchEmail:{
+            self.contacts=[self.contacts contactsWhichHasEmail];
+            break;
+        }
+        default:{
+            self.contacts=self.arrangedContactsUnderCurrentTag;
+            self.navigationTitleView.title=self.currentTag.tagName;
+            break;
+        }
+    }
+    [self.tableView reloadData];
+}
+
+-(void)setCurrentTag:(Tag *)currentTag{
+
+    _currentTag=currentTag;
+    self.arrangedContactsUnderCurrentTag =[[self.contactManager arrangedContactsunderTag:currentTag]mutableCopy];
+    if (self.selectionMode==TVSelectionModeBatchSMS) {
+        self.arrangedContactsUnderCurrentTag=[self.arrangedContactsUnderCurrentTag contactsWhichHasPhones];
+    }else if (self.selectionMode==TVSelectionModeBatchEmail){
+        self.arrangedContactsUnderCurrentTag=[self.arrangedContactsUnderCurrentTag contactsWhichHasEmail];
+    }
+}
+
+-(void)setArrangedContactsUnderCurrentTag:(NSMutableArray *)arrangedContactsUnderCurrentTag{
+    _arrangedContactsUnderCurrentTag=arrangedContactsUnderCurrentTag;
+    self.contacts=self.arrangedContactsUnderCurrentTag;
+}
+-(void)setContacts:(NSMutableArray *)contacts{
+
+    _contacts=contacts;
+    self.indexTitles=[[self.contactManager indexTitleOfContacts:contacts] mutableCopy];
+    [self configureTableHeaderView];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Contacts Manager Delegate
+-(void)loadingContact:(NSInteger)index total:(NSInteger)total{
+
+    MBProgressHUD *hud=[MBProgressHUD HUDForView:self.navigationController.view];
+    if (!hud) {
+        hud=[MBProgressHUD loadingContactHudMode:MBProgressHUDModeDeterminateHorizontalBar view:self.navigationController.view];
+        [hud show:YES];
+    }
+    if (index%2) {
+        // reduce some drawing time
+        hud.progress=index *1.0/total;
+    }
+}
+
+-(void)didFinishLoadContacts{
+    if (!self.contactManager.addressBookAuthorized) {
+        [self configureTableHeaderView];
+    }
+    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+    [self enableControls];
+    self.currentTag=[Tag rootTag];
+}
+-(void)disableControls{
+    self.navigationItem.rightBarButtonItem.enabled=NO;
+    self.navigationTitleView.enabled=NO;
+    self.moreFunctionsButton.enabled=NO;
+
+}
+
+-(void)didCreateNewPerson{
+
+    self.arrangedContactsUnderCurrentTag=[[self.contactManager arrangedContactsunderTag:self.currentTag] mutableCopy];
+
+    NSArray *searchKeyWords=[self keyWordsInSearchBar:self.searchController.searchBar];
+
+    if (searchKeyWords.count) {
+        NSDictionary *results=[self.contactManager searchContacts:self.arrangedContactsUnderCurrentTag keywords:searchKeyWords];
+        self.contacts=results[SearchResultContactsKey];
+    }
+}
+
 #pragma mark - Configure Table Header Footer
+
 -(void)configureTableFooterView{
     UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 200)];
-    NSLog(@"table view:%@",self.tableView);
-    NSLog(@"footer view:%@",self.tableView.tableFooterView);
     [self.tableView setTableFooterView:footerView];
-//    self.tableView.tableFooterView=footerView;
-    NSLog(@"footer view:%@",self.tableView.tableFooterView);
 }
 -(void)configureTableHeaderView{
     if (!self.indexTitles.count) {
         UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 300)];
         label.textAlignment=NSTextAlignmentCenter;
         label.textColor=[UIColor lightGrayColor];
-        label.text=@"无联系人";
         label.font=[UIFont systemFontOfSize:20 weight:UIFontWeightLight];
         self.tableView.tableHeaderView=label;
         [self.tableView setContentOffset:CGPointZero];
+        if (!self.contactManager.addressBookAuthorized) {
+            label.text=@"请允许APP访问通讯录";
+            return;
+        }
+        switch (self.selectionMode) {
+            case TVSelectionModeBatchEmail:{
+                label.text=@"无邮箱地址";
+                break;
+            }
+            case TVSelectionModeBatchSMS:{
+                label.text=@"无电话号码";
+                break;
+            }
+            case TVSelectionModeNormal:{
+                label.text=@"无联系人";
+                break;
+            }
+        }
     }else{
         self.tableView.tableHeaderView=nil;
     }
 
 }
-#pragma  mark - navigation bar
+#pragma  mark - navigation bar items and control,actions
 -(void)configureNavigationBar{
     self.navigationItem.rightBarButtonItem=[self searchBarButton];
-    self.navigationItem.rightBarButtonItem.enabled=NO;
     self.navigationItem.leftBarButtonItem=[self placeHolderBarButtonItem];
 
     NavigationTitleView *titleView=[[[NSBundle mainBundle]loadNibNamed:@"NavigationTitleView" owner:nil options:nil]lastObject];
-    titleView.enabled=NO;
     titleView.title=@"所有联系人";
     titleView.navigationTitlePressed=^{
         [self prepareSwitchTag];
@@ -192,12 +315,14 @@ typedef enum : NSUInteger {
     UIBarButtonItem *deselectAll=[[UIBarButtonItem alloc]initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(deSelectionAllContact:)];
     return deselectAll;
 }
+//actions
 -(void)selectAllContact:(UIBarButtonItem*)barbutton{
 
     [self disableSearchAndTagSwitch];
     self.navigationItem.leftBarButtonItem=[self deselectAllBarButtonItem];
     //select all
     MBProgressHUD *hud=[[MBProgressHUD alloc]initWithView:self.navigationController.view];
+    hud.removeFromSuperViewOnHide=YES;
     [self.navigationController.view addSubview:hud];
     [hud showAnimated:YES whileExecutingBlock:^{
         for (int section = 0; section< self.contacts.count; section++) {
@@ -227,7 +352,7 @@ typedef enum : NSUInteger {
     [self.receiverView removeAllContactInfos];
 }
 
-#pragma mark - Actions
+#pragma mark - Tag Navigation
 -(void)prepareSwitchTag{
     if (self.tagNavigationView) {
         [self dismissDimmingView:nil];
@@ -247,7 +372,7 @@ typedef enum : NSUInteger {
         [self dismissDimmingView:nil];
     };
     tagNavigationView.manageTags=^{
-        NSLog(@"manage tags");
+        [self performSegueWithIdentifier:@"Manage Tags" sender:nil];
     };
 
 
@@ -262,11 +387,11 @@ typedef enum : NSUInteger {
     // display with animation
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionLayoutSubviews animations:^{
         self.customDimmingView.alpha=0.7;
-        tagNavigationView.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 200);
+        tagNavigationView.frame=CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.view.bounds), 200);
     } completion:nil];
 
 }
-#pragma mark - dim
+#pragma mark - dim and disdim
 -(void)dim{
     UIView *dimmingView=[[UIView alloc]initWithFrame:self.tableView.frame];
     dimmingView.backgroundColor=[UIColor darkGrayColor];
@@ -279,7 +404,7 @@ typedef enum : NSUInteger {
 }
 -(void)dismissDimmingView:(UITapGestureRecognizer *)gesture{
 
-    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:-0.5 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut animations:^{
 
         self.customDimmingView.alpha=0.0;
 
@@ -299,14 +424,14 @@ typedef enum : NSUInteger {
     self.navigationItem.leftBarButtonItem.enabled=YES;
     ((NavigationTitleView *)self.navigationItem.titleView).enabled=YES;
 }
-#pragma mark - More Functions
+
+#pragma mark - MoreFunctionsView
 -(void)configureMoreFunctionButton{
 
     UIButton *moreFunctionButton=[[UIButton alloc]init];
     [self.view addSubview:moreFunctionButton];
     [self.view bringSubviewToFront:moreFunctionButton];
     [moreFunctionButton addTarget:self action:@selector(displayMoreFunctionsView:) forControlEvents:UIControlEventTouchUpInside];
-    moreFunctionButton.enabled=NO;
     UIImage *image=[[UIImage imageNamed:@"MoreFunctionButton"] resizableImageWithCapInsets:UIEdgeInsetsMake(4, 4, 4, 4) resizingMode:UIImageResizingModeStretch];
     [moreFunctionButton setBackgroundImage:image forState:UIControlStateNormal];
     self.moreFunctionsButton=moreFunctionButton;
@@ -344,8 +469,15 @@ typedef enum : NSUInteger {
     } completion:nil];
 
 }
-//delegate
+//MoreFunctionsView delegate
 -(void)groupSMS{
+    if (![MFMessageComposeViewController canSendText]) {
+        UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:@"无法发送短信" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleCancel handler:nil]];
+        [self  presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
+
     self.selectionMode=TVSelectionModeBatchSMS;
     [self.tableView setEditing:YES animated:NO];
     SMSReceiversView *receiversView=[[[NSBundle mainBundle]loadNibNamed:@"SMSReceiversView" owner:nil options:nil] lastObject];
@@ -353,6 +485,12 @@ typedef enum : NSUInteger {
     [self showReceiversView:receiversView];
 }
 -(void)groupEmail{
+    if (![MFMailComposeViewController canSendMail]) {
+        UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:@"无法发送邮件，请检查邮箱设置" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleCancel handler:nil]];
+        [self  presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
     self.selectionMode=TVSelectionModeBatchEmail;
     [self.tableView setEditing:YES animated:NO];
     EmailReceiversView *receiversView=[[[NSBundle mainBundle]loadNibNamed:@"EmailReceversView" owner:nil options:nil] lastObject];
@@ -369,6 +507,7 @@ typedef enum : NSUInteger {
     [self presentViewController:createPersonNavVC animated:YES completion:nil];
 
 }
+#pragma mark - group sms and email
 -(void)showReceiversView:(ReceiversView *)receiversView{
 
     [self dismissDimmingView:nil];
@@ -380,10 +519,9 @@ typedef enum : NSUInteger {
                         options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          receiversView.frame=CGRectOffset(frame, 0, -150);
-                     }
-                     completion:^(BOOL finished) {
                          self.navigationItem.leftBarButtonItem=[self selectAllBarButtonItem];
-                     }];
+                     }
+                     completion:nil];
 
     __weak ReceiversView * weakReceiverView=receiversView;
     receiversView.cancelHandler=^{
@@ -402,25 +540,46 @@ typedef enum : NSUInteger {
                              [weakReceiverView removeFromSuperview];
                          }];
     };
+    if ([receiversView isKindOfClass:[SMSReceiversView class]]) {
+        receiversView.sendHandler=^(NSArray *phonesOrEmails){
+            [self dismissSearchController];
+            [self SMSTo:phonesOrEmails];
+        };
+    }else if([receiversView isKindOfClass:[EmailReceiversView class]]){
+        receiversView.sendHandler=^(NSArray *phonesOrEmails){
+            [self dismissSearchController];
+            [self emailTo:phonesOrEmails[0] cc:phonesOrEmails[1] bcc:phonesOrEmails[2]];
+        };
+    }
+}
+-(void)SMSTo:(NSArray *)phones{
+    MBProgressHUD *hud=[MBProgressHUD textHud:@"跳转中" view:self.navigationController.view];
+    [hud show:YES];
+    APP.globalMessageComposer.recipients=phones;
+    APP.globalMessageComposer.messageComposeDelegate=self;
+    [self presentViewController:APP.globalMessageComposer animated:YES completion:^{
+        [hud hide:YES];
+    }];
+}
+-(void)emailTo:(NSArray *)to cc:(NSArray *)cc bcc:(NSArray *)bcc{
 
-    receiversView.sendHandler=^(NSArray *phonesOrEmails){
-        [self dismissSearchController];
-        if ([self.receiverView isKindOfClass:[SMSReceiversView class]]) {
-            MFMessageComposeViewController *composeSMSVC=[[MFMessageComposeViewController alloc]init];
-            composeSMSVC.recipients=phonesOrEmails;
-            composeSMSVC.messageComposeDelegate=self;
-            [self presentViewController:composeSMSVC animated:YES completion:nil];
+        MBProgressHUD *hud=[MBProgressHUD textHud:@"跳转中" view:self.navigationController.view];
+        [hud show:YES];
+        APP.globalMailComposer.mailComposeDelegate=self;
 
-        }else{
-            MFMailComposeViewController *composeEmail=[[MFMailComposeViewController alloc]init];
-            composeEmail.mailComposeDelegate=self;
-            [composeEmail setToRecipients:phonesOrEmails[0]];
-            [composeEmail setCcRecipients:phonesOrEmails[1]];
-            [composeEmail setBccRecipients:phonesOrEmails[2]];
-            [self presentViewController:composeEmail animated:YES completion:nil];
+        if (to.count) {
+            [APP.globalMailComposer setToRecipients:to];
         }
-    };
+        if (cc.count) {
+            [APP.globalMailComposer setCcRecipients:cc];
+        }
+        if (bcc.count) {
+            [APP.globalMailComposer setBccRecipients:bcc];
+        }
 
+        [self presentViewController:APP.globalMailComposer animated:YES completion:^{
+            [hud hide:YES];
+        }];
 }
 
 #pragma mark - QRCodeReader
@@ -437,9 +596,6 @@ typedef enum : NSUInteger {
         });
         reader.delegate = self;
 
-        [reader setCompletionWithBlock:^(NSString *resultAsString) {
-            NSLog(@"Completion with result: %@", resultAsString);
-        }];
         [self presentViewController:reader animated:YES completion:NULL];
     }
     else {
@@ -449,16 +605,22 @@ typedef enum : NSUInteger {
     }
 }
 
-//delegate
+//QRCodeReader delegate
 - (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
 {
-        [self dismissViewControllerAnimated:NO completion:nil];
+        
+    if (![[[Contact infoFromQRString:result] allKeys] count]) {
+        MBProgressHUD *hud=[MBProgressHUD textHud:@"无法识别联系人" view:reader.view];
+        [hud show:YES];
+        [hud hide:YES afterDelay:1.0];
+        return;
+    }
 
-        UINavigationController *nav=[self.storyboard instantiateViewControllerWithIdentifier:@"scanresultvc"];
-        QRScanResultViewController *scanresultvc=(QRScanResultViewController *)nav.viewControllers[0];
-        scanresultvc.resultString=result;
-
-        [self presentViewController:nav animated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
+    UINavigationController *nav=[self.storyboard instantiateViewControllerWithIdentifier:@"scanresultvc"];
+    QRScanResultViewController *scanresultvc=(QRScanResultViewController *)nav.viewControllers[0];
+    scanresultvc.personInfo=[Contact infoFromQRString:result];
+    [self presentViewController:nav animated:YES completion:nil];
 
 }
 
@@ -470,30 +632,12 @@ typedef enum : NSUInteger {
 #pragma  mark - Search
 -(void)prepareSearch:(UIBarButtonItem *)barButton{
 
-    self.baseContactsForSearch=self.contacts;
-    self.navigationItem.titleView=self.searchController.searchBar;
     self.navigationItem.rightBarButtonItem=nil;
     self.navigationItem.leftBarButtonItem=nil;
+    self.navigationItem.titleView=self.searchController.searchBar;
     [self presentViewController:self.searchController animated:YES completion:^{
         [self.searchController.searchBar becomeFirstResponder];
     }];
-}
-
--(void )prepareSearchController{
-
-    //configure Search Controller
-    UISearchController *searchController=[[UISearchController alloc]initWithSearchResultsController:nil];
-    self.searchController=searchController;
-    searchController.searchResultsUpdater=self;
-    searchController.delegate=self;
-    searchController.dimsBackgroundDuringPresentation=NO;
-    searchController.hidesNavigationBarDuringPresentation=NO;
-
-    //configure searchBar
-    UISearchBar *searchBar=searchController.searchBar;
-    searchBar.placeholder=@"联系人信息或者标签";
-    searchBar.delegate=self;
-    searchBar.showsCancelButton=YES;
 
 }
 -(void)dismissSearchController{
@@ -501,7 +645,7 @@ typedef enum : NSUInteger {
     [self dismissSearchAssistantView];
 
     NSString *searchText=self.searchController.searchBar.text;
-    self.navigationTitleView.title=searchText.length ? [NSString stringWithFormat:@"搜索：%@",searchText] :self.currentTag.tagName ;
+    self.navigationTitleView.title=[searchText whiteSpaceTrimmedLength] ? [NSString stringWithFormat:@"搜索：%@",searchText] :self.currentTag.tagName ;
     self.navigationItem.titleView=self.navigationTitleView;
     self.navigationItem.rightBarButtonItem=[self searchBarButton];
     if (self.selectionMode == TVSelectionModeBatchEmail || self.selectionMode == TVSelectionModeBatchSMS) {
@@ -511,6 +655,19 @@ typedef enum : NSUInteger {
     }
 
     [self.searchController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    
+}
+-(NSArray *)keyWordsInSearchBar:(UISearchBar *)searchBar{
+
+    NSMutableArray *keywords=[@[] mutableCopy];
+    for (NSString *subString in [searchBar.text componentsSeparatedByString:@" "]) {
+
+        NSString *string=[subString whiteSpaceAtEndsTrimmedString];
+        if (string.length) {
+            [keywords addObject:string];
+        }
+    }
+    return keywords;
     
 }
 //UISearchController delegate
@@ -523,7 +680,7 @@ typedef enum : NSUInteger {
         return;
     }
 
-    NSDictionary *results=[self.contactManager searchContacts:self.baseContactsForSearch keywords:keywords];
+    NSDictionary *results=[self.contactManager searchContacts:self.contacts keywords:keywords];
     if (![results[AdvicedTagsKey] count]) {
         self.contacts=[results[SearchResultContactsKey] mutableCopy];
     }else{
@@ -532,23 +689,11 @@ typedef enum : NSUInteger {
     }
 
 }
--(NSArray *)keyWordsInSearchBar:(UISearchBar *)searchBar{
-
-    NSMutableArray *keywords=[@[] mutableCopy];
-    for (NSString *subString in [searchBar.text componentsSeparatedByString:@" "]) {
-        NSString *string=[subString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (string.length) {
-            [keywords addObject:string];
-        }
-    }
-    return keywords;
-
-}
-
+// search bar delegate
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     [self dismissSearchAssistantView];
     NSArray *keywords=[self keyWordsInSearchBar:self.searchController.searchBar];
-    NSDictionary *results=[self.contactManager searchContacts:self.self.baseContactsForSearch keywords:keywords];
+    NSDictionary *results=[self.contactManager searchContacts:self.contacts keywords:keywords];
     self.contacts=results[SearchResultContactsKey];
 }
 
@@ -556,22 +701,7 @@ typedef enum : NSUInteger {
     [self dismissSearchController];
 }
 
-#pragma  mark - Search Assistant View
--(void)dismissSearchAssistantView{
-    [UIView animateWithDuration:0.5
-                          delay:0
-         usingSpringWithDamping:0.7
-          initialSpringVelocity:0.5
-                        options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.searchAssistant.frame=CGRectMake(0, -120,CGRectGetWidth(self.searchController.searchBar.bounds), 120);;
-
-                     }
-                     completion:^(BOOL finished){
-                         [self.searchAssistant removeFromSuperview];
-                     }];
-}
-
+// show and dismiss Search Assistant View
 -(void)showSearchAssistantView:(NSDictionary *)searchAdvice{
     if (self.searchAssistant) {
         self.searchAssistant.searchAdvice=searchAdvice;
@@ -589,13 +719,12 @@ typedef enum : NSUInteger {
     };
 
     searchAssistantView.advicedTagSelectedHandler=^(Tag *tag){
+        [self dismissSearchController];
         self.currentTag=tag;
         self.navigationTitleView.title=tag.tagName;
-        [self dismissSearchController];
     };
-    #warning  keyboard height
     CGFloat height=CGRectGetHeight(self.tableView.bounds)-250;
-    CGRect frame=CGRectMake(0, 0, CGRectGetWidth(self.tableView.bounds), height);
+    CGRect frame=CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), CGRectGetWidth(self.tableView.bounds), height);
     searchAssistantView.frame=CGRectMake(0, -height,CGRectGetWidth(frame), height);
     [searchAssistantView layoutIfNeeded];
 
@@ -609,56 +738,21 @@ typedef enum : NSUInteger {
                      completion:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)dismissSearchAssistantView{
+    [UIView animateWithDuration:0.5
+                          delay:0
+         usingSpringWithDamping:0.7
+          initialSpringVelocity:0.5
+                        options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.searchAssistant.frame=CGRectMake(0, -120,CGRectGetWidth(self.searchController.searchBar.bounds), 120);;
+
+                     }
+                     completion:^(BOOL finished){
+                         [self.searchAssistant removeFromSuperview];
+                     }];
 }
 
-#pragma mark - Properties
--(void)setSelectionMode:(TVSelectionMode)selectionMode{
-
-    _selectionMode=selectionMode;
-    switch (selectionMode) {
-        case TVSelectionModeBatchSMS:{
-            self.contacts=[self.contacts contactsWhichHasPhones];
-            break;
-        }
-        case TVSelectionModeBatchEmail:{
-            self.contacts=[self.contacts contactsWhichHasEmail];
-            break;
-        }
-        default:{
-        #warning  may not reasonable. when search worked
-            self.contacts=self.arrangedContactsUnderCurrentTag;
-            self.navigationTitleView.title=self.currentTag.tagName;
-            break;
-        }
-    }
-    [self.tableView reloadData];
-}
-
--(void)setCurrentTag:(Tag *)currentTag{
-
-    _currentTag=currentTag;
-    self.arrangedContactsUnderCurrentTag =[self.contactManager arrangedContactsunderTag:currentTag];
-    if (self.selectionMode==TVSelectionModeBatchSMS) {
-        self.arrangedContactsUnderCurrentTag=[self.arrangedContactsUnderCurrentTag contactsWhichHasPhones];
-    }else if (self.selectionMode==TVSelectionModeBatchEmail){
-        self.arrangedContactsUnderCurrentTag=[self.arrangedContactsUnderCurrentTag contactsWhichHasEmail];
-    }
-}
-
--(void)setArrangedContactsUnderCurrentTag:(NSMutableArray *)arrangedContactsUnderCurrentTag{
-    _arrangedContactsUnderCurrentTag=arrangedContactsUnderCurrentTag;
-    self.contacts=self.arrangedContactsUnderCurrentTag;
-}
--(void)setContacts:(NSMutableArray *)contacts{
-
-    _contacts=contacts;
-    self.indexTitles=[self.contactManager indexTitleOfContact:contacts];
-    [self configureTableHeaderView];
-    [self.tableView reloadData];
-}
 #pragma  mark - tableViewDataSource
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -668,11 +762,11 @@ typedef enum : NSUInteger {
     return [self.contacts[section] count];
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
-    ContactCell *cell=[tableView dequeueReusableCellWithIdentifier:@"Contact Cell"];
+    static NSString *cellIdentifier=@"Contact Cell";
+    ContactCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
     if (!cell) {
-        cell=[[ContactCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Contact Cell"];
+        cell=[[ContactCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     cell.contact=self.contacts[indexPath.section][indexPath.row];
     cell.delegate=self;
@@ -699,14 +793,14 @@ typedef enum : NSUInteger {
     Contact *contact=self.contacts[indexPath.section][indexPath.row];
     if (self.selectionMode == TVSelectionModeBatchSMS)
     {
-        return  48 + [self.contactManager phoneNumbersOfContact:contact].count * 16;
+        return  48 + [self.contactManager phoneCountOfContact:contact] * 16;
 
     }else if (self.selectionMode == TVSelectionModeBatchEmail) {
 
-        return  48 + [self.contactManager emailsOfContact:contact].count * 16;
+        return  48 + [self.contactManager emailCountOfContact:contact] * 16;
 
     }else{
-        return [contact mostRecentEvent] ? 108 :92;
+        return [contact hasUnfinishedOwnedEvents] ? 112 :92;
     }
 }
 
@@ -771,6 +865,7 @@ typedef enum : NSUInteger {
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @[self.deleteAction,self.shareAction,self.topAction];
 }
+
 #pragma mark - alertController
 -(UIAlertController *)alertControllerPhonesOrEmails:(NSArray *)infos
                                       actionHandler:(void(^)(UIAlertAction *action,NSString *phoneNumberOrEmailAddress))handler
@@ -836,12 +931,12 @@ typedef enum : NSUInteger {
             UIAlertAction *deleteCompletelyAction=[UIAlertAction actionWithTitle:@"同时删除通讯录中的联系人" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
                 [self.contactManager removePerson:contact];
                 [self.contacts removeContactAtIndexPath:indexPath];
-                self.indexTitles=[self.contactManager indexTitleOfContact:self.contacts];
+                self.indexTitles=[[self.contactManager indexTitleOfContacts:self.contacts] mutableCopy];
                 [self.tableView reloadData];}];
 
             UIAlertAction *deleteTemlyAction=[UIAlertAction actionWithTitle:@"保留通讯录中的联系人" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
                [self.contacts removeContactAtIndexPath:indexPath];
-               self.indexTitles=[self.contactManager indexTitleOfContact:self.contacts];
+               self.indexTitles=[[self.contactManager indexTitleOfContacts:self.contacts] mutableCopy];
                [self.tableView reloadData];}];
 
             UIAlertAction *cancelAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
@@ -861,13 +956,16 @@ typedef enum : NSUInteger {
     if (!_shareAction) {
         _shareAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"共享" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
             Contact *contact= self.contacts[indexPath.section][indexPath.row];
-            NSString *sharedInfo=[NSString stringWithFormat:@"姓名:%@; ",contact.contactName];
-            sharedInfo=[sharedInfo stringByAppendingString:[contact phoneInfoString]];
-            sharedInfo=[sharedInfo stringByAppendingString:[contact emailInfoString]];
+            NSString *sharedInfo=[NSString stringWithFormat:@"姓名:%@; %@; %@",contact.contactName,[contact phoneInfoString],[contact emailInfoString]];
             UIActivityViewController *activityVC=[[UIActivityViewController alloc]initWithActivityItems:@[sharedInfo] applicationActivities:nil];
+            activityVC.excludedActivityTypes=@[UIActivityTypePostToFacebook,UIActivityTypePostToTwitter,UIActivityTypePostToWeibo,UIActivityTypePostToTencentWeibo,UIActivityTypePrint];
 
             [self dismissSearchController];
-            [self presentViewController:activityVC animated:YES completion:nil];
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [self presentViewController:activityVC animated:YES completion:nil];
+        });
+
 
         }];
         _shareAction.backgroundColor=[UIColor orangeColor];
@@ -885,53 +983,31 @@ typedef enum : NSUInteger {
     }
     return _topAction;
 }
+
 -(void)putToTop:(NSIndexPath *)indexPath{
+
+
     Contact *contact=self.contacts[indexPath.section][indexPath.row];
     contact.contactOrderWeight=@([NSDate timeIntervalSinceReferenceDate]);
-    // remove the contact from the orig
-    [self.contacts[indexPath.section] removeObjectAtIndex:indexPath.row];
-    if ([self.contacts[indexPath.section] count] < 1) {
-        [self.contacts removeObjectAtIndex:indexPath.section];
+    [self.contactManager arrangeContactToTop:contact indexTitle:self.indexTitles[indexPath.section]];
+
+    //remove contact at indexPath
+    [self.contacts[indexPath.section] removeObject:contact];
+    if (![self.contacts[indexPath.section] count]) {
         [self.indexTitles removeObjectAtIndex:indexPath.section];
+        [self.contacts removeObjectAtIndex:indexPath.section];
     }
 
-    if ([self.indexTitles containsObject:@"☆"]) {
-        [self.contacts[0] insertObject:contact atIndex:0];
-        if ([self.contacts[0] count] > 5) {
-            // if more than 10 in the top contacts, downgrade the last one
-            Contact *lastOne=[self.contacts[0] lastObject];
-            lastOne.contactOrderWeight=@(0);
-            [self.contacts[0] removeObject:lastOne];
-
-            NSString *lastOneTitle=[self.contactManager firstLetter:lastOne];
-            NSInteger index=[self.indexTitles indexOfObject:lastOneTitle];
-            if (index != NSNotFound) {
-                //if has corresponding index title, move the last one contact to corresponding section and re-order
-                [self.contacts[index] addObject:lastOne];
-                self.contacts[index]=[[self.contacts sortedArrayUsingComparator:^NSComparisonResult(Contact * obj1, Contact * obj2) {
-                    return [self.contactManager compareResult:obj1 contact2:obj2];
-                }] mutableCopy];
-            }else{
-                // if no, add its first letter to indextitles and reorder, then add a new mutablearray to contacts
-                [self.indexTitles addObject:lastOneTitle];
-                self.indexTitles =[[self.indexTitles sortedArrayUsingComparator:^NSComparisonResult(NSString * obj1, NSString * obj2) {
-                    return [obj1 compare:obj2];
-                }] mutableCopy];
-                NSInteger topTitleIndex=[self.indexTitles indexOfObject:@"☆"];
-                [self.indexTitles removeObjectAtIndex:topTitleIndex];
-                [self.indexTitles insertObject:@"☆" atIndex:0];
-
-                NSInteger lastOneTitleIndex=[self.indexTitles indexOfObject:lastOneTitle];
-                [self.contacts insertObject:[@[lastOne] mutableCopy]  atIndex:lastOneTitleIndex];
-            }
-        }
-    }else{
+    // insert contact to (0,0)
+    if (![self.indexTitles[0] isEqualToString:@"☆"]) {
         [self.indexTitles insertObject:@"☆" atIndex:0];
-        NSMutableArray *topContact=[@[contact] mutableCopy];
-        [self.contacts insertObject:topContact atIndex:0];
+        [self.contacts insertObject:[@[] mutableCopy] atIndex:0];
     }
+    [self.contacts[0] insertObject:contact atIndex:0];
+
+
     [self.tableView reloadData];
-    
+
 }
 
 #pragma mark - Contact Cell delegate;
@@ -939,7 +1015,7 @@ typedef enum : NSUInteger {
     UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:numbers actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
         NSString *urlString=[NSString stringWithFormat:@"tel://%@",phoneNumberOrEmailAddress];
         NSURL *url=[NSURL URLWithString:urlString];
-        if ([[UIApplication sharedApplication]canOpenURL:url]) {
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
             [[UIApplication sharedApplication] openURL:url];
         }
     } cancelHandler:nil];
@@ -951,10 +1027,7 @@ typedef enum : NSUInteger {
 -(void)sms:(Contact *)contact phonesInfo:(NSArray *)numbers {
 
     UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:numbers actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
-        MFMessageComposeViewController *composeSMSVC=[[MFMessageComposeViewController alloc]init];
-        composeSMSVC.recipients=@[phoneNumberOrEmailAddress];
-        composeSMSVC.messageComposeDelegate=self;
-        [self presentViewController:composeSMSVC animated:YES completion:nil];
+        [self SMSTo:@[phoneNumberOrEmailAddress]];
     }cancelHandler:nil];
     phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发短信",contact.contactName];
 
@@ -964,12 +1037,7 @@ typedef enum : NSUInteger {
 }
 -(void)email:(Contact *)contact emailsInfo:(NSArray *)emails {
     UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:emails actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
-
-        MFMailComposeViewController *composeEmail=[[MFMailComposeViewController alloc]init];
-        composeEmail.mailComposeDelegate=self;
-        [composeEmail setToRecipients:@[phoneNumberOrEmailAddress]];
-        [self presentViewController:composeEmail animated:YES completion:nil];
-        
+        [self emailTo:@[phoneNumberOrEmailAddress] cc:nil bcc:nil];
     }cancelHandler:nil];
     phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发邮件",contact.contactName];
 
@@ -978,34 +1046,32 @@ typedef enum : NSUInteger {
 
 }
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [APP cycleTheGlobalMailComposer];
+    }];
 }
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [APP cycleTheGlobalMessageComposer];
+    }];
 }
 
 #pragma  mark - segue navigation
--(IBAction)didCreatePerson:(UIStoryboardSegue *)segue{
 
-    if ([segue.identifier isEqualToString:@"didCreatePerson"]) {
-
-        self.arrangedContactsUnderCurrentTag=[self.contactManager arrangedContactsunderTag:self.currentTag];
-
-        NSArray *searchKeyWords=[self keyWordsInSearchBar:self.searchController.searchBar];
-
-        if (searchKeyWords.count) {
-            NSDictionary *results=[self.contactManager searchContacts:self.arrangedContactsUnderCurrentTag keywords:searchKeyWords];
-            self.contacts=results[SearchResultContactsKey];
-        }
-    }
+-(IBAction)finishManagingTags:(UIStoryboardSegue *)segue{
+    // finish managing tags , so need to update tags list in tag navigaiton view
+    [self.tagNavigationView updateTags];
 }
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     if ([segue.identifier isEqualToString:@"contactDetail"]) {
+        [self dismissSearchController];
         ContactDetailsViewController *dstvc=(ContactDetailsViewController *)segue.destinationViewController;
         NSIndexPath *indexPath=[self.tableView indexPathForSelectedRow];
         Contact *contact=self.contacts[indexPath.section][indexPath.row];
         dstvc.contact=contact;
+        dstvc.indexPath=indexPath;
     }
 }
 

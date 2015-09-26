@@ -11,7 +11,9 @@
 @interface EventDisplayView : UIView
 
 @property(strong,nonatomic)Event *event;
+@property(copy) void(^SMSToRelatedPeople)(NSArray *contacts);
+@property(copy) void(^EmailToRelatedPeople)(NSArray *contacts);
 
 -(NSDictionary *)eventDescriptionAttributes;
-
+-(CGFloat)minHeightWithMaxWidth:(CGFloat)width;
 @end

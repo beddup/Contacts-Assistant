@@ -25,8 +25,6 @@ NSString * const ReceiversContactInfosKey=@"ReceiversContactInfoKey";
     //override
 }
 -(void)removeContactInfosOfContact:(Contact *)contact{
-
-
 }
 -(void)addContactInfosToReceivers:(NSArray *)contactInfos contact:(Contact *)contact{
 }
@@ -47,6 +45,7 @@ NSString * const ReceiversContactInfosKey=@"ReceiversContactInfoKey";
 -(NSArray *)phoneNumbersOrEmailOfReceivers:(NSArray *)receivers{
     NSMutableArray *allPhoneNumber=[@[] mutableCopy];
     for (NSDictionary *receiver in receivers) {
+
         [allPhoneNumber addObjectsFromArray:[receiver[ReceiversContactInfosKey] valueForKey:ContactInfoValueKey]];
     }
     return allPhoneNumber;

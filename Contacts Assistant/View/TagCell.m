@@ -10,75 +10,104 @@
 #import "Tag+Utility.h"
 @interface TagCell ()
 
-@property(weak,nonatomic)UIImageView *BKGImageView;
-@property(strong,nonatomic)UIImage *tagBKGImageUnselected;
-@property(strong,nonatomic)UIImage *tagBKGImageSelected;
-@property(weak,nonatomic)UILabel *tagNameLabel;
-@property(weak,nonatomic)UILabel *contactsCountLable;
+@property(strong,nonatomic)UIImage *tagBKGImage;
+
+@property(strong,nonatomic)NSAttributedString *tagName;
+@property(strong,nonatomic)NSAttributedString *countString;
 
 @property(weak,nonatomic)UIButton *closeButton;
-
+@property(nonatomic)CGFloat widthOfBKGImageView;
 @end
-
 
 @implementation TagCell
 
 #pragma mark - Properties
-
+-(NSParagraphStyle *)psWithAlignment:(NSTextAlignment)alignment{
+    NSMutableParagraphStyle *ps=[[NSMutableParagraphStyle alloc]init];
+    ps.alignment=alignment;
+    ps.lineBreakMode=NSLineBreakByTruncatingTail;
+    return ps;
+}
 -(void)setMyTag:(Tag *)myTag{
 
     _myTag=myTag;
-    self.tagNameLabel.text=myTag.tagName;
-    self.contactsCountLable.text= [NSString stringWithFormat:@"%@ 位联系人",@([myTag numberOfAllOwnedContacts])];
-    [self layoutIfNeeded];
+    self.tagName=[[NSAttributedString alloc]initWithString:self.myTag.tagName ? self.myTag.tagName : @""
+                                                attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:15],NSParagraphStyleAttributeName:[self psWithAlignment:NSTextAlignmentLeft]}];
+    self.countString=[[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@ 位联系人",@(self.myTag.ownedContacts.count)]
+                                                    attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor],NSFontAttributeName:[UIFont systemFontOfSize:12 weight:UIFontWeightLight],NSParagraphStyleAttributeName:[self psWithAlignment:NSTextAlignmentRight]}];
+    self.widthOfBKGImageView=[self calculateWidthOfBKGImageView];
+
+    [self setNeedsDisplay];
 
 }
--(UIImage *)tagBKGImageSelected{
-    if (!_tagBKGImageSelected) {
-        _tagBKGImageSelected=[[UIImage imageNamed:@"TagViewSelectedBKG"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, TagBKGImageCapInsetRight) resizingMode:UIImageResizingModeStretch];
-    }
-    return _tagBKGImageSelected;
+
+-(void)setHasCloseButton:(BOOL)hasCloseButton{
+    _hasCloseButton=hasCloseButton;
+    self.widthOfBKGImageView=[self calculateWidthOfBKGImageView];
+
+    [self setNeedsDisplay];
+
 }
+
+-(UIImage *)tagBKGImageSelected{
+    return  [[UIImage imageNamed:@"TagViewSelectedBKG"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, TagBKGImageCapInsetRight) resizingMode:UIImageResizingModeStretch];
+}
+
 -(UIImage *)tagBKGImageUnselected{
-    if (!_tagBKGImageUnselected) {
-        _tagBKGImageUnselected=[[UIImage imageNamed:@"TagViewUnSelectedBKG"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, TagBKGImageCapInsetRight) resizingMode:UIImageResizingModeStretch];
-    }
-    return _tagBKGImageUnselected;
+    return  [[UIImage imageNamed:@"TagViewUnSelectedBKG"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, TagBKGImageCapInsetRight) resizingMode:UIImageResizingModeStretch];
 }
 
 static CGFloat TagBKGImageCapInsetRight =16.0;
+static CGFloat HSpace=8;
+static CGFloat ButtonWidth = 44.0;
+static CGFloat CountLabelWidth = 80.0;
 
--(CGFloat )widthOfBKGImageView{
+-(CGFloat)calculateWidthOfBKGImageView{
 
-    CGFloat closeButtonWidth=self.hasCloseButton ? 44 : 64 ;
-    CGFloat availableWidth=CGRectGetWidth(self.contentView.frame)-self.separatorInset.left-self.separatorInset.right-closeButtonWidth-12;
-    CGFloat fullyDisplayedBKGWidth= self.tagNameLabel.attributedText.size.width + 20  +TagBKGImageCapInsetRight;
+    CGFloat BKGImageViewTrailing=0;
+    if (self.hasCloseButton) {
+        BKGImageViewTrailing=ButtonWidth+HSpace;
+    }else if (self.accessoryType != UITableViewCellAccessoryNone){
+        BKGImageViewTrailing=ButtonWidth/2+HSpace+CountLabelWidth;
+    }
+    else{
+        BKGImageViewTrailing=self.separatorInset.right+CountLabelWidth+HSpace;
+    }
+    CGFloat availableWidth=CGRectGetWidth(self.contentView.frame)-self.separatorInset.left-BKGImageViewTrailing;
+    CGFloat fullyDisplayedBKGWidth= self.tagName.size.width + 20  +TagBKGImageCapInsetRight;
     return  fullyDisplayedBKGWidth > availableWidth ? availableWidth : fullyDisplayedBKGWidth;
 
 }
+#pragma mark - draw
+-(void)drawRect:(CGRect)rect{
 
--(void)layoutSubviews{
+    CGRect BKGImageRect=CGRectMake(self.separatorInset.left, CGRectGetHeight(rect)/6, self.widthOfBKGImageView, CGRectGetHeight(rect)*2/3);
 
-    CGRect rect=self.bounds;
+    [self.tagBKGImage drawInRect:BKGImageRect];
+
+    CGRect tagNameRect=CGRectMake(CGRectGetMinX(BKGImageRect)+HSpace, CGRectGetMidY(rect)-self.tagName.size.height/2, CGRectGetWidth(BKGImageRect)-TagBKGImageCapInsetRight-HSpace, self.tagName.size.height);
+    [self.tagName drawAtPoint:tagNameRect.origin];
 
     if (self.hasCloseButton) {
-        self.closeButton.frame = CGRectMake(CGRectGetWidth(rect)-44, CGRectGetMinY(rect), 44, CGRectGetHeight(rect));
+        // no accessory
+        self.closeButton.frame = CGRectMake(CGRectGetWidth(rect)-ButtonWidth, CGRectGetMinY(rect), ButtonWidth, CGRectGetHeight(rect));
     }else{
-        self.contactsCountLable.frame=CGRectMake(CGRectGetWidth(rect)-80-self.separatorInset.right, CGRectGetMinY(rect), 80, CGRectGetHeight(rect));
+        CGFloat countLabelTrailing=self.separatorInset.right;
+        if (self.accessoryType != UITableViewCellAccessoryNone) {
+            countLabelTrailing=ButtonWidth/2+HSpace;
+        }
+        CGRect countStringRect=CGRectMake(CGRectGetWidth(rect)-CountLabelWidth-countLabelTrailing, CGRectGetMidY(rect)-self.countString.size.height/2, CountLabelWidth, self.countString.size.height);
+        [self.countString drawAtPoint:countStringRect.origin];
     }
-
-    self.BKGImageView.frame = CGRectMake(self.separatorInset.left, CGRectGetHeight(rect)/6, [self widthOfBKGImageView], CGRectGetHeight(rect)*2/3);
-
-    self.tagNameLabel.frame = CGRectInset(self.BKGImageView.frame,16, 0);
-    self.tagNameLabel.frame = CGRectOffset(self.tagNameLabel.frame, -4, 0);
-
 
 }
 
-
 -(void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
-    self.BKGImageView.image= selected && !self.hasCloseButton ? [self tagBKGImageSelected] : [self tagBKGImageUnselected];
+
+    self.tagBKGImage= selected && !self.hasCloseButton ? [self tagBKGImageSelected] : [self tagBKGImageUnselected];
+    [self setNeedsDisplay];
+
 }
 
 #pragma  mark - setup
@@ -88,39 +117,18 @@ static CGFloat TagBKGImageCapInsetRight =16.0;
 
 -(void)setup{
 
+    self.tagBKGImage=[self tagBKGImageUnselected];
 
-    UIImageView *imageView=[[UIImageView alloc]initWithImage:self.tagBKGImageUnselected];
-    [self.contentView addSubview:imageView];
-    self.BKGImageView=imageView;
-
-    UILabel *label=[[UILabel alloc]init];
-    label.textColor=[UIColor whiteColor];
-    label.font=[UIFont systemFontOfSize:15 weight:UIFontWeightRegular];
-    label.textAlignment=NSTextAlignmentLeft;
-    label.lineBreakMode=NSLineBreakByTruncatingTail;
-    [self.contentView addSubview:label];
-    self.tagNameLabel=label;
-
-    UILabel *countLabel=[[UILabel alloc]init];
-    countLabel.textColor=[UIColor lightGrayColor];
-    countLabel.font=[UIFont systemFontOfSize:12 weight:UIFontWeightLight];
-    countLabel.textAlignment=NSTextAlignmentRight;
-    [self.contentView addSubview:countLabel];
-    self.contactsCountLable=countLabel;
-
-
-    UIButton * button=[[UIButton alloc]init];
-    [button setBackgroundImage:[UIImage imageNamed:@"removeTagIcon"] forState:UIControlStateNormal];
-    [self.contentView addSubview:button];
-    self.closeButton=button;
-    [button addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
+    UIButton * closeButton=[[UIButton alloc]init];
+    [closeButton setBackgroundImage:[UIImage imageNamed:@"removeTagIcon"] forState:UIControlStateNormal];
+    [self addSubview:closeButton];
+    self.closeButton=closeButton;
+    [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
 }
 -(void)closeButtonTapped:(UIButton *)button{
 
     self.closeButtonTapped(self.myTag);
-
 
 }
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{

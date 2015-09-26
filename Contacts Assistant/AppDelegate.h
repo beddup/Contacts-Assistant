@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import <MessageUI/MessageUI.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -17,8 +18,15 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+
+@property (nonatomic, strong) MFMessageComposeViewController *globalMessageComposer;
+@property (nonatomic, strong) MFMailComposeViewController *globalMailComposer;
+
+
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
+-(void)cycleTheGlobalMailComposer;
+-(void)cycleTheGlobalMessageComposer;
 
 
 @end

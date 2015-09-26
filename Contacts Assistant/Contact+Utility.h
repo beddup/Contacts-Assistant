@@ -13,7 +13,7 @@
 @interface Contact (Utility)
 
 +(NSArray *)allContacts;
-//+(NSArray *)contactsWhoseNameContains:(NSString *)keyword;
+
 +(Contact *)contactOfContactID:(int)contactID;
 +(void)deleteContactsWhoseIDNotIn:(NSSet *)contactIDs;
 +(Contact *)createContactWithName:(NSString *)name contactID:(u_int32_t)contactID;
@@ -23,10 +23,19 @@
 +(NSDictionary *)infoFromQRString:(NSString *)qrstring;
 -(Event *)mostRecentEvent;
 
+-(NSMutableArray *)sortedUnfinishedOwnedEvents;
+-(BOOL)hasUnfinishedOwnedEvents;
+-(NSArray *)unfinishedOwnedEvents;
+-(NSArray *)finishedOwnedEvents;
+
+
 -(NSString *)phoneInfoString;
 -(NSString *)emailInfoString;
 
 -(BOOL)hasPhone;
 -(BOOL)hasEmail;
+
+-(void)addRelation:(NSString *)relationName WithContacts:(NSArray *)contacts;
+
 
 @end

@@ -8,8 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "Contact.h"
-@interface ContactDetailsViewController : UIViewController
+
+@protocol ContactDetailsUpdatingDelegate <NSObject>
+
+@optional
+-(void)contactInfoChanged;
+-(void)relationsChanged;
+-(void)eventsChanged;
+
+@end
+
+@interface ContactDetailsViewController : UIViewController <ContactDetailsUpdatingDelegate>
 
 @property(strong,nonatomic)Contact *contact;
+@property(strong,nonatomic)NSIndexPath *indexPath;
+
+
+
 
 @end

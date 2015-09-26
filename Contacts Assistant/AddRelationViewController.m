@@ -8,10 +8,13 @@
 //
 
 #import "AddRelationViewController.h"
-#import "Contact.h"
-#import "RelationContactsViewController.h"
+#import "Contact+Utility.h"
+#import "AddContactsToRelationViewController.h"
 #import "ContactsManager.h"
 #import "Relation.h"
+#import "defines.h"
+#import "NSString+ContactsAssistant.h"
+#import "NSString+ContactsAssistant.h"
 @interface AddRelationViewController ()<UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
@@ -34,7 +37,13 @@
     [self configureTableHeaderView];
     // Do any additional setup after loading the view.
 }
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
+
+#pragma mark - navigation bar items and actions
 -(void)configureNavigationBar{
 
     UIBarButtonItem *cancelItem=[[UIBarButtonItem alloc]initWithTitle:@"取消"
@@ -50,16 +59,16 @@
     self.navigationItem.title=@"创建关联";
 
 }
+-(void)dismiss:(UIBarButtonItem *)barbutton{
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)finish:(UIBarButtonItem *)barbutton{
 
-//-(void)setContact:(Contact *)contact{
-//    
-//    _contact=contact;
-//    NSArray *relations=[contact.relationsWithOtherPeople allObjects];
-//    for (Relation *relation in relations) {
-//        [self.relationContacts addObject:relation.otherContact];
-//    }
-//
-//}
+    [self.contact addRelation:[self.relationTF.text whiteSpaceAtEndsTrimmedString] WithContacts:self.relationContacts];
+    [self performSegueWithIdentifier:@"finishAddRelation" sender:nil];
+}
+
+#pragma mark - property
 -(NSMutableArray *)relationContacts{
     if (!_relationContacts) {
         _relationContacts=[@[] mutableCopy];
@@ -67,6 +76,7 @@
     return _relationContacts;
 }
 
+#pragma mark -table header view
 -(void)configureTableHeaderView{
 
     UIView *tableHearderView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, MAX(400, CGRectGetHeight(self.view.bounds)))];
@@ -126,6 +136,7 @@
 
 }
 
+#pragma mark RelationContactsView
 static CGFloat RelationContactViewSideLength = 70;
 -(void)contigureRelationContactsView{
 
@@ -159,8 +170,8 @@ static CGFloat RelationContactViewSideLength = 70;
     UIButton *addContactButton=[[UIButton alloc]initWithFrame:nextRelationContactViewRect];
     addContactButton.layer.cornerRadius=RelationContactViewSideLength/2;
     addContactButton.layer.borderWidth=1.0;
-    addContactButton.layer.borderColor=[[UIColor lightGrayColor]CGColor];
-    [addContactButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    addContactButton.layer.borderColor=[IconColor CGColor];
+    [addContactButton setTitleColor:IconColor forState:UIControlStateNormal];
     addContactButton.titleLabel.numberOfLines=2;
     addContactButton.titleLabel.textAlignment=NSTextAlignmentCenter;
     addContactButton.titleLabel.font=[UIFont systemFontOfSize:15 weight:UIFontWeightLight];
@@ -183,12 +194,10 @@ static CGFloat RelationContactViewSideLength = 70;
     [self performSegueWithIdentifier:@"relationContacts" sender:nil];
 }
 
--(void)dismiss:(UIBarButtonItem *)barbutton{
-    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-}
 
+#pragma mark -navigation
 -(BOOL)canFinish{
-    if (!self.relationTF.text.length) {
+    if (![self.relationTF.text whiteSpaceTrimmedLength]) {
         return NO;
     }
     if (!self.relationContacts.count) {
@@ -196,17 +205,11 @@ static CGFloat RelationContactViewSideLength = 70;
     }
     return YES;
 }
-
--(void)finish:(UIBarButtonItem *)barbutton{
-
-    [[ContactsManager sharedContactManager] addRelation:self.relationTF.text forContact:self.contact otherContacts:self.relationContacts];
-    [self performSegueWithIdentifier:@"finishAddRelation" sender:nil];
-}
-
 -(IBAction)relationContactsSelected:(UIStoryboardSegue *)segue{
 
-    RelationContactsViewController *dsvc=(RelationContactsViewController *)segue.sourceViewController;
+    AddContactsToRelationViewController *dsvc=(AddContactsToRelationViewController *)segue.sourceViewController;
     self.relationContacts=dsvc.contactsSelected;
+    [self.relationContacts removeObject:self.contact];
     self.navigationItem.rightBarButtonItem.enabled=[self canFinish];
     [self contigureRelationContactsView];
 
@@ -214,7 +217,7 @@ static CGFloat RelationContactViewSideLength = 70;
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"relationContacts"]) {
         UINavigationController *nav=(UINavigationController *)segue.destinationViewController;
-        RelationContactsViewController *dsvc=[nav.viewControllers firstObject];
+        AddContactsToRelationViewController *dsvc=[nav.viewControllers firstObject];
         dsvc.contactsSelected=[self.relationContacts mutableCopy];
     }
 }
@@ -229,10 +232,4 @@ static CGFloat RelationContactViewSideLength = 70;
     return YES;
 
 }
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
 @end

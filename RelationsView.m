@@ -9,12 +9,17 @@
 #import "RelationsView.h"
 #import "Contact+Utility.h"
 #import "Relation.h"
+#import "defines.h"
 @interface RelationViewGrid:NSObject
 
-@property(nonatomic)CGPoint center;
+@property(nonatomic)NSInteger centerGridIndex;
+
 @property(nonatomic)NSInteger numberOfContentGrids; //exclude the center grid
 @property(readonly,nonatomic)CGSize size;
 @property(readonly,nonatomic)NSInteger rowsCount;
+@property(readonly,nonatomic)NSInteger columnCount;
+
+
 
 -(instancetype)initWithMaxGridSideLength:(CGFloat)maxGridSideLength
                        minGridSideLength:(CGFloat) minGridSideLength;
@@ -32,6 +37,7 @@
 
 @property(readwrite,nonatomic)CGSize size;
 @property(readwrite,nonatomic)NSInteger rowsCount;
+@property(readwrite,nonatomic)NSInteger columnCount;
 
 
 @end
@@ -46,77 +52,18 @@
     }
     return self;
 }
--(CGRect)rectofCenterGrid{
-
-    NSInteger index=self.rowsHeights.count/2;
-    CGFloat width= [self.columnsWidths[index] floatValue];
-    CGFloat height=[self.rowsHeights[index] floatValue];
-
-    return CGRectMake(self.center.x-width/2, self.center.y-height/2, width, height);
-
-}
-
--(CGRect)rectOfGrid:(NSInteger)index{
-    // left up corner index is 0 , right down corner is max one
-
-    NSInteger gridRow=index/self.columnsWidths.count;
-    NSInteger gridColumn=index % self.rowsHeights.count;
-
-    CGFloat width= [self.columnsWidths[gridColumn] floatValue];
-    CGFloat height=[self.rowsHeights[gridRow] floatValue];
-
-    CGRect centerGrid=[self rectofCenterGrid];
-
-    NSInteger rowOfCenterGrid=self.rowsHeights.count/2;
-    int row = rowOfCenterGrid;
-    CGFloat y= CGRectGetMinY(centerGrid);
-    do {
-        if (rowOfCenterGrid > gridRow) {
-            row--;
-            y-=[self.rowsHeights[row] floatValue];
-        }else if (rowOfCenterGrid < gridRow){
-            y+=[self.rowsHeights[row] floatValue];
-            row++;
-        }else{
-            break;
-        }
-    } while (row != gridRow);
-
-    NSInteger columnOfCenterGrid=self.columnsWidths.count/2;
-    int column = columnOfCenterGrid;
-    CGFloat x= CGRectGetMinX(centerGrid);
-    do {
-        if (columnOfCenterGrid > gridColumn) {
-            column--;
-            x-=[self.columnsWidths[column] floatValue];
-        }else if (columnOfCenterGrid < gridColumn){
-            x+=[self.columnsWidths[column] floatValue];
-            column++;
-        }else{
-            break;
-        }
-    } while (column != gridColumn);
-
-    return CGRectMake(x, y, width, height);
-
-}
-
 -(void)setNumberOfContentGrids:(NSInteger)numberOfContentGrids{
 
     _numberOfContentGrids=numberOfContentGrids;
     [self reCalculate];
-
+    
 }
 
 -(void)reCalculate{
-    NSInteger rowsCount=MAX(3,(int)sqrtf(self.numberOfContentGrids));
-    if (rowsCount * rowsCount < self.numberOfContentGrids) {
-        rowsCount++;
-    }
-    if (rowsCount%2 == 0) {
-        rowsCount ++;
-    }
-    self.rowsCount=rowsCount;
+
+    self.rowsCount=MAX(3, (int)sqrtf(self.numberOfContentGrids)+1);
+    self.columnCount=MAX((int)(self.numberOfContentGrids/self.rowsCount)+1,3);
+
     int delta = (int)(self.maxGridSideLength-self.minGridSideLength);
 
     self.rowsHeights=[@[] mutableCopy];
@@ -126,20 +73,55 @@
     CGFloat totalWidth=0;
     CGFloat totalHeight=0;
 
-    for (int index=0 ; index<rowsCount; index++) {
+    for (int rowIndex=0 ; rowIndex<self.rowsCount; rowIndex++) {
 
         int randomNumber1= arc4random()%delta;
-        CGFloat width=randomNumber1 + self.minGridSideLength;
-        [self.columnsWidths addObject:@(width)];
-        totalWidth+=width;
-
-        int randomNumber2=arc4random()%delta;
-        CGFloat height=randomNumber2 + self.minGridSideLength;
+        CGFloat height=randomNumber1 + self.minGridSideLength;
         [self.rowsHeights addObject:@(height)];
         totalHeight+=height;
     }
+    for (int columnIndex=0; columnIndex<self.columnCount;columnIndex++) {
+        int randomNumber2=arc4random()%delta;
+        CGFloat width=randomNumber2 + self.minGridSideLength;
+        [self.columnsWidths addObject:@(width)];
+        totalWidth+=width;
+    }
+
     self.size=CGSizeMake(totalWidth, totalHeight);
+    self.centerGridIndex=self.rowsCount/2*self.columnCount+self.columnCount/2;
 }
+
+-(CGRect)rectofCenterGrid{
+
+    return [self rectOfGrid:self.centerGridIndex];
+
+}
+
+-(CGFloat)minXofColumn:(NSInteger)column{
+    if (column == 0) {
+        return 0;
+    }
+    return [self minXofColumn:column-1]+[self.columnsWidths[column-1] floatValue];
+}
+-(CGFloat)minYofRow:(NSInteger)row{
+    if (row == 0) {
+        return 0;
+    }
+    return [self minYofRow:row-1]+[self.rowsHeights[row-1] floatValue];
+}
+-(CGRect)rectOfGrid:(NSInteger)index{
+    // left up corner index is 0 , right down corner is max one
+
+    NSInteger rowIndex=index/self.columnCount;
+    NSInteger columnIndex=index % self.columnCount;
+    CGFloat minY=[self minYofRow:rowIndex];
+    CGFloat minX=[self minXofColumn:columnIndex];
+
+    CGFloat width= [self.columnsWidths[columnIndex] floatValue];
+    CGFloat height=[self.rowsHeights[rowIndex] floatValue];
+    return CGRectMake(minX, minY, width, height);
+}
+
 
 @end
 
@@ -147,14 +129,14 @@
 @interface RelationsView ()
 
 @property(strong,nonatomic)RelationViewGrid *grid;
-@property(strong,nonatomic)NSMutableArray *contactButtons;
-//@property(strong,nonatomic)NSArray *relations;
-@property(strong,nonatomic)NSMutableOrderedSet *otherContacts;
-@property(strong,nonatomic)NSMutableArray *relationStrings;
+
+@property(strong,nonatomic)NSMutableArray *relationGridIndexes;// include same tag view
+
+@property(strong,nonatomic)NSMutableArray *allRelations; // The contact's relation and relation it belong to
 
 @property(strong,nonatomic)NSMutableArray *relationViewsideLengths;
-@property(strong,nonatomic)NSMutableArray *relationViewsCenterXs;
-@property(strong,nonatomic)NSMutableArray *relationViewsCenterYs;
+@property(strong,nonatomic)NSMutableArray *relationViewsMinXs;
+@property(strong,nonatomic)NSMutableArray *relationViewsMinYs;
 
 @end
 @implementation RelationsView
@@ -162,39 +144,31 @@
 -(void)setContact:(Contact *)contact{
 
     _contact=contact;
+    [self update];
+}
+-(void)update{
+    
+    self.allRelations=[[self.contact.relationsWithOtherPeople allObjects]mutableCopy];
+    [self.allRelations addObjectsFromArray:[self.contact.belongWhichRelations allObjects]];
     [self updateRelationViews];
 }
 -(void)updateRelationViews{
 
-    self.otherContacts=[NSMutableOrderedSet orderedSet];
-    self.relationStrings=[@[] mutableCopy];
-    for (Relation *relation in self.contact.relationsWithOtherPeople) {
-        if (![self.otherContacts containsObject:relation.otherContact]) {
-            [self.otherContacts addObject:relation.otherContact];
-            [self.relationStrings addObject:relation.relationName];
-        }else{
-            NSInteger index = [self.otherContacts indexOfObject:relation.otherContact];
-            NSString *relationString=self.relationStrings[index];
-            self.relationStrings[index]=[NSString stringWithFormat:@"%@,%@",relationString,relation.relationName];
-        }
-    }
-
-    self.grid.numberOfContentGrids=self.otherContacts.count + 2; // include the same tag and contact itself relation
-
+    self.grid.numberOfContentGrids=self.allRelations.count + 2; // include the same tag and contact itself relation
     [self calculateGeomtry];
     [self updateRelationGraph];
 
 }
+
 -(void)calculateGeomtry{
 
-    self.grid.center=CGPointMake(self.grid.size.width/2, self.grid.size.height/2);
     self.bounds=CGRectMake(0, 0, self.grid.size.width, self.grid.size.height);
 
-    self.relationViewsCenterXs=[@[] mutableCopy];
-    self.relationViewsCenterYs=[@[] mutableCopy];
+    self.relationViewsMinXs=[@[] mutableCopy];
+    self.relationViewsMinYs=[@[] mutableCopy];
     self.relationViewsideLengths=[@[] mutableCopy];
 
-    for (int i =0 ; i<self.grid.numberOfContentGrids; i++) {
+    for (int i =0 ; i<self.grid.rowsCount*self.grid.columnCount; i++) {
 
         CGRect containRect=[self.grid rectOfGrid:i];
 
@@ -206,141 +180,152 @@
         CGFloat viewXOffset=arc4random()%((int)viewMaxXOffset);
         CGFloat viewYOffset=arc4random()%((int)viewMaxYOffset);
 
-        [self.relationViewsCenterXs addObject:@(CGRectGetMinX(containRect)+viewXOffset+viewSide/2)];
-        [self.relationViewsCenterYs addObject:@(CGRectGetMinY(containRect)+viewYOffset+viewSide/2)];
+        [self.relationViewsMinXs addObject:@(CGRectGetMinX(containRect)+viewXOffset)];
+        [self.relationViewsMinYs addObject:@(CGRectGetMinY(containRect)+viewYOffset)];
     }
+
+    // place the view(relation & same tag view) in a random grid
+    NSMutableArray *avaibleRelationGridIndex=[@[] mutableCopy];
+    for (int index=0; index<self.grid.rowsCount*self.grid.columnCount; index++) {
+        if (index != self.grid.centerGridIndex) {
+            [avaibleRelationGridIndex addObject:@(index)];
+        }
+    }
+    self.relationGridIndexes=[@[] mutableCopy];
+    for (int index =0 ; index<self.allRelations.count+1; index++) {
+        NSInteger gridIndex=arc4random() % avaibleRelationGridIndex.count;
+        [self.relationGridIndexes addObject:avaibleRelationGridIndex[gridIndex]];
+        [avaibleRelationGridIndex removeObjectAtIndex:gridIndex];
+    }
+
+
 
 }
 -(void)updateRelationGraph{
 
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    NSInteger centerGridIndex=(self.grid.rowsCount * self.grid.rowsCount)/2;
 
-    for (int index =0 ; index<self.grid.numberOfContentGrids; index++) {
-        if (index == self.grid.numberOfContentGrids-1 && index<centerGridIndex) {
-            break;
-        }
-        UIView *view=[self viewForGrid:index];
+    for (int index =0 ; index<self.allRelations.count+1; index++) {
+        UIView *view=[self viewForRelation:index<self.allRelations.count ? self.allRelations[index]:nil
+                                    atGrid:[self.relationGridIndexes[index] integerValue]];
         [self addSubview:view];
     }
+
     [self setNeedsDisplay];
 
 }
--(UIView *)viewForGrid:(NSInteger)index{
 
-    NSInteger centerGridIndex=(self.grid.rowsCount * self.grid.rowsCount)/2;
-
-    if (index==centerGridIndex) {
-        return nil;
-    }
-
-    CGFloat sideLength=[self.relationViewsideLengths[index] floatValue];
-    CGFloat centerX=[self.relationViewsCenterXs[index] floatValue];
-    CGFloat centerY=[self.relationViewsCenterYs[index] floatValue];
-
-    // get relation info
-    NSInteger relationInfoIndex= index < centerGridIndex ? index : index-1;
-    Contact *contact= relationInfoIndex < self.otherContacts.count ? self.otherContacts[relationInfoIndex] : nil;
-    NSString *relationName= relationInfoIndex < self.otherContacts.count ? self.relationStrings[relationInfoIndex] : nil;
-
-    UIView *view=[[UIView alloc]initWithFrame:CGRectMake(centerX-sideLength/2,centerY-sideLength/2,sideLength,sideLength)];
-    view.backgroundColor=[UIColor whiteColor];
-    view.layer.cornerRadius=sideLength/2;
-    view.layer.borderColor=[[UIColor lightGrayColor] CGColor];
-    view.layer.borderWidth=1.0;
-
-    UIButton *button=[[UIButton alloc]initWithFrame:view.bounds];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button setTitle:contact ? contact.contactName:@"同标签下\n联系人"
+-(UIButton *)buttonForContact:(Contact *)contact{
+    UIButton *button=[[UIButton alloc]init];
+    [button setTitleColor:IconColor forState:UIControlStateNormal];
+    [button setTitle:contact ? contact.contactName: @"同标签下\n联系人"
             forState:UIControlStateNormal];
     button.tag=[contact.contactID integerValue];
     button.titleLabel.font=[UIFont systemFontOfSize:15];
     button.titleLabel.numberOfLines=2;
     button.titleLabel.textAlignment=NSTextAlignmentCenter;
-    [view addSubview:button];
     [button addTarget:self
-               action:contact ?@selector(relationSelected:):@selector(sameTagContactsSelected:)
+               action:contact ? @selector(relationSelected:):@selector(sameTagContactsSelected:)
      forControlEvents:UIControlEventTouchUpInside];
+    return button;
 
-    if (relationName) {
-        CGRect relationLabelRect= CGRectMake(0, sideLength/2, sideLength, sideLength/2);
-        UILabel *relationLabel=[[UILabel alloc]initWithFrame:relationLabelRect];
-        relationLabel.font=[UIFont systemFontOfSize:12 weight:UIFontWeightLight];
-        relationLabel.textAlignment=NSTextAlignmentCenter;
-        relationLabel.text=relationName;
-        relationLabel.numberOfLines=2;
-        relationLabel.textColor=[UIColor lightGrayColor];
-        [view addSubview:relationLabel];
+}
+-(UIView *)viewForRelation:(Relation *)relation atGrid:(NSInteger)index{
+
+    CGFloat sideLength=[self.relationViewsideLengths[index] floatValue];
+    CGFloat minX=[self.relationViewsMinXs[index] floatValue];
+    CGFloat minY=[self.relationViewsMinYs[index] floatValue];
+    CGRect frame=CGRectMake(minX, minY, sideLength, sideLength);
+
+    UIView *view=[[UIView alloc]initWithFrame:frame];
+    view.backgroundColor=[UIColor whiteColor];
+    view.layer.cornerRadius=CGRectGetWidth(frame)/2;
+    view.layer.borderColor=[IconColor CGColor];
+    view.layer.borderWidth=1.0;
+
+    if (!relation) {
+        // same tag view
+        UIButton *sameTagButton=[self buttonForContact:nil];
+        sameTagButton.frame=view.bounds;
+        [view addSubview:sameTagButton];
+        return view;
     }
+
+    BOOL isMyRelation=[relation.whoseRelation.contactID isEqualToNumber:self.contact.contactID];
+    Contact *contact=isMyRelation ? relation.otherContact : relation.whoseRelation;
+
+    UIButton *contactButton=[self buttonForContact:contact];
+    contactButton.frame=view.bounds;
+    [view addSubview:contactButton];
+
+    UILabel *relationLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, sideLength/2, sideLength, sideLength/2)];
+    relationLabel.font=[UIFont systemFontOfSize:12 weight:UIFontWeightLight];
+    relationLabel.textAlignment=NSTextAlignmentCenter;
+    relationLabel.text= relation.relationName ;
+    relationLabel.numberOfLines=2;
+    relationLabel.textColor=isMyRelation ? [UIColor orangeColor] : IconColor;
+    relationLabel.text= isMyRelation ? relation.relationName : [@"的 " stringByAppendingString:relation.relationName];
+    [view addSubview:relationLabel];
 
     return view;
 
 }
+#pragma mark - actions
 -(void)relationSelected:(UIButton *)button{
 
     Contact *otherContact= [Contact contactOfContactID:button.tag];
-    self.relationSelected(self.contact,otherContact);
+    [self.delegate dismissRelationBetween:self.contact otherContact:otherContact];
+}
+
+-(void)sameTagContactsSelected:(UIButton *)button{
+    [self.delegate showAllContactsWhoHaveSameTagWithContact:self.contact];
 }
 
 -(void)relationDeleted:(Relation *)relation{
 
-    Contact *otherContact=relation.otherContact;
-    NSInteger index=[self.otherContacts indexOfObject:otherContact];
-    NSString *relationString=self.relationStrings[index];
-    if ([relationString isEqualToString:relation.relationName]) {
-//        [self.otherContacts removeObjectAtIndex:index];
-//        [self.relationStrings removeObjectAtIndex:index];
-//        self.grid.numberOfContentGrids=self.otherContacts.count+2;
-        [self updateRelationViews];
-    }else{
-        NSMutableArray *stringArray=[[relationString componentsSeparatedByString:@","]mutableCopy];
-        [stringArray removeObject:relation.relationName];
-        if (stringArray.count) {
-            self.relationStrings[index]=[stringArray componentsJoinedByString:@","];
-        }else{
-//            [self.otherContacts removeObjectAtIndex:index];
-//            [self.relationStrings removeObjectAtIndex:index];
-//            self.grid.numberOfContentGrids=self.otherContacts.count+2;
-            [self updateRelationViews];
-        }
-    }
-    [self updateRelationGraph];
+    [self.allRelations removeObject:relation];
+    [self updateRelationViews];
+
 }
 
--(void)sameTagContactsSelected:(UIButton *)button{
-    self.sameTagContactsSelected(self.contact);
-}
--(NSMutableArray *)contactButtons{
-    if (!_contactButtons) {
-        _contactButtons=[@[] mutableCopy];
-    }
-    return _contactButtons;
-}
-
+#pragma mark -draw
 -(void)drawRect:(CGRect)rect{
-    // draw center grid
-    CGPoint center=CGPointMake(CGRectGetMinX(rect)+CGRectGetWidth(rect)/2, CGRectGetMinY(rect)+CGRectGetHeight(rect)/2);
-    self.grid.center=center;
+    //center
 
+    CGFloat sideLength=[self.relationViewsideLengths[self.grid.centerGridIndex] floatValue];
+    CGFloat minX=[self.relationViewsMinXs[self.grid.centerGridIndex] floatValue];
+    CGFloat minY=[self.relationViewsMinYs[self.grid.centerGridIndex] floatValue];
+
+    // draw center grid
+    CGPoint center=CGPointMake(minX+sideLength/2,minY+sideLength/2);
 
     //draw line
-    [[UIColor lightGrayColor] setStroke];
-
-    NSInteger centerGridIndex=(self.grid.rowsCount * self.grid.rowsCount)/2;
-    for (int index=0 ; index<self.grid.numberOfContentGrids; index++) {
-        if (index == self.grid.numberOfContentGrids-1 && index<centerGridIndex) {
-            break;
-        }
-        CGPoint theCenter=CGPointMake([self.relationViewsCenterXs[index] floatValue],[self.relationViewsCenterYs[index] floatValue]);
+    [[UIColor orangeColor] setStroke];
+    for (int index=0 ; index<self.allRelations.count+1; index++) {
+        NSInteger gridIndex=[self.relationGridIndexes[index] integerValue];
+        CGFloat sideLength=[self.relationViewsideLengths[gridIndex] floatValue];
+        CGPoint theCenter=CGPointMake([self.relationViewsMinXs[gridIndex] floatValue]+ sideLength/2,[self.relationViewsMinYs[gridIndex] floatValue]+sideLength/2);
         UIBezierPath *line=[UIBezierPath bezierPath];
         [line moveToPoint:center];
         [line addLineToPoint:theCenter];
+
+        if(index < self.allRelations.count){
+            Relation *relation=self.allRelations[index];
+            BOOL isMyRelation=[relation.whoseRelation.contactID isEqualToNumber:self.contact.contactID];
+            isMyRelation ? [[[UIColor orangeColor] colorWithAlphaComponent:0.5] setStroke]: [[IconColor colorWithAlphaComponent:0.5] setStroke];
+        }else{
+            [[[UIColor orangeColor] colorWithAlphaComponent:0.5] setStroke];
+        }
+        line.lineWidth=0.5;
+        CGFloat pattern[2]={4.0,2.0};
+        [line setLineDash:pattern count:2 phase:0];
+
         [line stroke];
+
     }
 
-    CGRect centerGridRect=[self.grid rectofCenterGrid];
-    CGFloat centerGridSideLength=MIN(CGRectGetWidth(centerGridRect), CGRectGetHeight(centerGridRect))-20;
-    CGRect contentRect=CGRectMake(center.x-centerGridSideLength/2, center.y-centerGridSideLength/2, centerGridSideLength, centerGridSideLength);
+    // draw center grid ( the contact)
+    CGRect contentRect=CGRectMake(minX, minY, sideLength, sideLength);
     UIBezierPath *circle=[UIBezierPath bezierPathWithOvalInRect:contentRect];
     [[UIColor orangeColor] setFill];
     [circle fill];

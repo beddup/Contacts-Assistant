@@ -25,10 +25,7 @@
     // Drawing code
     
     UIBezierPath *circleBorder=[UIBezierPath bezierPathWithOvalInRect:CGRectInset(rect, 1, 1)];
-//    [[UIColor colorWithRed:1 green:1 blue:222.0/255 alpha:1] setStroke];
-//    [[UIColor colorWithRed:1 green:1 blue:235.0/255 alpha:1] setFill];
     [[UIColor whiteColor] setFill];
-//    [circleBorder stroke];
     [circleBorder fill];
     [circleBorder addClip];
     

@@ -1,9 +1,9 @@
 //
 //  Event.m
-//  Contacts Assistant
+//  
 //
-//  Created by Amay on 7/30/15.
-//  Copyright (c) 2015 Beddup. All rights reserved.
+//  Created by Amay on 9/17/15.
+//
 //
 
 #import "Event.h"
@@ -12,9 +12,15 @@
 
 @implementation Event
 
-@dynamic date;
-@dynamic event;
-@dynamic place;
-@dynamic contactsWhichAttend;
+@dynamic eventDate;
+@dynamic eventDescription;
+@dynamic eventID;
+@dynamic eventPlace;
+@dynamic eventRepeatedDays;
+@dynamic latitude;
+@dynamic longtitude;
+@dynamic finished;
+@dynamic otherContacts;
+@dynamic contactWhoOwnThisEvent;
 
 @end

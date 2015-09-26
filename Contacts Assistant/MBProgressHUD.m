@@ -5,6 +5,7 @@
 //
 
 #import "MBProgressHUD.h"
+#import "defines.h"
 #import <tgmath.h>
 
 
@@ -894,7 +895,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	if (self) {
 		_progress = 0.f;
 		_lineColor = [UIColor whiteColor];
-		_progressColor = [UIColor whiteColor];
+		_progressColor =IconColor;
 		_progressRemainingColor = [UIColor clearColor];
 		self.backgroundColor = [UIColor clearColor];
 		self.opaque = NO;
@@ -918,7 +919,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 - (void)drawRect:(CGRect)rect {
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
-	CGContextSetLineWidth(context, 2);
+	CGContextSetLineWidth(context, 1);
 	CGContextSetStrokeColorWithColor(context,[_lineColor CGColor]);
 	CGContextSetFillColorWithColor(context, [_progressRemainingColor CGColor]);
 	

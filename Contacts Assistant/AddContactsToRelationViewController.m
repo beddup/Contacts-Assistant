@@ -7,15 +7,15 @@
 //  Copyright (c) 2015 Beddup. All rights reserved.
 //
 
-#import "RelationContactsViewController.h"
+#import "AddContactsToRelationViewController.h"
 #import "Contact+Utility.h"
-@interface RelationContactsViewController ()
+@interface AddContactsToRelationViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
-@implementation RelationContactsViewController
+@implementation AddContactsToRelationViewController
 
 - (void)viewDidLoad {
 

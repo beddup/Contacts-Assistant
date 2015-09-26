@@ -8,30 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D074CD11B60D877000B73BB /* Contact+Utility.m */; };
+		8D07BCD61BAAA27400DAFF78 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D07BCD41BAAA27400DAFF78 /* Contact.m */; };
+		8D07BCD91BAAF96200DAFF78 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D07BCD81BAAF96200DAFF78 /* Event.m */; };
 		8D1C343C1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D1C343B1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m */; };
 		8D1C343F1B94A66C00E8E38E /* NSString+ContactsAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D1C343E1B94A66C00E8E38E /* NSString+ContactsAssistant.m */; };
 		8D3A8B9C1B75005B00ECEABC /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8B9B1B75005B00ECEABC /* Tag.m */; };
 		8D3A8B9F1B75005C00ECEABC /* Relation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8B9E1B75005C00ECEABC /* Relation.m */; };
-		8D3A8BA21B75005C00ECEABC /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BA11B75005C00ECEABC /* Contact.m */; };
-		8D3A8BA51B75005E00ECEABC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BA41B75005E00ECEABC /* Event.m */; };
 		8D3A8BA81B78F76700ECEABC /* EventDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BA71B78F76700ECEABC /* EventDisplayView.m */; };
 		8D3A8BAB1B7A6DA500ECEABC /* PhotoCircleImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A8BAA1B7A6DA500ECEABC /* PhotoCircleImageView.m */; };
+		8D5C33381B9C97C6009F41E8 /* TagsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C33371B9C97C6009F41E8 /* TagsTableViewController.m */; };
+		8D5C333B1B9E8570009F41E8 /* AddContactsToTagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D5C333A1B9E8570009F41E8 /* AddContactsToTagViewController.m */; };
+		8D6AB3961B9AA6BC0075E687 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D6AB3941B9AA6BC0075E687 /* pinyin.c */; };
+		8D6AB39C1B9BDCB70075E687 /* ManageTagsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6AB39B1B9BDCB70075E687 /* ManageTagsTableViewController.m */; };
 		8D70E5081B6B672D00B11C24 /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E5071B6B672D00B11C24 /* EventViewController.m */; };
 		8D70E50D1B6CA58400B11C24 /* ChangeEventTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */; };
-		8D70E5101B6CF52A00B11C24 /* ChangeEventContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */; };
-		8D70E5131B6D06D400B11C24 /* ChangeEventPlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */; };
+		8D70E5101B6CF52A00B11C24 /* AddContactsToEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D70E50F1B6CF52A00B11C24 /* AddContactsToEventViewController.m */; };
 		8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D71801F1B543EF000E372ED /* SearchAssistantView.xib */; };
 		8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180241B55102600E372ED /* SearchAssistantView.m */; };
 		8D7180451B5673E900E372ED /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180431B5673E900E372ED /* AddressBook.framework */; };
-		8D7180461B5673E900E372ED /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7180441B5673E900E372ED /* AddressBookUI.framework */; };
 		8D7180761B56B90800E372ED /* ContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180751B56B90800E372ED /* ContactsManager.m */; };
-		8D7180911B5D427A00E372ED /* HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180901B5D427A00E372ED /* HeaderView.m */; };
 		8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180931B5DE96A00E372ED /* ContactCell.m */; };
 		8D7180971B5DE97400E372ED /* TagCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180961B5DE97400E372ED /* TagCell.m */; };
 		8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */; };
-		8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A01B5F5FB300E372ED /* AddTagView.xib */; };
 		8D7180A41B5FACE300E372ED /* MoreFunctionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */; };
-		8D7180A61B5FD07100E372ED /* BatchEditOptionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */; };
 		8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */; };
 		8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180AA1B5FD63800E372ED /* TagNavigationView.m */; };
 		8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D7180B01B5FDEC700E372ED /* Tag+Utility.m */; };
@@ -52,12 +51,9 @@
 		8D841FC81B6292C200801362 /* SMSReceiversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC71B6292C200801362 /* SMSReceiversView.xib */; };
 		8D841FCA1B63331B00801362 /* EmailReceversView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D841FC91B63331B00801362 /* EmailReceversView.xib */; };
 		8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FCC1B63333B00801362 /* EmailReceiversView.m */; };
-		8D841FD01B636EB600801362 /* ContactDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */; };
 		8D841FD61B63A6DD00801362 /* RelationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FD51B63A6DD00801362 /* RelationsViewController.m */; };
 		8D841FDC1B63A72300801362 /* ContactInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FDB1B63A72300801362 /* ContactInfoViewController.m */; };
-		8D841FDF1B63A75900801362 /* TagsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FDE1B63A75900801362 /* TagsViewController.m */; };
-		8D841FE21B64830A00801362 /* CreateEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FE11B64830A00801362 /* CreateEventViewController.m */; };
-		8D841FE51B64831F00801362 /* AddTagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FE41B64831F00801362 /* AddTagViewController.m */; };
+		8D841FE51B64831F00801362 /* AddTagsToContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D841FE41B64831F00801362 /* AddTagsToContactViewController.m */; };
 		8D94D85E1B90B8DB00428679 /* ContactsUnderSameTagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94D85D1B90B8DB00428679 /* ContactsUnderSameTagViewController.m */; };
 		8D94F82E1B801FB900B480A1 /* CreatePersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F82D1B801FB900B480A1 /* CreatePersonViewController.m */; };
 		8D94F8311B84F20C00B480A1 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F8301B84F20C00B480A1 /* MBProgressHUD.m */; };
@@ -65,7 +61,7 @@
 		8D94F8371B8B230F00B480A1 /* NavigationTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D94F8361B8B230F00B480A1 /* NavigationTitleView.xib */; };
 		8D94F83C1B8BFE4E00B480A1 /* RelationsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F83B1B8BFE4E00B480A1 /* RelationsView.m */; };
 		8D94F83F1B8DC39500B480A1 /* AddRelationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F83E1B8DC39500B480A1 /* AddRelationViewController.m */; };
-		8D94F8421B8DE79A00B480A1 /* RelationContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F8411B8DE79A00B480A1 /* RelationContactsViewController.m */; };
+		8D94F8421B8DE79A00B480A1 /* AddContactsToRelationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F8411B8DE79A00B480A1 /* AddContactsToRelationViewController.m */; };
 		8D94F8451B8DEBC700B480A1 /* ChooseContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D94F8441B8DEBC700B480A1 /* ChooseContactsViewController.m */; };
 		8D95A92A1B53ABDD009EB722 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9291B53ABDD009EB722 /* main.m */; };
 		8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A92C1B53ABDD009EB722 /* AppDelegate.m */; };
@@ -75,6 +71,8 @@
 		8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D95A9391B53ABDD009EB722 /* LaunchScreen.xib */; };
 		8D95A9471B53ABDD009EB722 /* Contacts_AssistantTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9461B53ABDD009EB722 /* Contacts_AssistantTests.m */; };
 		8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */; };
+		8DC4B8531BA885F60096DB11 /* ContactDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4B8521BA885F60096DB11 /* ContactDetailsViewController.m */; };
+		8DCA64261BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCA64251BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m */; settings = {ASSET_TAGS = (); }; };
 		8DE0DF381B95ABDB00CE3265 /* ReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE0DF371B95ABDB00CE3265 /* ReceiversView.m */; };
 		8DE0DF3A1B9619A800CE3265 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DE0DF391B9619A800CE3265 /* MessageUI.framework */; };
 /* End PBXBuildFile section */
@@ -92,6 +90,10 @@
 /* Begin PBXFileReference section */
 		8D074CD01B60D877000B73BB /* Contact+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Contact+Utility.h"; sourceTree = "<group>"; };
 		8D074CD11B60D877000B73BB /* Contact+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Contact+Utility.m"; sourceTree = "<group>"; };
+		8D07BCD31BAAA27400DAFF78 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		8D07BCD41BAAA27400DAFF78 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		8D07BCD71BAAF96200DAFF78 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		8D07BCD81BAAF96200DAFF78 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		8D1C343A1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+ArrangedContacts.h"; sourceTree = "<group>"; };
 		8D1C343B1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+ArrangedContacts.m"; sourceTree = "<group>"; };
 		8D1C343D1B94A66C00E8E38E /* NSString+ContactsAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ContactsAssistant.h"; sourceTree = "<group>"; };
@@ -100,40 +102,38 @@
 		8D3A8B9B1B75005B00ECEABC /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
 		8D3A8B9D1B75005C00ECEABC /* Relation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relation.h; sourceTree = "<group>"; };
 		8D3A8B9E1B75005C00ECEABC /* Relation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relation.m; sourceTree = "<group>"; };
-		8D3A8BA01B75005C00ECEABC /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
-		8D3A8BA11B75005C00ECEABC /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
-		8D3A8BA31B75005E00ECEABC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		8D3A8BA41B75005E00ECEABC /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		8D3A8BA61B78F76700ECEABC /* EventDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventDisplayView.h; sourceTree = "<group>"; };
 		8D3A8BA71B78F76700ECEABC /* EventDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventDisplayView.m; sourceTree = "<group>"; };
 		8D3A8BA91B7A6DA500ECEABC /* PhotoCircleImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoCircleImageView.h; sourceTree = "<group>"; };
 		8D3A8BAA1B7A6DA500ECEABC /* PhotoCircleImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCircleImageView.m; sourceTree = "<group>"; };
+		8D5C33361B9C97C6009F41E8 /* TagsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsTableViewController.h; sourceTree = "<group>"; };
+		8D5C33371B9C97C6009F41E8 /* TagsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsTableViewController.m; sourceTree = "<group>"; };
+		8D5C33391B9E8570009F41E8 /* AddContactsToTagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactsToTagViewController.h; sourceTree = "<group>"; };
+		8D5C333A1B9E8570009F41E8 /* AddContactsToTagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactsToTagViewController.m; sourceTree = "<group>"; };
+		8D6AB3941B9AA6BC0075E687 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
+		8D6AB3951B9AA6BC0075E687 /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
+		8D6AB3991B9B34B30075E687 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
+		8D6AB39A1B9BDCB70075E687 /* ManageTagsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageTagsTableViewController.h; sourceTree = "<group>"; };
+		8D6AB39B1B9BDCB70075E687 /* ManageTagsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTagsTableViewController.m; sourceTree = "<group>"; };
 		8D70E5061B6B672D00B11C24 /* EventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventViewController.h; sourceTree = "<group>"; };
 		8D70E5071B6B672D00B11C24 /* EventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventViewController.m; sourceTree = "<group>"; };
 		8D70E50B1B6CA58400B11C24 /* ChangeEventTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventTimeViewController.h; sourceTree = "<group>"; };
 		8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventTimeViewController.m; sourceTree = "<group>"; };
-		8D70E50E1B6CF52A00B11C24 /* ChangeEventContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventContactsViewController.h; sourceTree = "<group>"; };
-		8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventContactsViewController.m; sourceTree = "<group>"; };
-		8D70E5111B6D06D400B11C24 /* ChangeEventPlaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeEventPlaceViewController.h; sourceTree = "<group>"; };
-		8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeEventPlaceViewController.m; sourceTree = "<group>"; };
+		8D70E50E1B6CF52A00B11C24 /* AddContactsToEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactsToEventViewController.h; sourceTree = "<group>"; };
+		8D70E50F1B6CF52A00B11C24 /* AddContactsToEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactsToEventViewController.m; sourceTree = "<group>"; };
 		8D71801F1B543EF000E372ED /* SearchAssistantView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchAssistantView.xib; path = View/SearchAssistantView.xib; sourceTree = "<group>"; };
 		8D7180231B55102600E372ED /* SearchAssistantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchAssistantView.h; path = View/SearchAssistantView.h; sourceTree = "<group>"; };
 		8D7180241B55102600E372ED /* SearchAssistantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchAssistantView.m; path = View/SearchAssistantView.m; sourceTree = "<group>"; };
 		8D7180431B5673E900E372ED /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		8D7180441B5673E900E372ED /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		8D7180741B56B90800E372ED /* ContactsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsManager.h; sourceTree = "<group>"; };
 		8D7180751B56B90800E372ED /* ContactsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsManager.m; sourceTree = "<group>"; };
-		8D71808F1B5D427A00E372ED /* HeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeaderView.h; path = View/HeaderView.h; sourceTree = "<group>"; };
-		8D7180901B5D427A00E372ED /* HeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeaderView.m; path = View/HeaderView.m; sourceTree = "<group>"; };
 		8D7180921B5DE96A00E372ED /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactCell.h; path = View/ContactCell.h; sourceTree = "<group>"; };
 		8D7180931B5DE96A00E372ED /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactCell.m; path = View/ContactCell.m; sourceTree = "<group>"; };
 		8D7180951B5DE97400E372ED /* TagCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagCell.h; path = View/TagCell.h; sourceTree = "<group>"; };
 		8D7180961B5DE97400E372ED /* TagCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagCell.m; path = View/TagCell.m; sourceTree = "<group>"; };
 		8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MoreFuctionsView.xib; path = View/MoreFuctionsView.xib; sourceTree = "<group>"; };
-		8D7180A01B5F5FB300E372ED /* AddTagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddTagView.xib; path = View/AddTagView.xib; sourceTree = "<group>"; };
 		8D7180A21B5FACE300E372ED /* MoreFunctionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoreFunctionsView.h; path = View/MoreFunctionsView.h; sourceTree = "<group>"; };
 		8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MoreFunctionsView.m; path = View/MoreFunctionsView.m; sourceTree = "<group>"; };
-		8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BatchEditOptionsView.xib; sourceTree = "<group>"; };
 		8D7180A71B5FD45C00E372ED /* TagNavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagNavigationView.xib; sourceTree = "<group>"; };
 		8D7180A91B5FD63800E372ED /* TagNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagNavigationView.h; path = View/TagNavigationView.h; sourceTree = "<group>"; };
 		8D7180AA1B5FD63800E372ED /* TagNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagNavigationView.m; path = View/TagNavigationView.m; sourceTree = "<group>"; };
@@ -173,17 +173,12 @@
 		8D841FCB1B63333B00801362 /* EmailReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailReceiversView.h; sourceTree = "<group>"; };
 		8D841FCC1B63333B00801362 /* EmailReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailReceiversView.m; sourceTree = "<group>"; };
 		8D841FCE1B636EB600801362 /* ContactDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailsViewController.h; path = viewController/ContactDetailsViewController.h; sourceTree = "<group>"; };
-		8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailsViewController.m; path = viewController/ContactDetailsViewController.m; sourceTree = "<group>"; };
 		8D841FD41B63A6DD00801362 /* RelationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelationsViewController.h; sourceTree = "<group>"; };
 		8D841FD51B63A6DD00801362 /* RelationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelationsViewController.m; sourceTree = "<group>"; };
 		8D841FDA1B63A72300801362 /* ContactInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInfoViewController.h; sourceTree = "<group>"; };
 		8D841FDB1B63A72300801362 /* ContactInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInfoViewController.m; sourceTree = "<group>"; };
-		8D841FDD1B63A75900801362 /* TagsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsViewController.h; sourceTree = "<group>"; };
-		8D841FDE1B63A75900801362 /* TagsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagsViewController.m; sourceTree = "<group>"; };
-		8D841FE01B64830A00801362 /* CreateEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEventViewController.h; sourceTree = "<group>"; };
-		8D841FE11B64830A00801362 /* CreateEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEventViewController.m; sourceTree = "<group>"; };
-		8D841FE31B64831F00801362 /* AddTagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTagViewController.h; sourceTree = "<group>"; };
-		8D841FE41B64831F00801362 /* AddTagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTagViewController.m; sourceTree = "<group>"; };
+		8D841FE31B64831F00801362 /* AddTagsToContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTagsToContactViewController.h; sourceTree = "<group>"; };
+		8D841FE41B64831F00801362 /* AddTagsToContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTagsToContactViewController.m; sourceTree = "<group>"; };
 		8D94D85C1B90B8DB00428679 /* ContactsUnderSameTagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsUnderSameTagViewController.h; sourceTree = "<group>"; };
 		8D94D85D1B90B8DB00428679 /* ContactsUnderSameTagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsUnderSameTagViewController.m; sourceTree = "<group>"; };
 		8D94F82C1B801FB900B480A1 /* CreatePersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatePersonViewController.h; sourceTree = "<group>"; };
@@ -197,8 +192,8 @@
 		8D94F83B1B8BFE4E00B480A1 /* RelationsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RelationsView.m; path = ../RelationsView.m; sourceTree = "<group>"; };
 		8D94F83D1B8DC39500B480A1 /* AddRelationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddRelationViewController.h; sourceTree = "<group>"; };
 		8D94F83E1B8DC39500B480A1 /* AddRelationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddRelationViewController.m; sourceTree = "<group>"; };
-		8D94F8401B8DE79A00B480A1 /* RelationContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelationContactsViewController.h; sourceTree = "<group>"; };
-		8D94F8411B8DE79A00B480A1 /* RelationContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelationContactsViewController.m; sourceTree = "<group>"; };
+		8D94F8401B8DE79A00B480A1 /* AddContactsToRelationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactsToRelationViewController.h; sourceTree = "<group>"; };
+		8D94F8411B8DE79A00B480A1 /* AddContactsToRelationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContactsToRelationViewController.m; sourceTree = "<group>"; };
 		8D94F8431B8DEBC700B480A1 /* ChooseContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseContactsViewController.h; sourceTree = "<group>"; };
 		8D94F8441B8DEBC700B480A1 /* ChooseContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseContactsViewController.m; sourceTree = "<group>"; };
 		8D95A9241B53ABDD009EB722 /* Contacts Assistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contacts Assistant.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +210,9 @@
 		8D95A9461B53ABDD009EB722 /* Contacts_AssistantTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Contacts_AssistantTests.m; sourceTree = "<group>"; };
 		8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualizedContactsViewController.h; path = viewController/VisualizedContactsViewController.h; sourceTree = "<group>"; };
 		8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualizedContactsViewController.m; path = viewController/VisualizedContactsViewController.m; sourceTree = "<group>"; };
+		8DC4B8521BA885F60096DB11 /* ContactDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailsViewController.m; path = viewController/ContactDetailsViewController.m; sourceTree = "<group>"; };
+		8DCA64241BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+ContactsAssistant.h"; sourceTree = "<group>"; };
+		8DCA64251BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+ContactsAssistant.m"; sourceTree = "<group>"; };
 		8DE0DF361B95ABDB00CE3265 /* ReceiversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiversView.h; sourceTree = "<group>"; };
 		8DE0DF371B95ABDB00CE3265 /* ReceiversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReceiversView.m; sourceTree = "<group>"; };
 		8DE0DF391B9619A800CE3265 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -227,7 +225,6 @@
 			files = (
 				8DE0DF3A1B9619A800CE3265 /* MessageUI.framework in Frameworks */,
 				8D7180451B5673E900E372ED /* AddressBook.framework in Frameworks */,
-				8D7180461B5673E900E372ED /* AddressBookUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,49 +238,97 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D5C333C1B9F223F009F41E8 /* Tag VC */ = {
+			isa = PBXGroup;
+			children = (
+				8D5C33361B9C97C6009F41E8 /* TagsTableViewController.h */,
+				8D5C33371B9C97C6009F41E8 /* TagsTableViewController.m */,
+				8D841FE31B64831F00801362 /* AddTagsToContactViewController.h */,
+				8D841FE41B64831F00801362 /* AddTagsToContactViewController.m */,
+				8D6AB39A1B9BDCB70075E687 /* ManageTagsTableViewController.h */,
+				8D6AB39B1B9BDCB70075E687 /* ManageTagsTableViewController.m */,
+			);
+			name = "Tag VC";
+			sourceTree = "<group>";
+		};
+		8D5C333D1B9F226C009F41E8 /* Event VC */ = {
+			isa = PBXGroup;
+			children = (
+				8D70E5061B6B672D00B11C24 /* EventViewController.h */,
+				8D70E5071B6B672D00B11C24 /* EventViewController.m */,
+				8D70E50B1B6CA58400B11C24 /* ChangeEventTimeViewController.h */,
+				8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */,
+			);
+			name = "Event VC";
+			sourceTree = "<group>";
+		};
+		8D5C333E1B9F22B7009F41E8 /* Contact VC */ = {
+			isa = PBXGroup;
+			children = (
+				8D94F8431B8DEBC700B480A1 /* ChooseContactsViewController.h */,
+				8D94F8441B8DEBC700B480A1 /* ChooseContactsViewController.m */,
+				8D5C33391B9E8570009F41E8 /* AddContactsToTagViewController.h */,
+				8D5C333A1B9E8570009F41E8 /* AddContactsToTagViewController.m */,
+				8D70E50E1B6CF52A00B11C24 /* AddContactsToEventViewController.h */,
+				8D70E50F1B6CF52A00B11C24 /* AddContactsToEventViewController.m */,
+				8D94F8401B8DE79A00B480A1 /* AddContactsToRelationViewController.h */,
+				8D94F8411B8DE79A00B480A1 /* AddContactsToRelationViewController.m */,
+				8D94D85C1B90B8DB00428679 /* ContactsUnderSameTagViewController.h */,
+				8D94D85D1B90B8DB00428679 /* ContactsUnderSameTagViewController.m */,
+			);
+			name = "Contact VC";
+			sourceTree = "<group>";
+		};
+		8D5C333F1B9F24B3009F41E8 /* Relation VC */ = {
+			isa = PBXGroup;
+			children = (
+				8D841FD41B63A6DD00801362 /* RelationsViewController.h */,
+				8D841FD51B63A6DD00801362 /* RelationsViewController.m */,
+				8D94F83D1B8DC39500B480A1 /* AddRelationViewController.h */,
+				8D94F83E1B8DC39500B480A1 /* AddRelationViewController.m */,
+			);
+			name = "Relation VC";
+			sourceTree = "<group>";
+		};
+		8D5C33401B9F25A0009F41E8 /* Foundation+ContactsAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				8D1C343A1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.h */,
+				8D1C343B1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m */,
+				8D1C343D1B94A66C00E8E38E /* NSString+ContactsAssistant.h */,
+				8D1C343E1B94A66C00E8E38E /* NSString+ContactsAssistant.m */,
+			);
+			name = "Foundation+ContactsAssistant";
+			sourceTree = "<group>";
+		};
+		8D6AB3981B9AA6CD0075E687 /* PinYin */ = {
+			isa = PBXGroup;
+			children = (
+				8D6AB3951B9AA6BC0075E687 /* pinyin.h */,
+				8D6AB3941B9AA6BC0075E687 /* pinyin.c */,
+			);
+			name = PinYin;
+			sourceTree = "<group>";
+		};
 		8D7180211B550FF100E372ED /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				8D7180741B56B90800E372ED /* ContactsManager.h */,
 				8D7180751B56B90800E372ED /* ContactsManager.m */,
-				8D1C343A1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.h */,
-				8D1C343B1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m */,
-				8D1C343D1B94A66C00E8E38E /* NSString+ContactsAssistant.h */,
-				8D1C343E1B94A66C00E8E38E /* NSString+ContactsAssistant.m */,
 				8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */,
 				8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */,
 				8D74D8BC1B6F157B008D5223 /* QRScanResultViewController.h */,
 				8D74D8BD1B6F157B008D5223 /* QRScanResultViewController.m */,
 				8D841FCE1B636EB600801362 /* ContactDetailsViewController.h */,
-				8D841FCF1B636EB600801362 /* ContactDetailsViewController.m */,
-				8D841FE31B64831F00801362 /* AddTagViewController.h */,
-				8D841FE41B64831F00801362 /* AddTagViewController.m */,
-				8D70E5061B6B672D00B11C24 /* EventViewController.h */,
-				8D70E5071B6B672D00B11C24 /* EventViewController.m */,
-				8D70E50B1B6CA58400B11C24 /* ChangeEventTimeViewController.h */,
-				8D70E50C1B6CA58400B11C24 /* ChangeEventTimeViewController.m */,
-				8D94F8431B8DEBC700B480A1 /* ChooseContactsViewController.h */,
-				8D94F8441B8DEBC700B480A1 /* ChooseContactsViewController.m */,
-				8D70E50E1B6CF52A00B11C24 /* ChangeEventContactsViewController.h */,
-				8D70E50F1B6CF52A00B11C24 /* ChangeEventContactsViewController.m */,
-				8D70E5111B6D06D400B11C24 /* ChangeEventPlaceViewController.h */,
-				8D70E5121B6D06D400B11C24 /* ChangeEventPlaceViewController.m */,
-				8D841FD41B63A6DD00801362 /* RelationsViewController.h */,
-				8D841FD51B63A6DD00801362 /* RelationsViewController.m */,
-				8D94F83D1B8DC39500B480A1 /* AddRelationViewController.h */,
-				8D94F83E1B8DC39500B480A1 /* AddRelationViewController.m */,
-				8D94F8401B8DE79A00B480A1 /* RelationContactsViewController.h */,
-				8D94F8411B8DE79A00B480A1 /* RelationContactsViewController.m */,
-				8D94D85C1B90B8DB00428679 /* ContactsUnderSameTagViewController.h */,
-				8D94D85D1B90B8DB00428679 /* ContactsUnderSameTagViewController.m */,
-				8D841FE01B64830A00801362 /* CreateEventViewController.h */,
-				8D841FE11B64830A00801362 /* CreateEventViewController.m */,
+				8DC4B8521BA885F60096DB11 /* ContactDetailsViewController.m */,
 				8D841FDA1B63A72300801362 /* ContactInfoViewController.h */,
 				8D841FDB1B63A72300801362 /* ContactInfoViewController.m */,
-				8D841FDD1B63A75900801362 /* TagsViewController.h */,
-				8D841FDE1B63A75900801362 /* TagsViewController.m */,
 				8D94F82C1B801FB900B480A1 /* CreatePersonViewController.h */,
 				8D94F82D1B801FB900B480A1 /* CreatePersonViewController.m */,
+				8D5C333E1B9F22B7009F41E8 /* Contact VC */,
+				8D5C333C1B9F223F009F41E8 /* Tag VC */,
+				8D5C333D1B9F226C009F41E8 /* Event VC */,
+				8D5C333F1B9F24B3009F41E8 /* Relation VC */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -291,23 +336,19 @@
 		8D7180221B55100200E372ED /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8D7180921B5DE96A00E372ED /* ContactCell.h */,
+				8D7180931B5DE96A00E372ED /* ContactCell.m */,
+				8D7180951B5DE97400E372ED /* TagCell.h */,
+				8D7180961B5DE97400E372ED /* TagCell.m */,
 				8D94F83A1B8BFE4E00B480A1 /* RelationsView.h */,
 				8D94F83B1B8BFE4E00B480A1 /* RelationsView.m */,
 				8D3A8BA91B7A6DA500ECEABC /* PhotoCircleImageView.h */,
 				8D3A8BAA1B7A6DA500ECEABC /* PhotoCircleImageView.m */,
 				8D3A8BA61B78F76700ECEABC /* EventDisplayView.h */,
 				8D3A8BA71B78F76700ECEABC /* EventDisplayView.m */,
-				8D7180951B5DE97400E372ED /* TagCell.h */,
-				8D7180961B5DE97400E372ED /* TagCell.m */,
-				8D7180921B5DE96A00E372ED /* ContactCell.h */,
-				8D7180931B5DE96A00E372ED /* ContactCell.m */,
-				8D71808F1B5D427A00E372ED /* HeaderView.h */,
-				8D7180901B5D427A00E372ED /* HeaderView.m */,
 				8D7180A21B5FACE300E372ED /* MoreFunctionsView.h */,
 				8D7180A31B5FACE300E372ED /* MoreFunctionsView.m */,
 				8D7180981B5EB55600E372ED /* MoreFuctionsView.xib */,
-				8D7180A51B5FD07100E372ED /* BatchEditOptionsView.xib */,
-				8D7180A01B5F5FB300E372ED /* AddTagView.xib */,
 				8D7180231B55102600E372ED /* SearchAssistantView.h */,
 				8D7180241B55102600E372ED /* SearchAssistantView.m */,
 				8D71801F1B543EF000E372ED /* SearchAssistantView.xib */,
@@ -332,10 +373,10 @@
 		8D7180391B5667D600E372ED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8D3A8BA31B75005E00ECEABC /* Event.h */,
-				8D3A8BA41B75005E00ECEABC /* Event.m */,
-				8D3A8BA01B75005C00ECEABC /* Contact.h */,
-				8D3A8BA11B75005C00ECEABC /* Contact.m */,
+				8D07BCD71BAAF96200DAFF78 /* Event.h */,
+				8D07BCD81BAAF96200DAFF78 /* Event.m */,
+				8D07BCD31BAAA27400DAFF78 /* Contact.h */,
+				8D07BCD41BAAA27400DAFF78 /* Contact.m */,
 				8D3A8B9D1B75005C00ECEABC /* Relation.h */,
 				8D3A8B9E1B75005C00ECEABC /* Relation.m */,
 				8D3A8B9A1B75005B00ECEABC /* Tag.h */,
@@ -410,6 +451,8 @@
 			children = (
 				8D94F82F1B84F20C00B480A1 /* MBProgressHUD.h */,
 				8D94F8301B84F20C00B480A1 /* MBProgressHUD.m */,
+				8DCA64241BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.h */,
+				8DCA64251BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m */,
 			);
 			name = HUD;
 			sourceTree = "<group>";
@@ -419,7 +462,6 @@
 			children = (
 				8DE0DF391B9619A800CE3265 /* MessageUI.framework */,
 				8D7180431B5673E900E372ED /* AddressBook.framework */,
-				8D7180441B5673E900E372ED /* AddressBookUI.framework */,
 				8D95A9261B53ABDD009EB722 /* Contacts Assistant */,
 				8D95A9431B53ABDD009EB722 /* Contacts AssistantTests */,
 				8D95A9251B53ABDD009EB722 /* Products */,
@@ -438,16 +480,19 @@
 		8D95A9261B53ABDD009EB722 /* Contacts Assistant */ = {
 			isa = PBXGroup;
 			children = (
+				8D6AB3991B9B34B30075E687 /* defines.h */,
 				8D95A92B1B53ABDD009EB722 /* AppDelegate.h */,
 				8D95A92C1B53ABDD009EB722 /* AppDelegate.m */,
 				8D95A9341B53ABDD009EB722 /* Main.storyboard */,
-				8D74D8AC1B6E57D1008D5223 /* QR */,
-				8D94F8321B84F21100B480A1 /* HUD */,
 				8D7180211B550FF100E372ED /* ViewControllers */,
 				8D7180221B55100200E372ED /* Views */,
+				8D74D8AC1B6E57D1008D5223 /* QR */,
+				8D6AB3981B9AA6CD0075E687 /* PinYin */,
+				8D94F8321B84F21100B480A1 /* HUD */,
+				8D5C33401B9F25A0009F41E8 /* Foundation+ContactsAssistant */,
+				8D7180391B5667D600E372ED /* Model */,
 				8D95A9371B53ABDD009EB722 /* Images.xcassets */,
 				8D95A9391B53ABDD009EB722 /* LaunchScreen.xib */,
-				8D7180391B5667D600E372ED /* Model */,
 				8D95A9271B53ABDD009EB722 /* Supporting Files */,
 			);
 			path = "Contacts Assistant";
@@ -523,12 +568,17 @@
 		8D95A91C1B53ABDD009EB722 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Beddup;
 				TargetAttributes = {
 					8D95A9231B53ABDD009EB722 = {
 						CreatedOnToolsVersion = 6.3.2;
 						DevelopmentTeam = 6W9CTNL7JS;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					8D95A93F1B53ABDD009EB722 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -567,10 +617,8 @@
 				8D7180991B5EB55600E372ED /* MoreFuctionsView.xib in Resources */,
 				8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */,
 				8D95A9381B53ABDD009EB722 /* Images.xcassets in Resources */,
-				8D7180A11B5F5FB300E372ED /* AddTagView.xib in Resources */,
 				8D7180A81B5FD45C00E372ED /* TagNavigationView.xib in Resources */,
 				8D7180201B543EF000E372ED /* SearchAssistantView.xib in Resources */,
-				8D7180A61B5FD07100E372ED /* BatchEditOptionsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,37 +636,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D6AB3961B9AA6BC0075E687 /* pinyin.c in Sources */,
 				8D74D8A61B6E57AC008D5223 /* qrencode.c in Sources */,
 				8D74D8A91B6E57AC008D5223 /* rscode.c in Sources */,
-				8D94F8421B8DE79A00B480A1 /* RelationContactsViewController.m in Sources */,
+				8D94F8421B8DE79A00B480A1 /* AddContactsToRelationViewController.m in Sources */,
 				8D7180971B5DE97400E372ED /* TagCell.m in Sources */,
 				8D841FCD1B63333B00801362 /* EmailReceiversView.m in Sources */,
 				8D95A9301B53ABDD009EB722 /* Contacts_Assistant.xcdatamodeld in Sources */,
-				8D3A8BA21B75005C00ECEABC /* Contact.m in Sources */,
+				8D07BCD61BAAA27400DAFF78 /* Contact.m in Sources */,
 				8D841FD61B63A6DD00801362 /* RelationsViewController.m in Sources */,
 				8D94F8351B8B22AE00B480A1 /* NavigationTitleView.m in Sources */,
 				8D1C343C1B94A1FD00E8E38E /* NSMutableArray+ArrangedContacts.m in Sources */,
 				8D70E50D1B6CA58400B11C24 /* ChangeEventTimeViewController.m in Sources */,
 				8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */,
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
-				8D841FD01B636EB600801362 /* ContactDetailsViewController.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
 				8D841FAA1B62157F00801362 /* Event+Utility.m in Sources */,
+				8D5C333B1B9E8570009F41E8 /* AddContactsToTagViewController.m in Sources */,
 				8D74D8B81B6E5FD6008D5223 /* QRCodeReaderView.m in Sources */,
 				8D94F82E1B801FB900B480A1 /* CreatePersonViewController.m in Sources */,
 				8D94D85E1B90B8DB00428679 /* ContactsUnderSameTagViewController.m in Sources */,
-				8D7180911B5D427A00E372ED /* HeaderView.m in Sources */,
 				8D74D8B71B6E5FD6008D5223 /* QRCodeReaderViewController.m in Sources */,
+				8DC4B8531BA885F60096DB11 /* ContactDetailsViewController.m in Sources */,
+				8D07BCD91BAAF96200DAFF78 /* Event.m in Sources */,
+				8D6AB39C1B9BDCB70075E687 /* ManageTagsTableViewController.m in Sources */,
 				8D74D8A71B6E57AC008D5223 /* qrinput.c in Sources */,
-				8D70E5131B6D06D400B11C24 /* ChangeEventPlaceViewController.m in Sources */,
 				8D074CD21B60D877000B73BB /* Contact+Utility.m in Sources */,
-				8D841FE51B64831F00801362 /* AddTagViewController.m in Sources */,
+				8D841FE51B64831F00801362 /* AddTagsToContactViewController.m in Sources */,
 				8D94F83C1B8BFE4E00B480A1 /* RelationsView.m in Sources */,
 				8D7180AB1B5FD63800E372ED /* TagNavigationView.m in Sources */,
-				8D70E5101B6CF52A00B11C24 /* ChangeEventContactsViewController.m in Sources */,
-				8D841FE21B64830A00801362 /* CreateEventViewController.m in Sources */,
-				8D841FDF1B63A75900801362 /* TagsViewController.m in Sources */,
+				8D70E5101B6CF52A00B11C24 /* AddContactsToEventViewController.m in Sources */,
 				8D94F8311B84F20C00B480A1 /* MBProgressHUD.m in Sources */,
+				8DCA64261BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m in Sources */,
 				8D74D8BE1B6F157B008D5223 /* QRScanResultViewController.m in Sources */,
 				8D3A8B9F1B75005C00ECEABC /* Relation.m in Sources */,
 				8D3A8BAB1B7A6DA500ECEABC /* PhotoCircleImageView.m in Sources */,
@@ -626,7 +675,6 @@
 				8D74D8AA1B6E57AC008D5223 /* split.c in Sources */,
 				8DE0DF381B95ABDB00CE3265 /* ReceiversView.m in Sources */,
 				8D74D8A51B6E57AC008D5223 /* mask.c in Sources */,
-				8D3A8BA51B75005E00ECEABC /* Event.m in Sources */,
 				8D74D8A41B6E57AC008D5223 /* bitstream.c in Sources */,
 				8D841FC61B62910B00801362 /* SMSReceiversView.m in Sources */,
 				8D7180A41B5FACE300E372ED /* MoreFunctionsView.m in Sources */,
@@ -640,6 +688,7 @@
 				8D3A8BA81B78F76700ECEABC /* EventDisplayView.m in Sources */,
 				8D74D8A81B6E57AC008D5223 /* qrspec.c in Sources */,
 				8D70E5081B6B672D00B11C24 /* EventViewController.m in Sources */,
+				8D5C33381B9C97C6009F41E8 /* TagsTableViewController.m in Sources */,
 				8D1C343F1B94A66C00E8E38E /* NSString+ContactsAssistant.m in Sources */,
 				8D7180251B55102600E372ED /* SearchAssistantView.m in Sources */,
 				8D3A8B9C1B75005B00ECEABC /* Tag.m in Sources */,
@@ -705,6 +754,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -771,9 +821,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Contacts Assistant/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Beddup.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -782,9 +836,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Contacts Assistant/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Beddup.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -802,6 +860,7 @@
 				);
 				INFOPLIST_FILE = "Contacts AssistantTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Beddup.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Contacts Assistant.app/Contacts Assistant";
 			};
@@ -817,6 +876,7 @@
 				);
 				INFOPLIST_FILE = "Contacts AssistantTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Beddup.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Contacts Assistant.app/Contacts Assistant";
 			};

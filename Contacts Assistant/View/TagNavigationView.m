@@ -10,17 +10,33 @@
 #import "AppDelegate.h"
 #import "TagCell.h"
 #import "Tag+Utility.h"
+#import "defines.h"
 @interface TagNavigationView()<UITableViewDataSource,UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property(strong,nonatomic)NSArray *tags;
 
+@property(weak,nonatomic)UIButton *managerButton;
+@property(weak,nonatomic)UILabel *titleLabel;
+
 @end
 
 @implementation TagNavigationView
 
 #pragma  mark - UITableViewDataSource
+
+-(void)layoutSubviews{
+    CGRect tableHeaderBounds=self.tableView.tableHeaderView.bounds;
+    self.titleLabel.frame=CGRectMake(self.tableView.separatorInset.left, 0, CGRectGetWidth(tableHeaderBounds), CGRectGetHeight(tableHeaderBounds));
+    self.managerButton.frame=CGRectMake(CGRectGetWidth(tableHeaderBounds)-self.tableView.separatorInset.right-60, 0,60,CGRectGetHeight(tableHeaderBounds));
+}
+-(void)updateTags{
+
+    self.tags=[Tag allTagsSortedByOwnedContactsCountAndTagName];
+    [self.tableView reloadData];
+    [APP saveContext];
+}
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
@@ -55,26 +71,30 @@
 
 -(void)setup{
 
-    UIButton *buttonfooter=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 0, 44)];
-    self.tableView.tableFooterView=buttonfooter;
-    [buttonfooter setTitle:@"管理标签" forState:UIControlStateNormal];
-    [buttonfooter setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    buttonfooter.titleLabel.font=[UIFont systemFontOfSize:17];
-    [buttonfooter addTarget:self action:@selector(manageTags:) forControlEvents:UIControlEventTouchUpInside];
+    UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 36)];
+    self.tableView.tableHeaderView=headerView;
 
-    UILabel *headerLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, 25)];
-    self.tableView.tableHeaderView=headerLabel;
-    headerLabel.textColor=[UIColor lightGrayColor];
-    headerLabel.text=@"选择标签筛选联系人";
-    headerLabel.font=[UIFont systemFontOfSize:14];
-    headerLabel.textAlignment=NSTextAlignmentCenter;
+    UILabel *titleLabel=[[UILabel alloc]init];
+    self.titleLabel=titleLabel;
+    [headerView addSubview:titleLabel];
+    titleLabel.textColor=[UIColor lightGrayColor];
+    titleLabel.text=@"选择标签筛选联系人";
+    titleLabel.font=[UIFont systemFontOfSize:15];
+    titleLabel.textAlignment=NSTextAlignmentLeft;
 
-    self.tags = [[Tag allTags] sortedArrayUsingComparator:^NSComparisonResult(Tag * obj1, Tag * obj2) {
-        return obj1.ownedContacts.count <= obj2.ownedContacts.count;
-    }];
+    UIButton *manageButton=[[UIButton alloc]init];
+    self.managerButton=manageButton;
+    [headerView addSubview:manageButton];
+    [manageButton setTitle:@"管理标签" forState:UIControlStateNormal];
+    manageButton.titleLabel.font=[UIFont systemFontOfSize:15];
+    [manageButton setTitleColor:IconColor
+                       forState:UIControlStateNormal];
+    [manageButton addTarget:self action:@selector(manageTags:) forControlEvents:UIControlEventTouchUpInside];
 
+    self.tags=[Tag allTagsSortedByOwnedContactsCountAndTagName];
 
 }
+
 -(void)manageTags:(UIButton *)button{
     self.manageTags();
 }

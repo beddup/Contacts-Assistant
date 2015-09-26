@@ -7,31 +7,23 @@
 //
 
 #import "ChangeEventTimeViewController.h"
+#import "Event+Utility.h"
+#import "EventViewController.h"
 
 @interface ChangeEventTimeViewController ()<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) UIDatePicker *datePicker;
-
-@property(strong,nonatomic)NSMutableArray *repeatedDays;
 
 @property(strong,nonatomic)NSArray *days;
 
 @end
 
 @implementation ChangeEventTimeViewController
-
+#pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.days=[[NSCalendar currentCalendar] weekdaySymbols];
     [self configureTableHeaderView];
-
-    if (self.event.repeatedDays.length) {
-        self.repeatedDays=[[[self.event.repeatedDays componentsSeparatedByString:@","] valueForKey:@"integerValue"] mutableCopy];
-    }else{
-        self.repeatedDays=[@[] mutableCopy];
-    }
-
-    // Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -40,7 +32,22 @@
     self.datePicker.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 180);
 
 }
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (IBAction)timeSettingDone:(id)sender {
 
+    self.repeatedDays=[[self.repeatedDays sortedArrayUsingComparator:^NSComparisonResult(NSNumber * obj1, NSNumber * obj2) {
+        return [obj1 compare:obj2];
+    }] mutableCopy];
+    [self.delegate eventDateChanged:self.datePicker.date repeatedDays:self.repeatedDays.count ? self.repeatedDays : nil];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+
+#pragma mark - table view header view
 -(void)configureTableHeaderView{
 
     UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 180)];
@@ -49,26 +56,31 @@
     dispatch_queue_t createDP = dispatch_queue_create("createDP", NULL);
     dispatch_async(createDP, ^{
         UIDatePicker *datePicker=[[UIDatePicker alloc]init];
-        if (self.event.date) {
-            self.datePicker.date=self.event.date;
+        datePicker.minimumDate=[NSDate dateWithTimeInterval:5*60 sinceDate:[NSDate date]];
+        if (self.repeatedDays.count) {
+            datePicker.datePickerMode=UIDatePickerModeTime;
         }
+        datePicker.minuteInterval=5;
         dispatch_async(dispatch_get_main_queue(), ^{
 
             self.datePicker=datePicker;
             [view addSubview:datePicker];
+            if (self.date) {
+                [self.datePicker setDate:self.date animated:NO];
+            }
         });
     });
-
-
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 #pragma mark - tableview
+-(NSMutableArray *)repeatedDays{
+    if (!_repeatedDays) {
+        _repeatedDays=[@[] mutableCopy];
+    }
+    return _repeatedDays;
+}
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
@@ -88,7 +100,8 @@
 
     cell.textLabel.text=self.days[indexPath.row];
 
-    if ([self.repeatedDays containsObject:@(indexPath.row)]) {
+    // in NSCalendar, weekday from 1 to 7
+    if ([self.repeatedDays containsObject:@(indexPath.row+1)]) {
         
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         cell.accessoryType=UITableViewCellAccessoryCheckmark;
@@ -107,28 +120,25 @@
 }
 
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-
-    [self.repeatedDays removeObject:@(indexPath.row)];
+    // in NSCalendar, weekday from 1 to 7
+    [self.repeatedDays removeObject:@(indexPath.row+1)];
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType=UITableViewCellAccessoryNone;
+    if (self.repeatedDays.count == 0) {
+        self.datePicker.datePickerMode=UIDatePickerModeDateAndTime;
+    }
 
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    [self.repeatedDays addObject:@(indexPath.row)];
+    [self.repeatedDays addObject:@(indexPath.row+1)];
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType=UITableViewCellAccessoryCheckmark;
-
-}
-
-- (IBAction)timeSettingDone:(id)sender {
-    self.event.date=self.datePicker.date;
-    if (self.repeatedDays.count) {
-        self.event.repeatedDays=[[self.repeatedDays valueForKey:@"stringValue"] componentsJoinedByString:@","];
-    }else{
-        self.event.repeatedDays=nil;
+    if (self.repeatedDays.count == 1) {
+        self.datePicker.datePickerMode=UIDatePickerModeTime;
     }
-    [self.navigationController popViewControllerAnimated:YES];
+
+
 }
 
 /*

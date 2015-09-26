@@ -14,6 +14,7 @@ typedef enum : NSUInteger {
     ContactCellModeSMS,
     ContactCellModeEmail,
 } ContactCellMode;
+
 @protocol ContactCellDelegate <NSObject>
 
 -(void)phone:(Contact *)contact phonesInfo:(NSArray *)numbers;

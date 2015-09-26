@@ -19,21 +19,28 @@ NSString *const CellIdentifier=@"contact cell";
 @end
 
 @implementation ChooseContactsViewController
-
+#pragma  mark - life cycle
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    self.contacts=[ContactsManager sharedContactManager].arrangedAllContacts;
-    self.indexTitles=[[ContactsManager sharedContactManager] indexTitleOfContact:self.contacts];
+    self.contacts=[[ContactsManager sharedContactManager] arrangedAllContacts];
+    self.indexTitles=[[ContactsManager sharedContactManager] indexTitleOfContacts:self.contacts];
 
     // Do any additional setup after loading the view.
 }
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - property
 -(NSMutableArray *)contactsSelected{
     if (!_contactsSelected) {
         _contactsSelected=[@[] mutableCopy];
     }
     return _contactsSelected;
 }
+#pragma mark - table view
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.indexTitles.count;
 }
@@ -45,18 +52,20 @@ NSString *const CellIdentifier=@"contact cell";
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (!cell) {
+        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    }
+
     Contact *contact=[self.contacts[indexPath.section] objectAtIndex:indexPath.row];
     cell.textLabel.text=contact.contactName;
 
     if ( [self.contactsSelected containsObject:contact] ) {
-
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         cell.accessoryType=UITableViewCellAccessoryCheckmark;
-
     }else{
-
         cell.accessoryType=UITableViewCellAccessoryNone;
-
     }
     return cell;
 }
@@ -100,20 +109,5 @@ NSString *const CellIdentifier=@"contact cell";
 }
 
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Contact.h"
-@interface AddTagViewController : UITableViewController
+#import "TagsTableViewController.h"
+@interface AddTagsToContactViewController : TagsTableViewController
 
 @property(strong,nonatomic)Contact *contact;
 

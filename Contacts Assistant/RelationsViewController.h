@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 @class Contact;
+@protocol ContactDetailsUpdatingDelegate;
 @interface RelationsViewController : UIViewController
 
 @property(strong,nonatomic)Contact *contact;
+@property(weak,nonatomic)id<ContactDetailsUpdatingDelegate>delegate;
 
 @end

@@ -25,6 +25,7 @@
  */
 
 #import "QRCodeReaderView.h"
+#import "defines.h"
 
 @interface QRCodeReaderView ()
 @property (nonatomic, strong) CAShapeLayer *overlay;
@@ -96,7 +97,7 @@
   _overlay = [[CAShapeLayer alloc] init];
   _overlay.backgroundColor = [UIColor clearColor].CGColor;
   _overlay.fillColor       = [UIColor clearColor].CGColor;
-  _overlay.strokeColor     = [UIColor colorWithRed:81.0/255 green:167.0/255 blue:249.0/255 alpha:1].CGColor;
+  _overlay.strokeColor     = [IconColor CGColor];
   _overlay.lineWidth       = 2.5;
   [self.layer addSublayer:_overlay];
 }

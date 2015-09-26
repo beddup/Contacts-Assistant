@@ -10,6 +10,6 @@
 
 @interface QRScanResultViewController : UITableViewController
 
-@property(strong,nonatomic)NSString *resultString;
+@property(strong,nonatomic)NSDictionary *personInfo;
 
 @end

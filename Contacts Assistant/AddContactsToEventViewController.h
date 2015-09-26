@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "Contact.h"
-#import "Event.h"
 #import "ChooseContactsViewController.h"
+@protocol EventContentUpdatingDelegate;
 
-@interface ChangeEventContactsViewController : ChooseContactsViewController
+@interface AddContactsToEventViewController : ChooseContactsViewController
 
-@property(strong,nonatomic)Event *event;
+@property(strong,nonatomic)Contact *whoseEvent;
+@property(weak,nonatomic)id<EventContentUpdatingDelegate>delegate;
 
 @end

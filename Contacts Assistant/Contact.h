@@ -1,9 +1,9 @@
 //
 //  Contact.h
-//  Contacts Assistant
+//  
 //
-//  Created by Amay on 8/7/15.
-//  Copyright (c) 2015 Beddup. All rights reserved.
+//  Created by Amay on 9/17/15.
+//
 //
 
 #import <Foundation/Foundation.h>
@@ -19,8 +19,9 @@
 @property (nonatomic, retain) NSNumber * contactOrderWeight;
 @property (nonatomic, retain) NSSet *attendWhichEvents;
 @property (nonatomic, retain) NSSet *belongWhichRelations;
-@property (nonatomic, retain) NSSet *underWhichTags;
 @property (nonatomic, retain) NSSet *relationsWithOtherPeople;
+@property (nonatomic, retain) NSSet *underWhichTags;
+@property (nonatomic, retain) NSSet *ownedEvents;
 @end
 
 @interface Contact (CoreDataGeneratedAccessors)
@@ -35,14 +36,19 @@
 - (void)addBelongWhichRelations:(NSSet *)values;
 - (void)removeBelongWhichRelations:(NSSet *)values;
 
+- (void)addRelationsWithOtherPeopleObject:(Relation *)value;
+- (void)removeRelationsWithOtherPeopleObject:(Relation *)value;
+- (void)addRelationsWithOtherPeople:(NSSet *)values;
+- (void)removeRelationsWithOtherPeople:(NSSet *)values;
+
 - (void)addUnderWhichTagsObject:(Tag *)value;
 - (void)removeUnderWhichTagsObject:(Tag *)value;
 - (void)addUnderWhichTags:(NSSet *)values;
 - (void)removeUnderWhichTags:(NSSet *)values;
 
-- (void)addRelationsWithOtherPeopleObject:(Relation *)value;
-- (void)removeRelationsWithOtherPeopleObject:(Relation *)value;
-- (void)addRelationsWithOtherPeople:(NSSet *)values;
-- (void)removeRelationsWithOtherPeople:(NSSet *)values;
+- (void)addOwnedEventsObject:(Event *)value;
+- (void)removeOwnedEventsObject:(Event *)value;
+- (void)addOwnedEvents:(NSSet *)values;
+- (void)removeOwnedEvents:(NSSet *)values;
 
 @end

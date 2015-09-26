@@ -1,9 +1,9 @@
 //
 //  Event.h
-//  Contacts Assistant
+//  
 //
-//  Created by Amay on 7/30/15.
-//  Copyright (c) 2015 Beddup. All rights reserved.
+//  Created by Amay on 9/17/15.
+//
 //
 
 #import <Foundation/Foundation.h>
@@ -13,17 +13,23 @@
 
 @interface Event : NSManagedObject
 
-@property (nonatomic, retain) NSDate * date;
-@property (nonatomic, retain) NSString * event;
-@property (nonatomic, retain) NSString * place;
-@property (nonatomic, retain) NSSet *contactsWhichAttend;
+@property (nonatomic, retain) NSDate * eventDate;
+@property (nonatomic, retain) NSString * eventDescription;
+@property (nonatomic, retain) NSNumber * eventID;
+@property (nonatomic, retain) NSString * eventPlace;
+@property (nonatomic, retain) NSString * eventRepeatedDays;
+@property (nonatomic, retain) NSNumber * latitude;
+@property (nonatomic, retain) NSNumber * longtitude;
+@property (nonatomic, retain) NSNumber * finished;
+@property (nonatomic, retain) NSSet *otherContacts;
+@property (nonatomic, retain) Contact *contactWhoOwnThisEvent;
 @end
 
 @interface Event (CoreDataGeneratedAccessors)
 
-- (void)addContactsWhichAttendObject:(Contact *)value;
-- (void)removeContactsWhichAttendObject:(Contact *)value;
-- (void)addContactsWhichAttend:(NSSet *)values;
-- (void)removeContactsWhichAttend:(NSSet *)values;
+- (void)addOtherContactsObject:(Contact *)value;
+- (void)removeOtherContactsObject:(Contact *)value;
+- (void)addOtherContacts:(NSSet *)values;
+- (void)removeOtherContacts:(NSSet *)values;
 
 @end

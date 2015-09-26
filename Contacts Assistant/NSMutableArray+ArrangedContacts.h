@@ -12,8 +12,10 @@
 @interface NSMutableArray (ArrangedContacts)
 
 -(void)removeContactAtIndexPath:(NSIndexPath *)indexPath;
-//-(NSMutableArray *)indexTitlesInTableView;
+//-(void)removeContact:(Contact *)contact;
+
 -(NSMutableArray *)contactsWhichHasPhones;
 -(NSMutableArray *)contactsWhichHasEmail;
+
 
 @end

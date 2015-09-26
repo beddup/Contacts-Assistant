@@ -23,6 +23,7 @@
     }
 }
 
+
 -(NSMutableArray *)contactsWhichHasPhones{
     return [self contactsWhichHasContactInfo:YES];
 }

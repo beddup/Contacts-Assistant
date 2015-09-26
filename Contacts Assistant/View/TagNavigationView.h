@@ -12,6 +12,7 @@
 @interface TagNavigationView : UIView
 
 @property(copy)void(^didSelectTag)(Tag *selectedTag);
-@property(copy)void(^manageTags)();
+@property(copy)void(^manageTags)() ;
 
+-(void)updateTags;
 @end
