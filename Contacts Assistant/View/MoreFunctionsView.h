@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class MoreFunctionsView;
-@protocol ActionsViewDelegate <NSObject>
+@protocol MoreFunctionViewDelegate <NSObject>
 
 -(void)groupSMS;
 -(void)groupEmail;
@@ -19,6 +19,6 @@
 @end
 @interface MoreFunctionsView : UIView
 
-@property(weak,nonatomic)id <ActionsViewDelegate>delegate;
+@property(weak,nonatomic)id <MoreFunctionViewDelegate>delegate;
 
 @end

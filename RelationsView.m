@@ -273,7 +273,7 @@
 #pragma mark - actions
 -(void)relationSelected:(UIButton *)button{
 
-    Contact *otherContact= [Contact contactOfContactID:button.tag];
+    Contact *otherContact= [Contact contactOfContactID:(int)button.tag];
     [self.delegate dismissRelationBetween:self.contact otherContact:otherContact];
 }
 

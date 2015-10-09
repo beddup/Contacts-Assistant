@@ -21,7 +21,7 @@
 @interface ContactDetailsViewController : UIViewController <ContactDetailsUpdatingDelegate>
 
 @property(strong,nonatomic)Contact *contact;
-@property(strong,nonatomic)NSIndexPath *indexPath;
+@property(copy,nonatomic)NSIndexPath *indexPath;
 
 
 

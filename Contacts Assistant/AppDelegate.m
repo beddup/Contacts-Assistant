@@ -17,11 +17,9 @@
 
 @implementation AppDelegate
 
-//this is a test1 for version control with github
-//this is a test 2 for version control with fithub
-#pragma mark
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+
     // first launch or not
     if (![[NSUserDefaults standardUserDefaults] boolForKey:APPLaunchedBefore]){
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:APPLaunchedBefore];
@@ -29,25 +27,18 @@
     }else{
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FirstLaunch];
     }
-    
-    [self cycleTheGlobalMessageComposer];
-    [self cycleTheGlobalMailComposer];
+    [[NSUserDefaults standardUserDefaults]synchronize];
 
+    //register local notification
     UIUserNotificationSettings *settings=[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound|UIUserNotificationTypeBadge categories:nil];
     [application registerUserNotificationSettings:settings];
 
-    return YES;
-}
--(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
-    NSString *description=notification.userInfo[LocalNotificationUserInfoDescriptionKey];
+    // cycle MFMailComposeViewController and MFMessageComposeViewController
+    [self cycleTheGlobalMessageComposer];
+    [self cycleTheGlobalMailComposer];
 
-    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:description preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action=[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:nil];
-    [alertController addAction:action];
-    UINavigationController *rootVC=(UINavigationController *)application.keyWindow.rootViewController;
-    UIViewController *currentVisibleVC=rootVC.visibleViewController;
-    [currentVisibleVC presentViewController:alertController animated:YES completion:nil];
-    
+
+    return YES;
 }
 
 -(void)cycleTheGlobalMailComposer
@@ -64,6 +55,20 @@
         self.globalMessageComposer = [[MFMessageComposeViewController alloc] init];
     }
 }
+
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    // if the app is running and local notification due, this method will be invoked
+    NSString *description=notification.userInfo[LocalNotificationUserInfoDescriptionKey];
+
+    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:description preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action=[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:action];
+    UINavigationController *rootVC=(UINavigationController *)application.keyWindow.rootViewController;
+    UIViewController *currentVisibleVC=rootVC.visibleViewController;
+    [currentVisibleVC presentViewController:alertController animated:YES completion:nil];
+    
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

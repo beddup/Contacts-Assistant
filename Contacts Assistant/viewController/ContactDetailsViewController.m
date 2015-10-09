@@ -22,7 +22,7 @@
 #import "Contact+Utility.h"
 #import "PhotoCircleImageView.h"
 #import "RelationsViewController.h"
-#import "VisualizedContactsViewController.h"
+#import "ContactsViewController.h"
 #import "NSString+ContactsAssistant.h"
 #import "defines.h"
 #import "AppDelegate.h"
@@ -38,7 +38,7 @@
 @property(strong,nonatomic)NSMutableArray *finishedEvents;
 @property(nonatomic)NSInteger relationsCount;
 
-@property(strong,nonatomic)NSArray *sectionHeaderTitles;
+@property(copy,nonatomic)NSArray *sectionHeaderTitles;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 // view of add new contact

@@ -17,8 +17,8 @@
 
 @interface ContactCell()
 
-@property(strong,nonatomic)NSArray *phonesInfo;
-@property(strong,nonatomic)NSArray *emailsInfo;
+@property(copy,nonatomic)NSArray *phonesInfo;
+@property(copy,nonatomic)NSArray *emailsInfo;
 
 @property(weak,nonatomic)UIButton *phoneButton;
 @property(weak,nonatomic)UIButton *smsButton;

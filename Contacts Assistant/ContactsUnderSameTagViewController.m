@@ -12,8 +12,8 @@
 #import "ContactsManager.h"
 @interface ContactsUnderSameTagViewController ()
 
-@property(strong,nonatomic)NSArray *contacts;
-@property(strong,nonatomic)NSArray *tags;
+@property(copy,nonatomic)NSArray *contacts;
+@property(copy,nonatomic)NSArray *tags;
 
 @end
 

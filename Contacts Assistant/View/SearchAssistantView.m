@@ -7,7 +7,7 @@
 //
 
 #import "SearchAssistantView.h"
-#import "VisualizedContactsViewController.h"
+#import "ContactsViewController.h"
 #import "ContactsManager.h"
 #import "Tag.h"
 #import "Contact.h"

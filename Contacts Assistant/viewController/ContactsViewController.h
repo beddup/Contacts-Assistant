@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VisualizedContactsViewController : UIViewController
+@interface ContactsViewController : UIViewController
 
 @end
 

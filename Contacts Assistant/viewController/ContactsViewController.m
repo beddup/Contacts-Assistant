@@ -7,7 +7,7 @@
 //
 #import "defines.h"
 #import "AppDelegate.h"
-#import "VisualizedContactsViewController.h"
+#import "ContactsViewController.h"
 #import "SearchAssistantView.h"
 #import "ContactsManager.h"
 #import "TagNavigationView.h"
@@ -40,8 +40,8 @@ typedef enum : NSUInteger {
     TVSelectionModeBatchEmail,
 } TVSelectionMode;
 
-@interface VisualizedContactsViewController ()
-<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,ActionsViewDelegate,LoadContactsDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate,ContactCellDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
+@interface ContactsViewController ()
+<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,MoreFunctionViewDelegate,LoadContactsDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate,ContactCellDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
 //table view
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -75,7 +75,7 @@ typedef enum : NSUInteger {
 @property(strong,nonatomic)UITableViewRowAction *shareAction;
 @end
 
-@implementation VisualizedContactsViewController
+@implementation ContactsViewController
 
 #pragma mark - vc life cycle
 - (void)viewDidLoad {
@@ -1074,19 +1074,5 @@ typedef enum : NSUInteger {
         dstvc.indexPath=indexPath;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

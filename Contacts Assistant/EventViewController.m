@@ -31,7 +31,7 @@
 
 @property(strong,nonatomic)NSDate *eventDate;
 @property(copy,nonatomic)NSArray *eventRepeatedDays;
-@property(strong,nonatomic)NSArray *relatedPeople;
+@property(copy,nonatomic)NSArray *relatedPeople;
 
 
 @end

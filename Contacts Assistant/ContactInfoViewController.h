@@ -13,7 +13,7 @@
 @interface ContactInfoViewController : UITableViewController
 
 @property(strong,nonatomic)Contact *contact;
-@property(strong,nonatomic)NSDictionary *contactInfo;
+@property(copy,nonatomic)NSDictionary *contactInfo;
 
 @property(weak,nonatomic)id<ContactDetailsUpdatingDelegate>delegate;
 

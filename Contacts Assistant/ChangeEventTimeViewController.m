@@ -14,7 +14,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) UIDatePicker *datePicker;
 
-@property(strong,nonatomic)NSArray *days;
+@property(copy,nonatomic)NSArray *days;
 
 @end
 

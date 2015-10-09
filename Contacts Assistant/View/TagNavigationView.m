@@ -13,9 +13,9 @@
 #import "defines.h"
 @interface TagNavigationView()<UITableViewDataSource,UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak,nonatomic) IBOutlet UITableView *tableView;
 
-@property(strong,nonatomic)NSArray *tags;
+@property(copy,nonatomic)NSArray *tags;
 
 @property(weak,nonatomic)UIButton *managerButton;
 @property(weak,nonatomic)UILabel *titleLabel;

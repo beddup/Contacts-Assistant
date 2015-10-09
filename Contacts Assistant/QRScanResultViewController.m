@@ -14,7 +14,7 @@
 
 @interface QRScanResultViewController ()
 
-@property(strong,nonatomic)NSArray *contactsInfo;
+@property(copy,nonatomic)NSArray *contactsInfo;
 
 @property(weak,nonatomic)UIButton *addToAdressBook;
 @end

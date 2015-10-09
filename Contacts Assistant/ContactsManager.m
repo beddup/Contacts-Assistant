@@ -44,10 +44,9 @@ typedef enum : NSUInteger {
 @interface ContactsManager()
 
 
+@property(assign,nonatomic)ABAddressBookRef addressBook;
 
-@property(nonatomic,assign)ABAddressBookRef addressBook;
-
-@property(strong,nonatomic)NSArray *allPossibleIndexTitles;
+@property(copy,nonatomic)NSArray *allPossibleIndexTitles;
 @property(strong,nonatomic)NSMutableArray *arrangedAllContactsPlaceHolder; // same count with allPossibleIndexTitles,may has empty array
 
 @property(nonatomic) ABPersonSortOrdering preferedSortOrdering;
@@ -57,17 +56,14 @@ typedef enum : NSUInteger {
 @implementation ContactsManager
 
 #pragma mark - instanitiation
-static ContactsManager * shareManager;
 
 //note: instance of ABAddressBookRef must be used by only one thread.
 static dispatch_queue_t abQueue;
+static ContactsManager * shareManager;
 
 +(instancetype)sharedContactManager{
 
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareManager=[[self alloc]init];
-    });
+    shareManager=[[self alloc]init];
     return shareManager;
 
 }
@@ -80,10 +76,6 @@ static dispatch_queue_t abQueue;
     });
     return shareManager;
 
-}
-
--(id)copy{
-    return shareManager;
 }
 
 #pragma mark - properties

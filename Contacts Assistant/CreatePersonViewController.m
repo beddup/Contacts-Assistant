@@ -15,7 +15,7 @@
 @interface CreatePersonViewController ()<UITextFieldDelegate,MBProgressHUDDelegate>
 
 @property(strong,nonatomic)NSMutableArray *contactsInfo; //dictionary : label + value
-@property(strong,nonatomic)NSArray *baiscInfoPlaceHodlers;
+@property(copy,nonatomic)NSArray *baiscInfoPlaceHodlers;
 
 @property(weak,nonatomic)UITextField *nameTF;
 

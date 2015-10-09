@@ -70,7 +70,8 @@
 		8D95A9381B53ABDD009EB722 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D95A9371B53ABDD009EB722 /* Images.xcassets */; };
 		8D95A93B1B53ABDD009EB722 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D95A9391B53ABDD009EB722 /* LaunchScreen.xib */; };
 		8D95A9471B53ABDD009EB722 /* Contacts_AssistantTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9461B53ABDD009EB722 /* Contacts_AssistantTests.m */; };
-		8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */; };
+		8D95A9551B53B723009EB722 /* ContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D95A9541B53B723009EB722 /* ContactsViewController.m */; };
+		8D9CF6861BB708F700C0BFB7 /* fdfd.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9CF6851BB708F700C0BFB7 /* fdfd.m */; settings = {ASSET_TAGS = (); }; };
 		8DC4B8531BA885F60096DB11 /* ContactDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4B8521BA885F60096DB11 /* ContactDetailsViewController.m */; };
 		8DCA64261BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCA64251BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m */; settings = {ASSET_TAGS = (); }; };
 		8DE0DF381B95ABDB00CE3265 /* ReceiversView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE0DF371B95ABDB00CE3265 /* ReceiversView.m */; };
@@ -208,8 +209,9 @@
 		8D95A9401B53ABDD009EB722 /* Contacts AssistantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contacts AssistantTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D95A9451B53ABDD009EB722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D95A9461B53ABDD009EB722 /* Contacts_AssistantTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Contacts_AssistantTests.m; sourceTree = "<group>"; };
-		8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualizedContactsViewController.h; path = viewController/VisualizedContactsViewController.h; sourceTree = "<group>"; };
-		8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualizedContactsViewController.m; path = viewController/VisualizedContactsViewController.m; sourceTree = "<group>"; };
+		8D95A9531B53B723009EB722 /* ContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactsViewController.h; path = viewController/ContactsViewController.h; sourceTree = "<group>"; };
+		8D95A9541B53B723009EB722 /* ContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactsViewController.m; path = viewController/ContactsViewController.m; sourceTree = "<group>"; };
+		8D9CF6851BB708F700C0BFB7 /* fdfd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fdfd.m; sourceTree = "<group>"; };
 		8DC4B8521BA885F60096DB11 /* ContactDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailsViewController.m; path = viewController/ContactDetailsViewController.m; sourceTree = "<group>"; };
 		8DCA64241BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+ContactsAssistant.h"; sourceTree = "<group>"; };
 		8DCA64251BAD961D0082C7F2 /* MBProgressHUD+ContactsAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+ContactsAssistant.m"; sourceTree = "<group>"; };
@@ -315,8 +317,8 @@
 			children = (
 				8D7180741B56B90800E372ED /* ContactsManager.h */,
 				8D7180751B56B90800E372ED /* ContactsManager.m */,
-				8D95A9531B53B723009EB722 /* VisualizedContactsViewController.h */,
-				8D95A9541B53B723009EB722 /* VisualizedContactsViewController.m */,
+				8D95A9531B53B723009EB722 /* ContactsViewController.h */,
+				8D95A9541B53B723009EB722 /* ContactsViewController.m */,
 				8D74D8BC1B6F157B008D5223 /* QRScanResultViewController.h */,
 				8D74D8BD1B6F157B008D5223 /* QRScanResultViewController.m */,
 				8D841FCE1B636EB600801362 /* ContactDetailsViewController.h */,
@@ -511,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				8D95A9461B53ABDD009EB722 /* Contacts_AssistantTests.m */,
+				8D9CF6851BB708F700C0BFB7 /* fdfd.m */,
 				8D95A9441B53ABDD009EB722 /* Supporting Files */,
 			);
 			path = "Contacts AssistantTests";
@@ -684,7 +687,7 @@
 				8D7180B11B5FDEC700E372ED /* Tag+Utility.m in Sources */,
 				8D94F83F1B8DC39500B480A1 /* AddRelationViewController.m in Sources */,
 				8D94F8451B8DEBC700B480A1 /* ChooseContactsViewController.m in Sources */,
-				8D95A9551B53B723009EB722 /* VisualizedContactsViewController.m in Sources */,
+				8D95A9551B53B723009EB722 /* ContactsViewController.m in Sources */,
 				8D3A8BA81B78F76700ECEABC /* EventDisplayView.m in Sources */,
 				8D74D8A81B6E57AC008D5223 /* qrspec.c in Sources */,
 				8D70E5081B6B672D00B11C24 /* EventViewController.m in Sources */,
@@ -700,6 +703,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D95A9471B53ABDD009EB722 /* Contacts_AssistantTests.m in Sources */,
+				8D9CF6861BB708F700C0BFB7 /* fdfd.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
