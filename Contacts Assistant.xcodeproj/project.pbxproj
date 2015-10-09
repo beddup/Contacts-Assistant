@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D13152B1BC7F697007A1E84 /* UIWindow+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D13152A1BC7F697007A1E84 /* UIWindow+Hierarchy.m */; settings = {ASSET_TAGS = (); }; };
+		8D13152E1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D13152D1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.m */; settings = {ASSET_TAGS = (); }; };
 		8D6438911BC7C0EF00D22BD5 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6438841BC7C0EF00D22BD5 /* Contact.m */; settings = {ASSET_TAGS = (); }; };
 		8D6438921BC7C0EF00D22BD5 /* Contact+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6438861BC7C0EF00D22BD5 /* Contact+Utility.m */; settings = {ASSET_TAGS = (); }; };
 		8D6438931BC7C0EF00D22BD5 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6438881BC7C0EF00D22BD5 /* Event.m */; settings = {ASSET_TAGS = (); }; };
@@ -89,6 +91,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D1315291BC7F697007A1E84 /* UIWindow+Hierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIWindow+Hierarchy.h"; path = "viewController/UIWindow+Hierarchy.h"; sourceTree = "<group>"; };
+		8D13152A1BC7F697007A1E84 /* UIWindow+Hierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIWindow+Hierarchy.m"; path = "viewController/UIWindow+Hierarchy.m"; sourceTree = "<group>"; };
+		8D13152C1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+SendSMSOrEmail.h"; path = "viewController/UIViewController+SendSMSOrEmail.h"; sourceTree = "<group>"; };
+		8D13152D1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+SendSMSOrEmail.m"; path = "viewController/UIViewController+SendSMSOrEmail.m"; sourceTree = "<group>"; };
 		8D6438831BC7C0EF00D22BD5 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = Model/Contact.h; sourceTree = "<group>"; };
 		8D6438841BC7C0EF00D22BD5 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Contact.m; path = Model/Contact.m; sourceTree = "<group>"; };
 		8D6438851BC7C0EF00D22BD5 /* Contact+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Contact+Utility.h"; path = "Model/Contact+Utility.h"; sourceTree = "<group>"; };
@@ -315,6 +321,8 @@
 		8D7180211B550FF100E372ED /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				8D13152C1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.h */,
+				8D13152D1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.m */,
 				8D95A9531B53B723009EB722 /* ContactsViewController.h */,
 				8D95A9541B53B723009EB722 /* ContactsViewController.m */,
 				8D6439201BC7C44C00D22BD5 /* ContactInfoViewController.h */,
@@ -336,6 +344,8 @@
 		8D7180221B55100200E372ED /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8D1315291BC7F697007A1E84 /* UIWindow+Hierarchy.h */,
+				8D13152A1BC7F697007A1E84 /* UIWindow+Hierarchy.m */,
 				8D7180921B5DE96A00E372ED /* ContactCell.h */,
 				8D7180931B5DE96A00E372ED /* ContactCell.m */,
 				8D7180951B5DE97400E372ED /* TagCell.h */,
@@ -649,6 +659,7 @@
 				8D6439281BC7C44C00D22BD5 /* CreatePersonViewController.m in Sources */,
 				8D6438C41BC7C17E00D22BD5 /* split.c in Sources */,
 				8D6439191BC7C3E800D22BD5 /* AddContactsToEventViewController.m in Sources */,
+				8D13152E1BC7FF9E007A1E84 /* UIViewController+SendSMSOrEmail.m in Sources */,
 				8D7180941B5DE96A00E372ED /* ContactCell.m in Sources */,
 				8D95A92D1B53ABDD009EB722 /* AppDelegate.m in Sources */,
 				8D7180761B56B90800E372ED /* ContactsManager.m in Sources */,
@@ -656,6 +667,7 @@
 				8D6438931BC7C0EF00D22BD5 /* Event.m in Sources */,
 				8D64392E1BC7C50C00D22BD5 /* Contacts_Assistant.xcdatamodeld in Sources */,
 				8D64391B1BC7C3E800D22BD5 /* AddContactsToTagViewController.m in Sources */,
+				8D13152B1BC7F697007A1E84 /* UIWindow+Hierarchy.m in Sources */,
 				8D6438921BC7C0EF00D22BD5 /* Contact+Utility.m in Sources */,
 				8D6439101BC7C3CE00D22BD5 /* RelationsViewController.m in Sources */,
 				8D6438971BC7C0EF00D22BD5 /* Tag+Utility.m in Sources */,

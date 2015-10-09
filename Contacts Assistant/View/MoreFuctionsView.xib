@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -13,24 +14,29 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GroupSMS" translatesAutoresizingMaskIntoConstraints="NO" id="bd2-e8-flc">
                     <rect key="frame" x="8" y="8" width="75" height="75"/>
+                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="bd2-e8-flc" secondAttribute="height" multiplier="1:1" id="Zk5-Ca-5cC"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GroupEmail" translatesAutoresizingMaskIntoConstraints="NO" id="Oxr-US-JMR">
                     <rect key="frame" x="83" y="8" width="76" height="75"/>
+                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="Oxr-US-JMR" secondAttribute="height" multiplier="1:1" id="XqK-1v-vCi"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ScanIcon" translatesAutoresizingMaskIntoConstraints="NO" id="8V8-wr-2up">
                     <rect key="frame" x="159" y="8" width="75" height="75"/>
+                    <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ManuallyAdd" translatesAutoresizingMaskIntoConstraints="NO" id="Bxq-8W-co1">
                     <rect key="frame" x="234" y="8" width="75" height="75"/>
+                    <animations/>
                 </imageView>
                 <button opaque="NO" tag="281" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TH6-Uj-BE7">
                     <rect key="frame" x="8" y="8" width="75" height="107"/>
+                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" priority="250" constant="75" id="fuX-zP-Z6h"/>
                         <constraint firstAttribute="height" priority="250" constant="95" id="rKI-OU-liG"/>
@@ -44,6 +50,7 @@
                 </button>
                 <button opaque="NO" tag="283" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m47-da-as3">
                     <rect key="frame" x="159" y="8" width="75" height="107"/>
+                    <animations/>
                     <state key="normal">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -53,6 +60,7 @@
                 </button>
                 <button opaque="NO" tag="282" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bRI-G8-vBH">
                     <rect key="frame" x="83" y="8" width="76" height="107"/>
+                    <animations/>
                     <state key="normal">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -62,24 +70,28 @@
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="扫描联系人" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XVk-52-Uku">
                     <rect key="frame" x="159" y="83" width="75" height="32"/>
+                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.31764705882352939" green="0.65490196078431373" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="群发短信" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xmg-us-ikO">
                     <rect key="frame" x="8" y="83" width="75" height="32"/>
+                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.31764705882352939" green="0.65490196078431373" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="群发邮件" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Mz-C7-PgH">
                     <rect key="frame" x="83" y="83" width="76" height="32"/>
+                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.31764705882352939" green="0.65490196078431373" blue="0.97647058823529409" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" tag="284" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AW5-yv-jEU">
                     <rect key="frame" x="234" y="8" width="75" height="107"/>
+                    <animations/>
                     <state key="normal">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -89,11 +101,13 @@
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="录入联系人" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdi-8q-JPx">
                     <rect key="frame" x="234" y="83" width="75" height="32"/>
+                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.31764705879999999" green="0.65490196079999996" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <animations/>
             <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="bd2-e8-flc" firstAttribute="trailing" secondItem="Xmg-us-ikO" secondAttribute="trailing" id="0eu-RY-C6I"/>
@@ -161,9 +175,4 @@
         <image name="ManuallyAdd" width="50" height="50"/>
         <image name="ScanIcon" width="50" height="50"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>

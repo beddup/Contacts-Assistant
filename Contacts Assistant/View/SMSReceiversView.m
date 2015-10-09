@@ -9,7 +9,8 @@
 #import "SMSReceiversView.h"
 #import "ContactsManager.h"
 #import "Contact.h"
-
+#import "UIWindow+Hierarchy.h"
+#import "UIViewController+SendSMSOrEmail.h"
 @interface SMSReceiversView()
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
@@ -24,8 +25,8 @@
 
 
 - (IBAction)receiversDetermined:(id)sender {
-
-    self.sendHandler([self phoneNumbersOrEmailOfReceivers:self.receivers]);
+    UIViewController *currentVC=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+    [currentVC SMSTo:[self phoneNumbersOrEmailOfReceivers:self.receivers]];
 }
 
 - (IBAction)cancelSeletion:(id)sender {

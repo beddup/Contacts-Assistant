@@ -15,7 +15,6 @@ extern NSString * const ReceiversContactInfosKey;
 @interface ReceiversView : UIView
 //abstract;
 @property(copy)void (^cancelHandler)();
-@property(copy)void (^sendHandler)(NSArray *phoneNumbersOrEmails);
 @property(nonatomic)BOOL hasContactInfo;
 
 -(void)addContactInfosToReceivers:(NSArray *)contactInfos contact:(Contact *)contact;

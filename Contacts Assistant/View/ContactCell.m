@@ -13,6 +13,10 @@
 #import "ContactsManager.h"
 #import "NSString+ContactsAssistant.h"
 #import "defines.h"
+#import "AppDelegate.h"
+#import "UIWindow+Hierarchy.h"
+#import "MBProgressHUD+ContactsAssistant.h"
+#import "UIViewController+SendSMSOrEmail.h"
 #import <MessageUI/MessageUI.h>
 
 @interface ContactCell()
@@ -54,24 +58,6 @@
     self.smsButton.hidden   = self.phoneButton.hidden || ![MFMessageComposeViewController canSendText];
     self.emailButton.hidden = self.mode || !self.emailsInfo.count || ![MFMailComposeViewController canSendMail];
 }
-#pragma mark - delegate
--(void)phone:(UIButton *)button{
-
-    [self.delegate phone:self.contact phonesInfo:self.phonesInfo];
-
-}
-
--(void)SMS:(UIButton *)button{
-
-    [self.delegate sms:self.contact phonesInfo:self.phonesInfo];
-
-}
-
--(void)email:(UIButton *)button{
-
-    [self.delegate email:self.contact emailsInfo:self.emailsInfo];
-    
-}
 
 -(void)setEditing:(BOOL)editing animated:(BOOL)animated{
     [super setEditing:editing animated:animated];
@@ -86,6 +72,70 @@
     [super setSelected:selected animated:animated];
     [self setNeedsDisplay];
 }
+#pragma mark -button Action
+-(void)phone:(UIButton *)button{
+
+    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:self.phonesInfo actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
+        NSString *urlString=[NSString stringWithFormat:@"tel://%@",phoneNumberOrEmailAddress];
+        NSURL *url=[NSURL URLWithString:urlString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    } cancelHandler:nil];
+    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 打电话",self.contact.contactName];
+    UIViewController *currentVC=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+    [currentVC presentViewController:phoneAlertController animated:YES completion:nil];
+
+}
+
+-(void)SMS:(UIButton *)button{
+
+    UIViewController *currentVC=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+
+    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:self.phonesInfo
+                                                                  actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
+                                                                      UIViewController *vc=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+                                                                      [vc SMSTo:@[phoneNumberOrEmailAddress]];
+                                                                  }
+                                                                  cancelHandler:nil];
+    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发短信",self.contact.contactName];
+    [currentVC presentViewController:phoneAlertController animated:YES completion:nil];
+
+}
+
+-(void)email:(UIButton *)button{
+
+    UIViewController *currentVC=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:self.emailsInfo actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
+        UIViewController *vc=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
+        [vc emailTo:@[phoneNumberOrEmailAddress] cc:nil bcc:nil];
+    }cancelHandler:nil];
+    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发邮件",self.contact.contactName];
+    [currentVC presentViewController:phoneAlertController animated:YES completion:nil];
+    
+}
+
+-(UIAlertController *)alertControllerPhonesOrEmails:(NSArray *)infos
+                                      actionHandler:(void(^)(UIAlertAction *action,NSString *phoneNumberOrEmailAddress))handler
+                                      cancelHandler:(void(^)(UIAlertAction *action))cancleHandler{
+
+    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    for (NSDictionary *info in infos) {
+        NSString *title=[NSString stringWithFormat:@"%@: %@", info[ContactInfoLabelKey],info[ContactInfoValueKey]];
+        UIAlertAction *action=[UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            handler(action,info[ContactInfoValueKey]);
+        }];
+        [alertController addAction:action];
+    }
+
+    UIAlertAction *cancelAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:cancleHandler];
+    [alertController addAction:cancelAction];
+    return alertController;
+    
+}
+
+
 #pragma mark -draw
 static CGFloat const ContentInsetX=4;
 static CGFloat const ContentInsetY=4;

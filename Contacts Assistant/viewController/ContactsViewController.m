@@ -41,7 +41,7 @@ typedef enum : NSUInteger {
 } TVSelectionMode;
 
 @interface ContactsViewController ()
-<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,MoreFunctionViewDelegate,LoadContactsDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate,ContactCellDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
+<UISearchResultsUpdating,UISearchControllerDelegate,UISearchBarDelegate,MoreFunctionViewDelegate,LoadContactsDelegate,UITableViewDataSource,UITableViewDelegate,QRCodeReaderDelegate>
 
 //table view
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -497,6 +497,7 @@ typedef enum : NSUInteger {
     self.receiverView=receiversView;
     [self showReceiversView:receiversView];
 }
+
 -(void)scanContactQR{
     [self dismissSearchController];
     [self prepareScanQR];
@@ -540,46 +541,6 @@ typedef enum : NSUInteger {
                              [weakReceiverView removeFromSuperview];
                          }];
     };
-    if ([receiversView isKindOfClass:[SMSReceiversView class]]) {
-        receiversView.sendHandler=^(NSArray *phonesOrEmails){
-            [self dismissSearchController];
-            [self SMSTo:phonesOrEmails];
-        };
-    }else if([receiversView isKindOfClass:[EmailReceiversView class]]){
-        receiversView.sendHandler=^(NSArray *phonesOrEmails){
-            [self dismissSearchController];
-            [self emailTo:phonesOrEmails[0] cc:phonesOrEmails[1] bcc:phonesOrEmails[2]];
-        };
-    }
-}
--(void)SMSTo:(NSArray *)phones{
-    MBProgressHUD *hud=[MBProgressHUD textHud:@"跳转中" view:self.navigationController.view];
-    [hud show:YES];
-    APP.globalMessageComposer.recipients=phones;
-    APP.globalMessageComposer.messageComposeDelegate=self;
-    [self presentViewController:APP.globalMessageComposer animated:YES completion:^{
-        [hud hide:YES];
-    }];
-}
--(void)emailTo:(NSArray *)to cc:(NSArray *)cc bcc:(NSArray *)bcc{
-
-        MBProgressHUD *hud=[MBProgressHUD textHud:@"跳转中" view:self.navigationController.view];
-        [hud show:YES];
-        APP.globalMailComposer.mailComposeDelegate=self;
-
-        if (to.count) {
-            [APP.globalMailComposer setToRecipients:to];
-        }
-        if (cc.count) {
-            [APP.globalMailComposer setCcRecipients:cc];
-        }
-        if (bcc.count) {
-            [APP.globalMailComposer setBccRecipients:bcc];
-        }
-
-        [self presentViewController:APP.globalMailComposer animated:YES completion:^{
-            [hud hide:YES];
-        }];
 }
 
 #pragma mark - QRCodeReader
@@ -769,7 +730,6 @@ typedef enum : NSUInteger {
         cell=[[ContactCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     cell.contact=self.contacts[indexPath.section][indexPath.row];
-    cell.delegate=self;
     switch (self.selectionMode) {
         case TVSelectionModeBatchSMS:{
             cell.mode=ContactCellModeSMS;
@@ -867,25 +827,6 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - alertController
--(UIAlertController *)alertControllerPhonesOrEmails:(NSArray *)infos
-                                      actionHandler:(void(^)(UIAlertAction *action,NSString *phoneNumberOrEmailAddress))handler
-                                      cancelHandler:(void(^)(UIAlertAction *action))cancleHandler{
-
-    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-
-    for (NSDictionary *info in infos) {
-        NSString *title=[NSString stringWithFormat:@"%@: %@", info[ContactInfoLabelKey],info[ContactInfoValueKey]];
-        UIAlertAction *action=[UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            handler(action,info[ContactInfoValueKey]);
-        }];
-        [alertController addAction:action];
-    }
-
-    UIAlertAction *cancelAction=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:cancleHandler];
-    [alertController addAction:cancelAction];
-    return alertController;
-    
-}
 
 -(UIAlertController *)alertControllerForAddingContactInfosToRecevierView:(NSArray *)contactInfos
                                                                ofContact:(Contact *)contact
@@ -1008,52 +949,6 @@ typedef enum : NSUInteger {
 
     [self.tableView reloadData];
 
-}
-
-#pragma mark - Contact Cell delegate;
--(void)phone:(Contact *)contact phonesInfo:(NSArray *)numbers{
-    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:numbers actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
-        NSString *urlString=[NSString stringWithFormat:@"tel://%@",phoneNumberOrEmailAddress];
-        NSURL *url=[NSURL URLWithString:urlString];
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url];
-        }
-    } cancelHandler:nil];
-    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 打电话",contact.contactName];
-    [self dismissSearchController];
-    [self presentViewController:phoneAlertController animated:YES completion:nil];
-
-}
--(void)sms:(Contact *)contact phonesInfo:(NSArray *)numbers {
-
-    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:numbers actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
-        [self SMSTo:@[phoneNumberOrEmailAddress]];
-    }cancelHandler:nil];
-    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发短信",contact.contactName];
-
-    [self dismissSearchController];
-    [self presentViewController:phoneAlertController animated:YES completion:nil];
-
-}
--(void)email:(Contact *)contact emailsInfo:(NSArray *)emails {
-    UIAlertController *phoneAlertController=[self alertControllerPhonesOrEmails:emails actionHandler:^(UIAlertAction *action,NSString *phoneNumberOrEmailAddress) {
-        [self emailTo:@[phoneNumberOrEmailAddress] cc:nil bcc:nil];
-    }cancelHandler:nil];
-    phoneAlertController.message=[NSString stringWithFormat:@"给 %@ 发邮件",contact.contactName];
-
-    [self dismissSearchController];
-    [self presentViewController:phoneAlertController animated:YES completion:nil];
-
-}
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [APP cycleTheGlobalMailComposer];
-    }];
-}
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    [self dismissViewControllerAnimated:YES completion:^{
-        [APP cycleTheGlobalMessageComposer];
-    }];
 }
 
 #pragma  mark - segue navigation

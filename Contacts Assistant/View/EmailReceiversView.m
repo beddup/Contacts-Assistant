@@ -9,6 +9,8 @@
 #import "EmailReceiversView.h"
 #import "Contact.h"
 #import "ContactsManager.h"
+#import "UIViewController+SendSMSOrEmail.h"
+#import "UIWindow+Hierarchy.h"
 NSString * const ContentContactIndex=@"ContentContactIndex";
 NSString * const ContentNameKey=@"ContentNameKey";
 NSString * const ContentEmailsKey=@"ContentEmailsKey";
@@ -120,12 +122,11 @@ NSString * const ReceiversBCCKey=@"ReceiversBCCKey";
 
 
 - (IBAction)receversDetermined:(UIButton *)sender {
-
+    UIViewController *currentVC=[[[UIApplication sharedApplication] keyWindow]  currentViewController];
     NSArray *ToEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversToKey]];
     NSArray *CCEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversCCKey]];
     NSArray *BCCEmail=[self phoneNumbersOrEmailOfReceivers:self.allThreeKindReceivers[ReceiversBCCKey]];
-
-    self.sendHandler(@[ToEmail,CCEmail,BCCEmail]);
+    [currentVC emailTo:ToEmail cc:CCEmail bcc:BCCEmail];
 }
 
 - (IBAction)cancelSelection:(UIButton *)sender {

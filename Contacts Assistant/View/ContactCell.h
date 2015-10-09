@@ -15,12 +15,6 @@ typedef enum : NSUInteger {
     ContactCellModeEmail,
 } ContactCellMode;
 
-@protocol ContactCellDelegate <NSObject>
-
--(void)phone:(Contact *)contact phonesInfo:(NSArray *)numbers;
--(void)sms:(Contact *)contact phonesInfo:(NSArray *)numbers ;
--(void)email:(Contact *)contact emailsInfo:(NSArray *)emails ;
-@end
 
 
 @interface ContactCell : UITableViewCell
@@ -28,7 +22,6 @@ typedef enum : NSUInteger {
 @property(strong,nonatomic)Contact *contact;
 @property(nonatomic)ContactCellMode mode;
 
-@property(weak,nonatomic)id<ContactCellDelegate>delegate;
 /*
  考虑显示的内容：
  1. 目前不定位于社交，不显示图片
