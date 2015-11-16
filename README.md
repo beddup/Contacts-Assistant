@@ -1,5 +1,10 @@
 # Contacts-Assistant
-use tag,event,relation to manage relation
+Version 1.1 is under review, which has the following new features:
+- Business card recognization enable you to add contacts more conveniently and quickly
+- you can view the all contact reminders of one week more easily
+This version is estimated to be released by the end of Nov.
+====
+Use tag,event,relation to manage relation
 
 Contacts Assistant is an APP like(and based on) iOS Contacts, but more powerful.
 You CAN
