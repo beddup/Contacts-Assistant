@@ -1,5 +1,5 @@
 # Contacts-Assistant
-Version 1.1 is under review, which has the following new features:
+Version 1.1 has the following new features:
 - Business card recognization enable you to add contacts more conveniently and quickly
 - you can view the all contact reminders of one week more easily
 This version is estimated to be released by the end of Nov.
