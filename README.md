@@ -14,3 +14,8 @@ You CAN
 - Add Event to reminder you to contact someone
 - Create Relations in people, and you will see someone's relation in a "map"
 
+
+Next:
+
+- Refactoring. I found the current code is so ugly when I read some beautiful one and known some more advanced notion and practice. 
+- Deliver it to US. 
